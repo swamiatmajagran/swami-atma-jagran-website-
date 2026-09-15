@@ -737,7 +737,7 @@
                 </div>
                 <div>
                     <div class="text-center text-2xl font-bold text-maroonDark mb-4">₹1 <span class="text-xs font-semibold text-maroonMain/60">(TEST)</span></div>
-                    <button onclick="openPaidProductForm('Swarnima Janm Patrika', 1, 'pl_TcJTZ2f8CsQcl0')" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT →</button>
+                    <button onclick="openFreeReportModal()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT → FREE</button>
                 </div>
             </div>
 
@@ -1140,7 +1140,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase text-maroonDark mb-1">WhatsApp No (रिपोर्ट पाने के लिए)</label>
-                    <input type="tel" id="free-whatsapp" placeholder="10-digit mobile number" pattern="[0-9]{10}" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                    <input type="tel" id="free-whatsapp" placeholder="10-digit mobile number" pattern="[0-9]{10}" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:outline-none focus:ring-goldPrimary text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-maroonDark mb-1">Email Address</label>
+                    <input type="email" id="free-email" placeholder="your@email.com" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
                 </div>
                 <button type="submit" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-3.5 rounded-xl shadow-md transition-all cursor-pointer">
                     GET MY CHART REPORT →
@@ -1150,55 +1154,24 @@
     </div>
 
     <!-- MODAL: Free Report Success -->
-    <div id="free-success-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl text-center space-y-4">
-            <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg">
-                <i class="fa-solid fa-check"></i>
-            </div>
-            <h3 class="font-cinzel text-xl font-bold text-maroonDark">आपका बहुत-बहुत शुक्रिया!</h3>
-            <p class="text-sm text-maroonMain/90 leading-relaxed">आपकी दी हुई जानकारी हम तक पहुँच गई है। हम आपकी रिपोर्ट 24 घंटे के अंदर आपके WhatsApp नंबर पर भेज देंगे।</p>
-            <div class="pt-2">
-                <button onclick="sendToWhatsAppDirect()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
-                    <i class="fa-brands fa-whatsapp text-lg"></i> GET UPDATE ON WHATSAPP
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Paid Payment Modal (Divya Bhagya Sutra) -->
-    <div id="paid-payment-modal" style="display:none!important" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 border-2 border-goldPrimary shadow-2xl relative my-6">
-            <button onclick="closePaidModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl">&times;</button>
-            <div class="text-center space-y-4">
-                <h3 class="font-cinzel text-xl font-bold text-maroonDark">Scan & Pay Securely</h3>
-                <p class="text-sm font-bold text-maroonMain">Amount to Pay: <span class="text-red-700 text-lg">₹999</span></p>
-                <div class="bg-maroonDark p-4 rounded-2xl border-2 border-goldPrimary/60 max-w-[260px] mx-auto shadow-xl">
-                    <div class="text-goldPrimary font-cinzel text-xs font-bold mb-2 tracking-wider">SWAMI ATMA JAGRAN</div>
-                    <div class="bg-white p-2 rounded-xl">
-                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=999&cu=INR" alt="Payment QR" class="w-full h-auto mx-auto rounded">
-                    </div>
-                    <div class="text-goldLight text-[11px] mt-2 font-mono">UPI: 7000534788-3@ybl</div>
+    <div id="free-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[105] hidden items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-2xl w-full rounded-3xl p-7 sm:p-10 border-2 border-goldPrimary shadow-2xl text-center my-6">
+            <div class="w-24 h-24 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-5xl shadow-2xl">✓</div>
+            <div class="text-[11px] tracking-[.3em] uppercase text-emerald-700 font-extrabold mt-6">FREE REPORT REQUEST RECEIVED</div>
+            <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-3">🎉 Congratulations!</h3>
+            <p class="text-lg font-bold text-maroonMain mt-4">Namaste <span id="free-success-name">🙏</span></p>
+            <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka <b>Swarnima Janm Patrika — FREE Kundli Report</b> request successfully place ho gaya hai.</p>
+            <div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner">
+                <div class="text-center text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS</div>
+                <p class="text-center text-sm font-bold text-emerald-700 mt-2">Aapki personalised Swarnima Janm Kundli report aapke WhatsApp number par 24 hours ke andar pahoch jayegi.</p>
+                <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950">
+                    <div>✓ Details Received</div><div>✓ Free Report Request Placed</div>
+                    <div>✓ Team Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div>
                 </div>
-                <a href="upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=999&cu=INR" class="block w-full bg-maroonMain text-goldPrimary py-3 rounded-xl font-bold text-sm shadow hover:bg-maroonDark transition-all">
-                    <i class="fa-solid fa-mobile-screen-button mr-2"></i> Pay Direct via PhonePe / Paytm App
-                </a>
-                <p class="text-[11px] text-maroonMain/80 italic bg-amber-100 p-2 rounded-lg border border-goldPrimary/30">पेमेंट पूरा करने के बाद ही नीचे "I Have Paid" बटन पर क्लिक करें।</p>
-                <div class="space-y-3 pt-2 text-left border-t border-goldPrimary/20">
-                    <h4 class="text-xs font-bold uppercase text-maroonDark">अपनी जन्म विवरण दर्ज करें (सत्यापन के लिए):</h4>
-                    <input type="text" id="paid-name" placeholder="Full Name" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="date" id="paid-dob" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <input type="text" id="paid-time" placeholder="Time (e.g. 10:30 AM)" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="paid-place" placeholder="Birth Place" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <input type="tel" id="paid-whatsapp" placeholder="WhatsApp No" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    </div>
-                </div>
-                <button onclick="submitPaidOrder()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer animate-glow">
-                    I HAVE PAID — COMPLETE ORDER ✓
-                </button>
             </div>
+            <p class="text-sm text-maroonMain/70 mt-5">A confirmation email bhi aapke diye gaye email address par bheja jayega.</p>
+            <button onclick="sendToWhatsAppDirect()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg">📱 SEND DETAILS TO WHATSAPP</button>
+            <button onclick="closeFreeSuccessModal()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">DONE</button>
         </div>
     </div>
 
@@ -1261,6 +1234,19 @@
                         <p class="text-xs text-maroonMain/80 leading-relaxed">Practical, personalized planetary layout solutions.</p>
                     </div>
                 </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto rounded-3xl border-2 border-goldPrimary/50 bg-[#4A0E17] p-6 sm:p-8 text-warmWhite shadow-2xl">
+                <div class="text-center">
+                    <div class="text-[11px] tracking-[.28em] uppercase text-goldPrimary font-extrabold">CONSULTATION SCHEDULE</div>
+                    <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-goldLight mt-2">Monday to Friday • 12:00 PM to 8:00 PM</h3>
+                    <p class="text-xs sm:text-sm text-warmWhite/80 mt-3">Sessions are bookable only Monday–Friday. No session starts before 12:00 PM or after 8:00 PM.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+                    <div><label class="block text-xs font-bold uppercase text-goldLight mb-1">Preferred Date</label><input id="consult-slot-date" type="date" min="2026-09-16" class="w-full px-4 py-3 rounded-xl bg-warmWhite text-maroonDark font-semibold" required></div>
+                    <div><label class="block text-xs font-bold uppercase text-goldLight mb-1">Preferred Session Time</label><select id="consult-slot-time" class="w-full px-4 py-3 rounded-xl bg-warmWhite text-maroonDark font-semibold" required><option value="">Select time</option></select></div>
+                </div>
+                <p id="consult-slot-help" class="text-[11px] text-goldLight/80 mt-3 text-center">Select your preferred date and time. Your chosen slot will be attached to the paid consultation order.</p>
             </div>
 
             <div class="max-w-7xl mx-auto space-y-8">
@@ -1472,28 +1458,13 @@
                     </div>
                 </div>
 
-                <div id="consult-payment-card" style="display:none!important" class="hidden bg-[#4A0E17] border-2 border-goldPrimary rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl animate-glow">
+                <div id="consult-payment-card" style="display:none!important" class="hidden bg-[#4A0E17] border-2 border-goldPrimary rounded-3xl p-8 max-w-xl mx-auto text-center space-y-4 shadow-2xl">
+                    <div class="text-[10px] tracking-[.25em] uppercase text-goldPrimary font-extrabold">READY FOR SECURE PAYMENT</div>
                     <h3 class="font-cinzel text-2xl font-bold text-goldLight" id="selected-plan-title">Complete Your Payment</h3>
-                    <p class="text-sm text-warmWhite/90">Scan below QR code or use UPI ID to pay <span class="text-goldPrimary font-bold text-lg" id="selected-plan-price">₹999</span></p>
-
-                    <div class="bg-maroonDark p-4 rounded-2xl border border-goldPrimary/50 max-w-[240px] mx-auto shadow-xl">
-                        <div class="text-goldPrimary font-cinzel text-xs font-bold mb-2 tracking-wider">SWAMI ATMA JAGRAN</div>
-                        <div class="bg-white p-2 rounded-xl">
-                            <img id="consult-qr-img" src="" alt="UPI QR Code" class="w-full h-auto mx-auto rounded">
-                        </div>
-                        <div class="text-goldLight text-[11px] mt-2 font-mono">UPI: 7000534788-3@ybl</div>
-                    </div>
-
-                    <a id="consult-upi-link" href="#" class="block w-full bg-goldPrimary text-maroonDark font-bold py-3 rounded-xl text-sm shadow hover:bg-goldLight transition-all">
-                        <i class="fa-solid fa-mobile-screen-button mr-2"></i> Pay Direct via GPay / PhonePe / Paytm
-                    </a>
-
-                    <div class="pt-4 border-t border-goldPrimary/30">
-                        <p class="text-xs text-goldLight mb-3 font-medium">पेमेंट करने के बाद नीचे दिए गए बटन पर क्लिक करें:</p>
-                        <button onclick="sendConsultationToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 text-base cursor-pointer animate-glow">
-                            <i class="fa-brands fa-whatsapp text-xl"></i> I HAVE PAID NOW — SEND TO WHATSAPP ✓
-                        </button>
-                    </div>
+                    <p class="text-sm text-warmWhite/90">Your preferred consultation slot will be saved with your paid order.</p>
+                    <div class="rounded-2xl bg-maroonDark/70 border border-goldPrimary/30 p-4 text-sm text-goldLight">📅 <span id="selected-consult-slot">Slot selected above</span></div>
+                    <div class="text-2xl font-black text-goldPrimary" id="selected-plan-price">₹999</div>
+                    <p class="text-xs text-warmWhite/70">Click BOOK & PAY below. Official Razorpay Standard Checkout will open.</p>
                 </div>
 
             </div>
@@ -1534,6 +1505,8 @@
         function openConsultationModal() {
             document.getElementById('consultation-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            const sel=document.getElementById('consult-slot-time');
+            if(sel && sel.options.length<=1){['12:00 PM','1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM','7:00 PM','8:00 PM'].forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;sel.appendChild(o);});}
         }
         function closeConsultationModal() {
             document.getElementById('consultation-modal').classList.add('hidden');
@@ -1586,34 +1559,37 @@
         function closeFreeReportModal() {
             document.getElementById('free-report-modal').classList.add('hidden');
         }
-        function submitFreeReport(e) {
+        async function submitFreeReport(e) {
             e.preventDefault();
-            const name = document.getElementById('free-name').value;
+            const name = document.getElementById('free-name').value.trim();
             const gender = document.getElementById('free-gender').value;
             const dob = document.getElementById('free-dob').value;
-            const time = document.getElementById('free-time').value + ' ' + document.getElementById('free-ampm').value;
-            const place = document.getElementById('free-place').value;
-            const whatsapp = document.getElementById('free-whatsapp').value;
-
-            currentUserData = { name, gender, dob, time, place, whatsapp };
-
-            const submission = {
-                name: name,
-                type: 'Swarnima Janm Patrika (Free)',
-                whatsapp: whatsapp,
-                details: `DOB: ${dob}, Time: ${time}, Place: ${place}`,
-                status: 'Free Report Requested'
-            };
-            saveJigyasuSubmission(submission);
-
-            closeFreeReportModal();
-            document.getElementById('free-success-modal').classList.remove('hidden');
+            const time = document.getElementById('free-time').value;
+            const ampm = document.getElementById('free-ampm').value;
+            const place = document.getElementById('free-place').value.trim();
+            const whatsapp = document.getElementById('free-whatsapp').value.trim();
+            const email = document.getElementById('free-email').value.trim();
+            if(!name||!gender||!dob||!time||!ampm||!place||!/^[0-9]{10}$/.test(whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+                alert('कृपया सभी details और valid Email Address भरें।'); return;
+            }
+            const btn=e.submitter; if(btn){btn.disabled=true;btn.textContent='SUBMITTING SECURELY…';}
+            try{
+                const r=await fetch('/api/free-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,gender,dob,time,ampm,place,whatsapp,email})});
+                const d=await r.json(); if(!r.ok) throw new Error(d.error||'Unable to submit free report request.');
+                currentUserData={name,gender,dob,time:time+' '+ampm,place,whatsapp,email,requestId:d.requestId};
+                closeFreeReportModal();
+                const n=document.getElementById('free-success-name'); if(n)n.textContent=name+' 🙏';
+                const m=document.getElementById('free-success-modal');m.classList.remove('hidden');m.classList.add('flex');
+                if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
+            }catch(err){alert(err.message||'Something went wrong. Please try again.');}
+            finally{if(btn){btn.disabled=false;btn.textContent='GET MY CHART REPORT →';}}
         }
-        function sendToWhatsAppDirect() {
-            const d = currentUserData;
-            const msg = `Namaste Swami Ji, I have requested the free *Swarnima Janm Patrika*.\n\n*My Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}\n\nPlease check my chart.`;
-            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
-            document.getElementById('free-success-modal').classList.add('hidden');
+        function closeFreeSuccessModal(){const m=document.getElementById('free-success-modal');if(m){m.classList.add('hidden');m.classList.remove('flex');}}
+        function sendToWhatsAppDirect(){
+            const d=currentUserData;
+            if(!d?.name)return;
+            const msg=`Namaste Swami Ji, I have requested the free *Swarnima Janm Patrika*.\n\n*My Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`,'_blank');
         }
 
         // Paid Modal (Divya Bhagya Sutra)
@@ -1715,31 +1691,22 @@
         }
 
         function selectConsultationPackage(planName, price, pkgKey) {
-            const name = document.getElementById('consult-name').value.trim();
-            const dob = document.getElementById('consult-dob').value.trim();
-            const time = document.getElementById('consult-time').value.trim();
-            const location = document.getElementById('consult-location').value.trim();
-            const gender = document.getElementById('consult-gender').value.trim();
-            const whatsapp = document.getElementById('consult-whatsapp').value.trim();
-
-            if (!name || !dob || !time || !location || !whatsapp) {
-                alert('कृपया कंसल्टेशन बुक करने से पहले ऊपर दिए गए फॉर्म में अपनी सारी डिटेल्स (नाम, DOB, समय, स्थान, WhatsApp) भरें।');
-                document.getElementById('consult-name').focus();
-                return;
-            }
-
-            let duration = document.getElementById(`${pkgKey}-duration`) ? document.getElementById(`${pkgKey}-duration`).value : '1 Hour';
-            let cType = pkgTypes[pkgKey] || 'audio';
-
-            activeConsultationPlan = { name, price, duration, type: cType, planTitle: planName };
-
-            document.getElementById('selected-plan-title').innerText = `${planName} (${duration} - ${cType.toUpperCase()})`;
-            document.getElementById('selected-plan-price').innerText = `₹${price}`;
-            document.getElementById('consult-qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
-            document.getElementById('consult-upi-link').href = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
-
+            const name=document.getElementById('consult-name').value.trim(), dob=document.getElementById('consult-dob').value.trim(), time=document.getElementById('consult-time').value.trim(), location=document.getElementById('consult-location').value.trim(), whatsapp=document.getElementById('consult-whatsapp').value.trim();
+            const slotDate=document.getElementById('consult-slot-date')?.value||'', slotTime=document.getElementById('consult-slot-time')?.value||'';
+            if(!name||!dob||!time||!location||!whatsapp){alert('कृपया consultation details पूरी भरें।');document.getElementById('consult-name').focus();return;}
+            if(!slotDate||!slotTime){alert('कृपया Monday–Friday के लिए preferred session date और time select करें।');return;}
+            const day=new Date(slotDate+'T12:00:00').getDay();
+            if(day===0||day===6){alert('Saturday और Sunday पर consultation sessions उपलब्ध नहीं हैं।');return;}
+            let duration=document.getElementById(`${pkgKey}-duration`)?.value||'1 Hour', cType=pkgTypes[pkgKey]||'audio';
+            activeConsultationPlan={name,price,duration,type:cType,planTitle:planName,slotDate,slotTime};
+            window.activeConsultationPlan=activeConsultationPlan;
+            document.getElementById('selected-plan-title').innerText=`${planName} (${duration} - ${cType.toUpperCase()})`;
+            document.getElementById('selected-plan-price').innerText=`₹${price}`;
+            const slotLabel=document.getElementById('selected-consult-slot'); if(slotLabel)slotLabel.textContent=`${slotDate} • ${slotTime}`;
+            document.getElementById('consult-qr-img').src=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
+            document.getElementById('consult-upi-link').href=`upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
             document.getElementById('consult-payment-card').classList.remove('hidden');
-            document.getElementById('consult-payment-card').scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('consult-payment-card').scrollIntoView({behavior:'smooth'});
         }
 
         function sendConsultationToWhatsApp() {
@@ -1839,9 +1806,11 @@
                 tbody.innerHTML=list.map(item=>{
                     const due=Number(item.dueAt||0), left=due-Date.now();
                     const status=String(item.paymentStatus||'').toUpperCase();
-                    const badge=status.includes('PAID')||status==='PAYMENT_VERIFIED'
-                        ? '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-900 text-emerald-200 text-[11px] font-bold">✓ Payment Received</span>'
-                        : '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-900 text-amber-200 text-[11px] font-bold">Payment Processing</span>';
+                    const badge=status==='FREE REQUEST'
+                        ? '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-900 text-blue-200 text-[11px] font-bold">✓ Free Request Received</span>'
+                        : (status.includes('PAID')||status==='PAYMENT_VERIFIED'
+                            ? '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-900 text-emerald-200 text-[11px] font-bold">✓ Payment Received</span>'
+                            : '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-900 text-amber-200 text-[11px] font-bold">Payment Processing</span>');
                     return `<tr class="hover:bg-maroonMain/30 transition-colors border-b border-goldPrimary/10">
                         <td class="py-3 px-4 font-bold text-goldLight">${escPub(item.name||'Customer')}</td>
                         <td class="py-3 px-4 text-warmWhite text-xs">${escPub(item.product||'')}</td>
@@ -1897,7 +1866,9 @@
         if(!v['u-name']||!v['u-dob']||!v['u-gender']||!v['u-time']||!v['u-ampm']||!v['u-place']||!/^[0-9]{10}$/.test(v['u-whatsapp'])||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v['u-email'])){
           alert('कृपया Name, DOB, Gender, Birth Time, AM/PM, Birth Place, 10-digit WhatsApp और valid Email Address सभी भरें।'); return null;
         }
-        return {name:v['u-name'],dob:v['u-dob'],gender:v['u-gender'],time:v['u-time'],ampm:v['u-ampm'],place:v['u-place'],whatsapp:v['u-whatsapp'],email:v['u-email']};
+        const out={name:v['u-name'],dob:v['u-dob'],gender:v['u-gender'],time:v['u-time'],ampm:v['u-ampm'],place:v['u-place'],whatsapp:v['u-whatsapp'],email:v['u-email']};
+        if(window.activeConsultationPlan){out.consultation_slot_date=window.activeConsultationPlan.slotDate;out.consultation_slot_time=window.activeConsultationPlan.slotTime;out.consultation_duration=window.activeConsultationPlan.duration;out.consultation_type=window.activeConsultationPlan.type;}
+        return out;
       }
       function renderDetails(){
         const m=ensureModal(),box=document.getElementById('universal-paid-box'),p=activeProduct;
@@ -1925,6 +1896,7 @@
               <input id="u-email" type="email" autocomplete="email" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Email Address">
             </div>
           </form>
+          ${window.activeConsultationPlan ? `<div class="mt-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 p-4 text-sm text-maroonDark"><b>📅 Consultation Slot:</b> ${esc(window.activeConsultationPlan.slotDate)} • ${esc(window.activeConsultationPlan.slotTime)}<br><span class="text-xs text-maroonMain/70">Monday–Friday • 12:00 PM–8:00 PM</span></div>` : ''}
           <div class="mt-5 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-left text-xs sm:text-sm text-emerald-900 leading-relaxed">
             <b>🔐 Secure & Automatic:</b> Aapki details secure order record ke saath save hongi. Payment ke baad payment status automatically verify hoga — <b>koi Payment ID paste karne ki zarurat nahi.</b>
           </div>
@@ -1971,7 +1943,14 @@
                 const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:activeProduct.name,customer})});
                 const vd=await vr.json();
                 if(!vr.ok)throw new Error(vd.error||'Payment verification failed.');
-                showCongrats({name:customer.name,product:activeProduct.name,whatsapp:customer.whatsapp,email:customer.email,price:activeProduct.price,paymentId:vd.paymentId,orderId:vd.orderId});
+                let bookingSaved=false;
+                if(customer.consultation_slot_date && customer.consultation_slot_time){
+                  const br=await fetch('/api/book-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,date:customer.consultation_slot_date,time:customer.consultation_slot_time})});
+                  const bd=await br.json();
+                  if(!br.ok)throw new Error(bd.error||'Payment verified, but the selected consultation slot could not be saved.');
+                  bookingSaved=true;
+                }
+                showCongrats({name:customer.name,product:activeProduct.name,whatsapp:customer.whatsapp,email:customer.email,price:activeProduct.price,paymentId:vd.paymentId,orderId:vd.orderId,isConsultation:Boolean(customer.consultation_slot_date),slotDate:customer.consultation_slot_date,slotTime:customer.consultation_slot_time,bookingSaved});
                 if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
               }catch(e){
                 if(err){err.textContent='Payment received, but secure verification could not be completed. Please contact support. '+e.message;err.classList.remove('hidden');}
@@ -1993,11 +1972,7 @@
             <h3 class="font-cinzel text-4xl sm:text-5xl font-extrabold text-maroonDark mt-3">🎉 Congratulations!</h3>
             <p class="text-lg font-bold text-maroonMain mt-4">Namaste ${esc(o.name)} 🙏</p>
             <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka <b>${esc(o.product)}</b> order aur aapki saari details successfully receive ho gayi hain.</p>
-            <div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner">
-              <div class="text-center"><div class="text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS DELIVERY</div><div class="text-sm font-bold text-emerald-700 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi.</div></div>
-              <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950"><div>✓ Payment Received</div><div>✓ Details Received</div><div>✓ Secure Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div></div>
-            </div>
-            <p class="text-sm text-maroonMain/70 mt-5">Confirmation email bhi aapke diye gaye email address par automatically bheja jayega.</p>
+            ${o.isConsultation ? `<div class="mt-6 rounded-3xl bg-goldPrimary/10 border-2 border-goldPrimary/50 p-6 sm:p-7 text-left shadow-inner"><div class="text-center text-2xl sm:text-3xl font-black text-maroonDark uppercase">SESSION BOOKING RECEIVED</div><div class="text-center text-sm font-bold text-maroonMain mt-2">📅 ${esc(o.slotDate||'Selected Date')} • 🕐 ${esc(o.slotTime||'Selected Time')}</div><div class="text-center text-xs text-maroonMain/70 mt-2">Monday–Friday • 12:00 PM–8:00 PM</div><div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-maroonDark"><div>✓ Payment Received</div><div>✓ Details Received</div><div>✓ Slot Saved With Order</div><div>✓ Confirmation Sent</div></div></div><p class="text-sm text-maroonMain/70 mt-5">Your consultation confirmation and joining instructions will be sent to your email/WhatsApp.</p>` : `<div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner"><div class="text-center"><div class="text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS DELIVERY</div><div class="text-sm font-bold text-emerald-700 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi.</div></div><div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950"><div>✓ Payment Received</div><div>✓ Details Received</div><div>✓ Secure Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div></div></div><p class="text-sm text-maroonMain/70 mt-5">Confirmation email bhi aapke diye gaye email address par automatically bheja jayega.</p>`}
             <button onclick="closeUniversalPaidModal()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">DONE</button>
           </div>`;
       }
@@ -2046,7 +2021,7 @@
   window.closeChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.add('hidden');m.classList.remove('flex');document.body.style.overflow='';};
   async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
   window.loginChartsAdmin=async function(){const err=document.getElementById('charts-admin-error');err.textContent='';try{const {d,pass}=await fetchAdmin();sessionStorage.setItem('swami_admin_pass',pass);document.getElementById('charts-admin-login').classList.add('hidden');document.getElementById('charts-admin-dashboard').classList.remove('hidden');renderAdmin(d.orders||[]);}catch(e){err.textContent=e.message||'Private access denied.';}};
-  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="6" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
+  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':(o.paymentStatus==='FREE REQUEST'?'bg-blue-900 text-blue-200':'bg-amber-900 text-amber-200')}">${o.paymentStatus==='PAID'?'✓ Payment Verified':(o.paymentStatus==='FREE REQUEST'?'✓ FREE REQUEST':'Payment Pending')}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div>${o.consultationSlotDate?`<div class="text-xs text-goldLight mt-2">📅 ${esc(o.consultationSlotDate)} • ${esc(o.consultationSlotTime||'')}</div>`:''}</td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="6" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
   window.refreshChartsAdmin=async function(){const status=document.getElementById('charts-admin-status');status.className='mb-4 rounded-xl p-3 text-sm bg-goldPrimary/10 border border-goldPrimary/20 text-goldLight';status.textContent='Refreshing secure customer data…';status.classList.remove('hidden');try{const {d}=await fetchAdmin();renderAdmin(d.orders||[]);status.textContent='✓ Live data refreshed.';setTimeout(()=>status.classList.add('hidden'),1800);}catch(e){status.className='mb-4 rounded-xl p-3 text-sm bg-red-50/10 border border-red-400/20 text-red-200';status.textContent=e.message||'Unable to load data.';}};
   setInterval(()=>document.querySelectorAll('.admin-countdown').forEach(el=>el.textContent=countdown(Number(el.dataset.due)-Date.now())),1000);
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement?.id==='charts-admin-password')loginChartsAdmin();});
