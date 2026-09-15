@@ -9,6 +9,28 @@
     <meta name="author" content="Swami Atma Jagran">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        maroonDark: '#2b070a',
+                        maroonMain: '#4a0e14',
+                        maroonLight: '#63131b',
+                        goldPrimary: '#d4af37',
+                        goldLight: '#f3e5ab',
+                        warmWhite: '#fcf8f2',
+                        cardBg: '#f7f1e5',
+                        gold: '#d4af37'
+                    },
+                    fontFamily: {
+                        serif: ['Cinzel', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
     <!-- PAYMENT SUCCESS MODAL -->
     <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
@@ -64,6 +86,12 @@
         .animate-glow {
             animation: pulseGlow 3s infinite;
         }
+    </style>
+    <style>
+        /* Warm + Maroon + Antique Gold theme: warm surfaces dominate; maroon/gold stay as accents. */
+        main, section { background-color: transparent; }
+        .warm-surface { background:#fcf8f2; color:#2b070a; }
+        input, select, textarea { color:#2b070a; }
     </style>
 </head>
 <body class="bg-warmWhite text-maroonDark antialiased selection:bg-goldPrimary selection:text-maroonDark m-0 p-0">
@@ -162,7 +190,7 @@
             
             <!-- Product 1: LAGAN MAYA SUTRA -->
             <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/40 p-8 shadow-xl flex flex-col justify-between relative overflow-hidden hover:shadow-2xl transition-all">
-                <div class="absolute top-4 right-4 bg-maroonMain text-goldPrimary text-xs uppercase font-bold px-3 py-1 rounded-full">₹1 TEST</div>
+                <div class="absolute top-4 right-4 bg-maroonMain text-goldPrimary text-xs uppercase font-bold px-3 py-1 rounded-full">₹299</div>
                 <div>
                     <!-- Transparent Thumbnail (No Background) -->
                     <div class="w-full h-72 sm:h-80 flex items-center justify-center overflow-hidden mb-6">
@@ -241,14 +269,14 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
             
             <!-- Tool 1: Daily Cosmic Energy Meter & Mantra Generator -->
-            <div class="p-8 rounded-3xl bg-maroonDark border-2 border-gold/40 backdrop-blur-md shadow-2xl flex flex-col justify-between text-warmWhite relative">
+            <div class="p-8 rounded-3xl bg-cardBg border-2 border-goldPrimary/40 backdrop-blur-md shadow-xl flex flex-col justify-between text-maroonDark relative">
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-xs uppercase tracking-widest text-gold font-bold px-3 py-1 rounded-full bg-gold/10 border border-gold/30">Live Daily Energy</span>
                         <i class="fa-solid fa-fire text-gold text-xl animate-pulse"></i>
                     </div>
                     <h3 class="font-cinzel text-2xl font-bold text-gold mb-2">Daily Cosmic Energy & Mantra</h3>
-                    <p class="text-sm text-gray-300 mb-6">Select your zodiac to sync with today's astral frequency & get your live mantra.</p>
+                    <p class="text-sm text-maroonMain/70 mb-6">Select your zodiac to sync with today's astral frequency & get your live mantra.</p>
                     
                     <div class="flex flex-wrap gap-2 mb-6">
                         <div id="zodiac-buttons-container" class="flex flex-wrap gap-2 w-full">
@@ -267,22 +295,22 @@
                             <span class="text-xs text-gold uppercase tracking-wider font-bold" id="res-sign-title">Energy Index (Aries)</span>
                             <span class="text-base font-extrabold text-white" id="res-score">88%</span>
                         </div>
-                        <p class="text-xs sm:text-sm text-gray-200"><strong>Vibe:</strong> <span id="res-vibe">High Spiritual Clarity & Manifestation Power</span></p>
-                        <p class="text-xs sm:text-sm text-gray-200"><strong>Auspicious Window:</strong> <span id="res-time">06:15 AM - 07:45 AM</span></p>
+                        <p class="text-xs sm:text-sm text-maroonMain/80"><strong>Vibe:</strong> <span id="res-vibe">High Spiritual Clarity & Manifestation Power</span></p>
+                        <p class="text-xs sm:text-sm text-maroonMain/80"><strong>Auspicious Window:</strong> <span id="res-time">06:15 AM - 07:45 AM</span></p>
                         <p class="text-xs sm:text-sm text-gold italic mt-2 font-medium" id="res-mantra">"Om Vam Vam Namah - Channeling inner cosmic sovereignty."</p>
                     </div>
                 </div>
             </div>
 
             <!-- Tool 2: Ask a Question to Guru Ji Live Mini-Oracle -->
-            <div class="p-8 rounded-3xl bg-maroonDark border-2 border-gold/40 backdrop-blur-md shadow-2xl flex flex-col justify-between text-warmWhite relative">
+            <div class="p-8 rounded-3xl bg-cardBg border-2 border-goldPrimary/40 backdrop-blur-md shadow-xl flex flex-col justify-between text-maroonDark relative">
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-xs uppercase tracking-widest text-gold font-bold px-3 py-1 rounded-full bg-gold/10 border border-gold/30">Live Mini-Oracle</span>
                         <i class="fa-solid fa-om text-gold text-xl animate-pulse"></i>
                     </div>
                     <h3 class="font-cinzel text-2xl font-bold text-gold mb-2">Ask Guru Ji — Mini Oracle</h3>
-                    <p class="text-sm text-gray-300 mb-6">Type your inner question and receive an instant intuitive reflection.</p>
+                    <p class="text-sm text-maroonMain/70 mb-6">Type your inner question and receive an instant intuitive reflection.</p>
                     
                     <form onsubmit="consultGuruOracle(event)" class="space-y-4">
                         <input
@@ -415,8 +443,8 @@
                     </ul>
                 </div>
                 <div>
-                    <div class="text-center text-2xl font-bold text-maroonDark mb-4">₹1 <span class="text-xs font-semibold text-maroonMain/60">(TEST)</span></div>
-                    <button onclick="openPaidProductForm('Swarnima Janm Patrika', 1)" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT →</button>
+                    <div class="text-center text-2xl font-bold text-maroonDark mb-4">FREE</div>
+                    <button onclick="openFreeReportModal()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT →</button>
                 </div>
             </div>
 
@@ -993,7 +1021,7 @@
                         </div>
                         <div>
                             <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹999</div>
-                            <button onclick="openPaidProductForm('Individual Clarity Session', 999)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                            <button onclick="selectConsultationPackage('Individual Clarity Session', 999, 'pkg1')" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
                                 Book Now
                             </button>
                         </div>
@@ -1036,7 +1064,7 @@
                         </div>
                         <div>
                             <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹1,299</div>
-                            <button onclick="openPaidProductForm('Partnership & Harmony', 1299)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                            <button onclick="selectConsultationPackage('Partnership & Harmony', 1299, 'pkg2')" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
                                 Book Now
                             </button>
                         </div>
@@ -1077,7 +1105,7 @@
                             <div><i class="fa-solid fa-location-dot text-[#5C1D24] mr-1.5"></i> Location: Ashram in Bhopal (Face-to-Face)</div>
                         </div>
                         <div class="text-2xl font-extrabold text-[#4A0E17]">Price Starting from: ₹1,999 <span class="text-[10px] font-normal">(Incl. GST)</span></div>
-                        <button onclick="openPaidProductForm('Meet Swami Ji Ashram Session', 1999)" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-xl transition-all text-base cursor-pointer animate-glow">
+                        <button onclick="selectConsultationPackage('Meet Swami Ji Ashram Session', 1999, 'pkg3')" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-xl transition-all text-base cursor-pointer animate-glow">
                             Consult Now
                         </button>
                     </div>
@@ -1123,6 +1151,31 @@
         function closeConsultationModal() {
             document.getElementById('consultation-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
+        }
+
+        function selectConsultationPackage(planName, price, pkgKey) {
+            const name = document.getElementById('consult-name').value.trim();
+            const dob = document.getElementById('consult-dob').value;
+            const timeRaw = document.getElementById('consult-time').value.trim();
+            const location = document.getElementById('consult-location').value.trim();
+            const gender = document.getElementById('consult-gender').value;
+            const whatsapp = document.getElementById('consult-whatsapp').value.trim();
+
+            if (!name || !dob || !timeRaw || !location || !gender || !/^[0-9]{10}$/.test(whatsapp)) {
+                alert('कृपया Consultation page पर Name, DOB, Birth Time, Birth Place, Gender और 10-digit WhatsApp number सभी भरें।');
+                return;
+            }
+
+            const durationEl = document.getElementById(`${pkgKey}-duration`);
+            const duration = durationEl ? durationEl.value : '1 Hour';
+            const type = pkgTypes[pkgKey] || 'audio';
+            const productName = planName;
+
+            // Close the consultation page only after the seeker has selected a paid package.
+            // The same secure Razorpay Standard Checkout then handles the payment.
+            closeConsultationModal();
+            window.__consultationDraft = { name, dob, gender, time: timeRaw.replace(/\s+(AM|PM)$/i,''), ampm: (timeRaw.match(/\b(AM|PM)\b/i)||['',''])[1].toUpperCase() || 'AM', place: location, whatsapp, duration, type, planTitle: planName };
+            window.openPaidProductForm(productName, price);
         }
 
         // Product Modal Logic (Lagan Maya, Shukra Maya, D10 Destiny)
@@ -1297,32 +1350,6 @@
             }
         }
 
-        function selectConsultationPackage(planName, price, pkgKey) {
-            const name = document.getElementById('consult-name').value.trim();
-            const dob = document.getElementById('consult-dob').value.trim();
-            const time = document.getElementById('consult-time').value.trim();
-            const location = document.getElementById('consult-location').value.trim();
-            const gender = document.getElementById('consult-gender').value.trim();
-            const whatsapp = document.getElementById('consult-whatsapp').value.trim();
-
-            if (!name || !dob || !time || !location || !whatsapp) {
-                alert('कृपया कंसल्टेशन बुक करने से पहले ऊपर दिए गए फॉर्म में अपनी सारी डिटेल्स (नाम, DOB, समय, स्थान, WhatsApp) भरें।');
-                document.getElementById('consult-name').focus();
-                return;
-            }
-
-            let duration = document.getElementById(`${pkgKey}-duration`) ? document.getElementById(`${pkgKey}-duration`).value : '1 Hour';
-            let cType = pkgTypes[pkgKey] || 'audio';
-
-            activeConsultationPlan = { name, price, duration, type: cType, planTitle: planName };
-
-            document.getElementById('selected-plan-title').innerText = `${planName} (${duration} - ${cType.toUpperCase()})`;
-            document.getElementById('selected-plan-price').innerText = `₹${price}`;
-
-            document.getElementById('consult-payment-card').classList.remove('hidden');
-            document.getElementById('consult-payment-card').scrollIntoView({ behavior: 'smooth' });
-        }
-
         function sendConsultationToWhatsApp() {
             const name = document.getElementById('consult-name').value;
             const dob = document.getElementById('consult-dob').value;
@@ -1461,7 +1488,6 @@
   const OWNER_WA='917000534788';
   const ORDER_KEY='swami_all_product_orders_direct_v2';
   const PRODUCTS={
-    'Swarnima Janm Patrika':{price:1},
     'Lagan Maya Sutra':{price:299},
     'Shukra Maya Sutra':{price:399},
     'D10 Destiny Sutra':{price:799},
@@ -1534,87 +1560,6 @@
     return m;
   }
 
-  function renderDetails(){
-    const m=ensureModal(),box=document.getElementById('universal-paid-box'),p=active.product;
-    box.innerHTML=`
-      <button onclick="closeUniversalPaidModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl">&times;</button>
-      <div class="text-center mb-5">
-        <div class="w-16 h-16 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-2xl shadow">✦</div>
-        <p class="text-[10px] tracking-[.22em] uppercase text-maroonMain/60 mt-4">Secure Order • Razorpay</p>
-        <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">${esc(p)}</h3>
-        <p class="text-sm text-maroonMain/70 mt-2">Apni janm-jankari neeche bhariye. Details ke turant neeche official Razorpay Standard Checkout diya gaya hai.</p>
-      </div>
-      <form id="universal-details-form" class="space-y-3" onsubmit="return false;">
-        <input id="u-name" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name">
-        <div class="grid grid-cols-2 gap-3">
-          <input id="u-dob" type="date" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
-          <select id="u-gender" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <input id="u-time" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Time (e.g. 10:30)">
-          <select id="u-ampm" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">AM / PM</option><option>AM</option><option>PM</option></select>
-        </div>
-        <input id="u-place" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Place / Location">
-      </form>
-      <div class="mt-5 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-left text-xs sm:text-sm text-amber-900 leading-relaxed">
-        <b>🔐 Important:</b> Payment complete hone ke baad Razorpay aapko unique <b>Payment ID</b> dega. Website par wapas aane ke baad aapko wahi Payment ID copy karke paste karni hogi. Payment ID ke bina report processing start nahi hogi.
-      </div>
-      <div class="mt-4 rounded-2xl bg-white border-2 border-goldPrimary/30 p-5 shadow-inner">
-        <div class="text-center text-xs font-bold text-maroonMain/70 mb-3">SECURE PAYMENT</div>
-        <div id="universal-rzp-host-${p.replace(/[^a-z0-9]/gi,'-')}-${Date.now()}" class="min-h-[58px] flex items-center justify-center"></div>
-        <p id="universal-rzp-note" class="text-[11px] text-maroonMain/60 text-center mt-3">Upar apni details complete karke neeche diye gaye official Razorpay button se secure payment karein.</p>
-      </div>`;
-
-    const host=[...box.querySelectorAll('[id^="universal-rzp-host-"]')][0];
-    const source=document.getElementById('rzp-static-form-'+active.product.replace(/[^a-z0-9]/gi,'-'));
-    if(!host || !source){
-      alert('Razorpay Standard Checkout could not be loaded. Please refresh the page and try again.');
-      return;
-    }
-    const activeForm=source;
-    activeForm.dataset.originalRzpId=source.id;
-    activeForm.id='rzp-active-form-'+Date.now();
-    activeForm.classList.remove('hidden');
-    host.appendChild(activeForm);
-
-    const fields=['u-name','u-dob','u-gender','u-time','u-ampm','u-place'].map(id=>document.getElementById(id));
-    const syncOrder=()=>{
-      const [name,dob,gender,time,ampm,place]=fields.map(x=>x.value.trim());
-      const valid=!!(name&&dob&&gender&&time&&ampm&&place);
-      if(valid){
-        active.customer={name,dob,gender,time,ampm,place};
-        const order={id:'ORD-'+Date.now().toString(36).toUpperCase(),product:active.product,price:active.price,name,dob,gender,birthTime:time,birthAmPm:ampm,birthPlace:place,status:'PAYMENT_PENDING',createdAt:new Date().toISOString(),reportStatus:'Pending'};
-        active.order=order;
-        const a=orders();
-        const existing=a.findIndex(o=>o.id===order.id);
-        if(existing<0){a.unshift(order);saveOrders(a);} else {a[existing]=order;saveOrders(a);}
-        savePublicOrder(order);
-        localStorage.setItem('swami_active_product_order',JSON.stringify(order));
-        sessionStorage.setItem('swami_waiting_payment_return','1');
-        sessionStorage.setItem('swami_waiting_payment_order_id',order.id);
-      }
-      return valid;
-    };
-    fields.forEach(f=>f.addEventListener('input',syncOrder));
-    fields.forEach(f=>f.addEventListener('change',syncOrder));
-    // Official Razorpay Standard Checkout is shown directly below the details.
-    // Customer completes the details first, then uses the Razorpay button.
-    // Details are saved locally as they are entered so the post-payment Payment ID flow can continue.
-    fields.forEach(f=>f.addEventListener('blur',syncOrder));
-  }
-  function showPaymentIdEntry(){ return; }
-  window.verifyEnteredPaymentId=function(){ return; };
-
-  function observeReturnToPage(orderId){
-    // Static Direct Upload has no server to verify a payment ID. This fallback only asks the
-    // customer to enter the ID after returning; it does NOT cryptographically verify payment.
-  }
-
-  function confirmPaid(id){
-    // Legacy callback hook retained for compatibility. Payment-ID flow is the active Direct Upload flow.
-    return;
-  }
-
   function showGetReport(o){ showCongrats(o); }
 
   function showCongrats(o){
@@ -1658,89 +1603,7 @@
   window.openLaganPayment=function(){window.openPaidProductForm('Lagan Maya Sutra',299,PRODUCTS['Lagan Maya Sutra'].buttonId);};
   window.closeLaganPayment=window.closeUniversalPaidModal;
 
-  // If Razorpay does not redirect back with a callback, show the Payment ID fallback
-  // when the customer returns to this page after leaving the payment flow.
-  let paymentIdPanelShownFor='';
-  function maybeShowPaymentIdFallback(){
-    if(sessionStorage.getItem('swami_waiting_payment_return')!=='1') return;
-    const orderId=sessionStorage.getItem('swami_waiting_payment_order_id')||'';
-    const raw=localStorage.getItem('swami_active_product_order');
-    if(!raw) return;
-    let o;try{o=JSON.parse(raw)}catch(e){return}
-    if(orderId && o.id!==orderId) return;
-    if((o.status||'').startsWith('PAYMENT_SUCCESS')) return;
-    if(paymentIdPanelShownFor===o.id) return;
-    paymentIdPanelShownFor=o.id;
-    ensureModal();
-    const m=document.getElementById('universal-paid-modal');
-    m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
-    showPaymentIdEntry(o);
-  }
-  // Razorpay Standard Checkout can return to this page without a full manual refresh.
-  // Keep watching for the checkout to hand control back to the page so the Payment ID
-  // panel appears immediately for every product. This is intentionally a UI hand-off;
-  // it does not claim cryptographic payment verification.
-  let paymentReturnWatcher=null;
-  function startPaymentReturnWatcher(){
-    if(paymentReturnWatcher) return;
-    paymentReturnWatcher=setInterval(()=>{
-      maybeShowPaymentIdFallback();
-      if(sessionStorage.getItem('swami_waiting_payment_return')!=='1'){
-        clearInterval(paymentReturnWatcher);paymentReturnWatcher=null;
-      }
-    },100);
-    maybeShowPaymentIdFallback();
-  }
-  window.addEventListener('message',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
-  window.addEventListener('pageshow',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
-  window.addEventListener('focus',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
-  document.addEventListener('visibilitychange',()=>{
-    if(document.visibilityState==='visible'){
-      maybeShowPaymentIdFallback();
-      startPaymentReturnWatcher();
-    }
-  });
-  window.addEventListener('load',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
-  setTimeout(()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();},250);
 
-  // Razorpay Standard Checkout success/redirect signal. If the button is configured in
-  // Razorpay Dashboard with Redirect URL = this page, the Payment ID panel opens
-  // immediately after the successful checkout returns here.
-  const q=new URLSearchParams(location.search);
-  const razorpaySuccess=(q.get('razorpay_payment_link_status')||'').toLowerCase()==='paid'
-    || !!q.get('razorpay_payment_id')
-    || q.get('payment')==='success';
-  if(razorpaySuccess){
-    const raw=localStorage.getItem('swami_active_product_order');
-    if(raw){
-      try{
-        const o=JSON.parse(raw);
-        ensureModal();
-        const m=document.getElementById('universal-paid-modal');
-        m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
-        const a=orders(),i=a.findIndex(x=>x.id===o.id);
-        if(i>=0){
-          a[i].status='PAYMENT_RETURNED';
-          a[i].paymentStatus='PAYMENT_RETURNED';
-          a[i].paymentReturnedAt=new Date().toISOString();
-          if(q.get('razorpay_payment_id')) a[i].razorpayPaymentId=q.get('razorpay_payment_id');
-          saveOrders(a); savePublicOrder(a[i]); o=a[i];localStorage.setItem('swami_active_product_order',JSON.stringify(o));
-        }
-        paymentIdPanelShownFor=o.id;
-        showPaymentIdEntry(o);
-        const returnedId=q.get('razorpay_payment_id') || q.get('payment_id') || '';
-        if(returnedId){
-          const input=document.getElementById('customer-payment-id');
-          if(input) input.value=returnedId;
-          setTimeout(()=>{
-            const verifyBtn=document.getElementById('verify-payment-id-btn');
-            if(verifyBtn && !verifyBtn.disabled) verifyBtn.click();
-          },180);
-        }
-        setTimeout(()=>window.history.replaceState({},document.title,window.location.pathname+window.location.hash),50);
-      }catch(e){}
-    }
-  }
 })();
 </script>
 
@@ -1854,7 +1717,6 @@
 <script>
 (function(){
   const PRODUCTS={
-    'Swarnima Janm Patrika':1,
     'Lagan Maya Sutra':299,
     'Shukra Maya Sutra':399,
     'D10 Destiny Sutra':799,
@@ -1909,6 +1771,7 @@
         <p class="text-[10px] tracking-[.22em] uppercase text-maroonMain/60 mt-4">Secure Order • Razorpay</p>
         <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">${esc(activeProduct.name)}</h3>
         <p class="text-sm text-maroonMain/70 mt-2">Apni janm-jankari bhariye aur secure payment complete kijiye.</p>
+        <div id="consultation-selected-note" class="hidden mt-3 inline-flex px-3 py-1.5 rounded-full bg-goldPrimary/15 border border-goldPrimary/30 text-xs font-bold text-maroonMain"></div>
       </div>
       <form id="vercel-details-form" class="space-y-3" onsubmit="return false;">
         <input id="u-name" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name">
@@ -2003,14 +1866,19 @@
     const serverPrice=PRODUCTS[name];
     activeProduct={name,price:serverPrice||Number(price)||0};
     showForm();
+    const d=window.__consultationDraft;
+    if(d && d.planTitle===name){
+      const set=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+      set('u-name',d.name); set('u-dob',d.dob); set('u-gender',d.gender);
+      set('u-time',d.time); set('u-ampm',d.ampm); set('u-place',d.place); set('u-whatsapp',d.whatsapp);
+      const note=document.getElementById('consultation-selected-note');
+      if(note){note.textContent=`${d.planTitle} • ${d.duration} • ${d.type.toUpperCase()}`; note.classList.remove('hidden');}
+      window.__consultationDraft=null;
+    }
   };
   window.openLaganPayment=function(){window.openPaidProductForm('Lagan Maya Sutra',PRODUCTS['Lagan Maya Sutra']);};
-  window.openConsultationModal=function(){ window.openPaidProductForm('Individual Clarity Session',PRODUCTS['Individual Clarity Session']); };
+  // Consultation has its own full-screen page. Payment opens only after a package is selected.
   window.openProductModal=function(name,price){ window.openPaidProductForm(name,price); };
-  window.selectConsultationPackage=function(planName,price){
-    const map={'Individual Clarity Session':'Individual Clarity Session','Partnership & Harmony':'Partnership & Harmony','Meet Swami Ji Ashram Session':'Meet Swami Ji Ashram Session'};
-    window.openPaidProductForm(map[planName]||planName,price);
-  };
   window.closeUniversalPaidModal=function(){
     const m=document.getElementById('universal-paid-modal');
     if(m){m.classList.add('hidden');m.classList.remove('flex');}
