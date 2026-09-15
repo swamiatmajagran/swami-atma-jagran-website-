@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       const p = paymentByOrder.get(o.id);
       const paid = o.status === 'paid';
       const baseTime = p?.created_at ? p.created_at * 1000 : (o.created_at ? o.created_at * 1000 : Date.now());
-      const notes = o.notes || {};
+      const notes = { ...(o.notes || {}), ...(p?.notes || {}) };
       return {
         orderId: o.id,
         name: notes.customer_name || '',
@@ -46,7 +46,12 @@ export default async function handler(req, res) {
         birthPlace: notes.birth_place || '',
         whatsapp: notes.whatsapp || '',
         product: notes.product || '',
-        paymentStatus: paid ? 'PAID' : String(o.status || 'PENDING').toUpperCase(),
+        freeRequest: notes.free_request === 'true',
+        consultationSlotDate: notes.consultation_slot_date || '',
+        consultationSlotTime: notes.consultation_slot_time || '',
+        consultationDuration: notes.consultation_duration || '',
+        consultationType: notes.consultation_type || '',
+        paymentStatus: notes.free_request === 'true' ? 'FREE REQUEST' : (paid ? 'PAID' : String(o.status || 'PENDING').toUpperCase()),
         paymentId: p?.id || '',
         amount: Number(o.amount || 0) / 100,
         createdAt: (o.created_at || 0) * 1000,
