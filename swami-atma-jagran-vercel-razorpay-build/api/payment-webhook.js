@@ -1,10 +1,6 @@
 import crypto from 'crypto';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+export const config = { api: { bodyParser: false } };
 
 function readRawBody(req) {
   return new Promise((resolve, reject) => {
@@ -15,22 +11,81 @@ function readRawBody(req) {
   });
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
+function esc(value) {
+  return String(value ?? '').replace(/[&<>'"]/g, c => ({
+    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+  }[c]));
 }
 
-function safeEqualHex(a, b) {
-  if (!a || !b || a.length !== b.length) return false;
-  try {
-    return crypto.timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'));
-  } catch {
-    return false;
-  }
+function formatEmail({ name, product, amount, whatsapp, email, orderId, paymentId }) {
+  return `
+  <div style="font-family:Arial,sans-serif;background:#faf7f0;padding:28px;color:#3b1118">
+    <div style="max-width:640px;margin:auto;background:#fff;border:1px solid #e7d7a6;border-radius:18px;padding:28px">
+      <div style="text-align:center;margin-bottom:22px">
+        <div style="font-size:12px;letter-spacing:3px;color:#a47a13;font-weight:700">SWAMI ATMA JAGRAN</div>
+        <div style="font-size:12px;color:#7a5b20;margin-top:4px">The Digital Monk</div>
+      </div>
+      <h1 style="font-size:25px;margin:0 0 16px">🙏 New Paid Order Received</h1>
+      <p style="font-size:16px;line-height:1.6">A new customer payment has been successfully captured and verified.</p>
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        <tr><td style="padding:8px 0;color:#777">Customer</td><td style="padding:8px 0;font-weight:700">${esc(name)}</td></tr>
+        <tr><td style="padding:8px 0;color:#777">Service</td><td style="padding:8px 0;font-weight:700">${esc(product)}</td></tr>
+        <tr><td style="padding:8px 0;color:#777">Amount</td><td style="padding:8px 0;font-weight:700">₹${esc(amount)}</td></tr>
+        <tr><td style="padding:8px 0;color:#777">WhatsApp</td><td style="padding:8px 0">${esc(whatsapp)}</td></tr>
+        <tr><td style="padding:8px 0;color:#777">Email</td><td style="padding:8px 0">${esc(email)}</td></tr>
+        <tr><td style="padding:8px 0;color:#777">Order ID</td><td style="padding:8px 0;font-family:monospace">${esc(orderId)}</td></tr>
+        <tr><td style="padding:8px 0;color:#777">Payment ID</td><td style="padding:8px 0;font-family:monospace">${esc(paymentId)}</td></tr>
+      </table>
+      <div style="margin-top:22px;padding:16px;border-radius:14px;background:#f8f0d8;border:1px solid #e7d7a6">
+        <b>24-hour delivery countdown has started.</b><br>
+        The customer's personalised report is due within 24 hours of successful payment.
+      </div>
+    </div>
+  </div>`;
+}
+
+function customerEmail({ name, product }) {
+  return `
+  <div style="font-family:Arial,sans-serif;background:#faf7f0;padding:28px;color:#3b1118">
+    <div style="max-width:640px;margin:auto;background:#fff;border:1px solid #e7d7a6;border-radius:18px;padding:30px">
+      <div style="text-align:center;margin-bottom:22px">
+        <div style="font-size:12px;letter-spacing:3px;color:#a47a13;font-weight:700">SWAMI ATMA JAGRAN</div>
+        <div style="font-size:12px;color:#7a5b20;margin-top:4px">The Digital Monk</div>
+      </div>
+      <h1 style="font-size:24px;margin:0 0 18px">🙏 Your Order Has Been Successfully Received</h1>
+      <p style="font-size:16px">Namaste ${esc(name)} 🙏</p>
+      <p style="font-size:15px;line-height:1.7">Your payment and details for <b>${esc(product)}</b> have been successfully received. ✅</p>
+      <div style="margin:20px 0;padding:18px;border-radius:15px;background:#f4fbf5;border:1px solid #bfe3c4;line-height:1.9">
+        💳 <b>Payment:</b> Received<br>
+        📜 <b>Service:</b> ${esc(product)}<br>
+        📋 <b>Details:</b> Successfully Received
+      </div>
+      <p style="font-size:15px;line-height:1.7">Your order has now been received by our team and processing has started.</p>
+      <p style="font-size:17px;line-height:1.7;font-weight:700">✨ Your personalised ${esc(product)} report will be prepared and delivered to your WhatsApp number within <span style="color:#177245">24 hours</span>.</p>
+      <p style="font-size:15px;line-height:1.7">Thank you for your trust and for choosing Swami Atma Jagran.</p>
+      <p style="font-size:15px;line-height:1.7;margin-top:24px">🙏 With gratitude,<br><b>Swami Atma Jagran</b><br><i>The Digital Monk</i></p>
+    </div>
+  </div>`;
+}
+
+async function sendResend({ to, subject, html, idempotencyKey }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const domain = process.env.RESEND_EMAIL_DOMAIN || 'swamiatmajagran.in';
+  const from = process.env.RESEND_FROM_EMAIL || `Swami Atma Jagran <orders@${domain}>`;
+  if (!apiKey) throw new Error('RESEND_API_KEY is missing.');
+
+  const r = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      'Idempotency-Key': idempotencyKey,
+    },
+    body: JSON.stringify({ from, to: [to], subject, html }),
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data?.message || data?.name || 'Resend email failed.');
+  return data;
 }
 
 export default async function handler(req, res) {
@@ -38,94 +93,61 @@ export default async function handler(req, res) {
 
   try {
     const rawBody = await readRawBody(req);
-    const signature = String(req.headers['x-razorpay-signature'] || '');
-    const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
-    const resendApiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Swami Atma Jagran <orders@swamiatmajagran.in>';
+    const signature = req.headers['x-razorpay-signature'];
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+    if (!secret || !signature) return res.status(400).json({ error: 'Webhook configuration/signature missing.' });
 
-    if (!webhookSecret) {
-      return res.status(500).json({ error: 'RAZORPAY_WEBHOOK_SECRET is missing.' });
-    }
-    if (!resendApiKey) {
-      return res.status(500).json({ error: 'RESEND_API_KEY is missing.' });
+    const expected = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+    if (expected.length !== signature.length || !crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(signature))) {
+      return res.status(400).json({ error: 'Invalid webhook signature.' });
     }
 
-    const expected = crypto.createHmac('sha256', webhookSecret).update(rawBody).digest('hex');
-    if (!safeEqualHex(expected, signature)) {
-      return res.status(400).json({ error: 'Invalid Razorpay webhook signature.' });
+    const payload = JSON.parse(rawBody);
+    if (payload.event !== 'order.paid') return res.status(200).json({ ok: true, ignored: payload.event });
+
+    const order = payload?.payload?.order?.entity || {};
+    const payment = payload?.payload?.payment?.entity || {};
+    const notes = order.notes || payment.notes || {};
+    const orderId = order.id || payment.order_id || '';
+    const paymentId = payment.id || '';
+    const name = notes.customer_name || payment?.notes?.customer_name || payment?.email || 'Customer';
+    const email = notes.customer_email || payment?.notes?.customer_email || payment.email || '';
+    const product = notes.product || payment?.notes?.product || 'Swami Atma Jagran Service';
+    const amount = Number(order.amount || payment.amount || 0) / 100;
+    const whatsapp = notes.whatsapp || payment.contact || '';
+
+    if (!orderId || !email) {
+      return res.status(400).json({ error: 'Paid order is missing order ID or customer email.' });
     }
 
-    const event = JSON.parse(rawBody || '{}');
-    if (event.event !== 'order.paid') {
-      return res.status(200).json({ ok: true, ignored: true, event: event.event || '' });
+    const tasks = [];
+    tasks.push(sendResend({
+      to: email,
+      subject: '🙏 Your Order Has Been Successfully Received — Swami Atma Jagran',
+      html: customerEmail({ name, product }),
+      idempotencyKey: `customer-order/${orderId}`,
+    }));
+
+    const ownerEmail = process.env.OWNER_NOTIFICATION_EMAIL;
+    if (ownerEmail) {
+      tasks.push(sendResend({
+        to: ownerEmail,
+        subject: `🔔 New Paid Order — ${product} — ${name}`,
+        html: formatEmail({ name, product, amount, whatsapp, email, orderId, paymentId }),
+        idempotencyKey: `owner-order/${orderId}`,
+      }));
     }
 
-    const order = event?.payload?.order?.entity;
-    const payment = event?.payload?.payment?.entity;
-    const notes = order?.notes || {};
-    const email = String(notes.customer_email || payment?.email || '').trim().toLowerCase();
-    const name = String(notes.customer_name || payment?.notes?.customer_name || 'Customer').trim();
-    const product = String(notes.product || order?.description || 'Your selected service').trim();
-    const orderId = String(order?.id || payment?.order_id || '').trim();
-    const paymentId = String(payment?.id || '').trim();
-
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({ error: 'Customer email is missing or invalid in Razorpay order notes.' });
+    const results = await Promise.allSettled(tasks);
+    const failed = results.filter(x => x.status === 'rejected');
+    if (failed.length) {
+      console.error('Webhook email failure:', failed.map(x => x.reason?.message || String(x.reason)));
+      return res.status(500).json({ error: 'Payment was received, but one or more notification emails failed.' });
     }
 
-    const firstName = name.split(/\s+/)[0] || 'Customer';
-    const subject = '🙏 Your Order Has Been Successfully Received — Swami Atma Jagran';
-    const html = `<!doctype html>
-<html><body style="margin:0;padding:0;background:#f7f1e5;font-family:Arial,Helvetica,sans-serif;color:#2b070a;">
-  <div style="max-width:640px;margin:0 auto;padding:28px 16px;">
-    <div style="background:#2b070a;border:1px solid #d4af37;border-radius:20px;padding:28px 24px;color:#fcf8f2;">
-      <div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#f3e5ab;">Swami Atma Jagran · The Digital Monk</div>
-      <h1 style="font-family:Georgia,serif;font-size:26px;line-height:1.25;color:#f3e5ab;margin:18px 0 20px;">Your Order Has Been Successfully Received</h1>
-      <p style="font-size:16px;line-height:1.7;margin:0 0 12px;">Namaste ${escapeHtml(firstName)} 🙏</p>
-      <p style="font-size:15px;line-height:1.7;margin:0 0 18px;">Your payment and details for <strong style="color:#f3e5ab;">${escapeHtml(product)}</strong> have been successfully received. ✅</p>
-      <div style="background:#fcf8f2;color:#2b070a;border-radius:14px;padding:16px 18px;margin:18px 0;line-height:1.8;font-size:14px;">
-        <div>💳 <strong>Payment:</strong> Received</div>
-        <div>📜 <strong>Service:</strong> ${escapeHtml(product)}</div>
-        <div>📋 <strong>Details:</strong> Successfully Received</div>
-      </div>
-      <p style="font-size:15px;line-height:1.7;margin:0 0 12px;">Your order has now been received by our team and processing has started.</p>
-      <p style="font-size:15px;line-height:1.7;margin:0 0 18px;">✨ Your personalised ${escapeHtml(product)} report will be prepared and delivered within 24 hours.</p>
-      <p style="font-size:15px;line-height:1.7;margin:0 0 18px;">Thank you for your trust and for choosing Swami Atma Jagran.</p>
-      <p style="font-size:15px;line-height:1.7;margin:0;">🙏 With gratitude,<br><strong style="color:#f3e5ab;">Swami Atma Jagran</strong><br><em>The Digital Monk</em></p>
-    </div>
-    <p style="text-align:center;color:#6f5a52;font-size:11px;line-height:1.6;margin:14px 10px 0;">Order ${escapeHtml(orderId)}${paymentId ? ` · Payment ${escapeHtml(paymentId)}` : ''}</p>
-  </div>
-</body></html>`;
-
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json',
-        ...(orderId ? { 'Idempotency-Key': `swami-atma-jagran-${orderId}` } : {}),
-      },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: [email],
-        subject,
-        html,
-      }),
-    });
-
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      return res.status(502).json({
-        error: data?.message || data?.error || 'Resend email delivery failed.',
-      });
-    }
-
-    return res.status(200).json({
-      ok: true,
-      event: event.event,
-      emailId: data?.id || '',
-      orderId,
-    });
+    return res.status(200).json({ ok: true, orderId, paymentId, customerEmailSent: true, ownerNotificationSent: Boolean(ownerEmail) });
   } catch (e) {
-    return res.status(500).json({ error: e.message || 'Webhook server error.' });
+    console.error('payment-webhook error:', e);
+    return res.status(500).json({ error: e.message || 'Webhook processing failed.' });
   }
 }
