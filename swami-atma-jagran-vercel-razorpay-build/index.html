@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="hi" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swami Atma Jagran — The Digital Monk | Vedic Astrology & Spiritual Guidance</title>
+    <meta name="description" content="Discover your karmic blueprint with Swami Atma Jagran, The Digital Monk. Get expert astrological reports, D1 & D9 chart analysis, Kundli Milan, and direct consultation for career, love, and life purpose.">
+    <meta name="keywords" content="Swami Atma Jagran, Digital Monk, Vedic Astrology, Kundli Milan, Janm Patrika, D1 D9 Charts, Spiritual Consultation, Horoscope, Vedic Kundli, Horoscope Matching, D9 Navamsha, Ashtakoot Milan, Dasha Predictions, Spiritual Awakening">
+    <meta name="author" content="Swami Atma Jagran">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PAYMENT SUCCESS MODAL -->
+    <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
+            <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
+            <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
+            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
+            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
+            <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
+            <p class="text-xs text-maroonMain/80 mt-4">📲 Ab WhatsApp par apni details team ko bhej dein, taaki report process karne mein koi delay na ho.</p>
+            <button id="payment-success-whatsapp" class="mt-4 w-full bg-maroonMain text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg">SEND DETAILS ON WHATSAPP ✓</button>
+            <button onclick="document.getElementById('payment-success-modal').classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
+        </div>
+    </div>
+
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #fcf8f2;
+            color: #2b070a;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .font-cinzel {
+            font-family: 'Cinzel', serif;
+        }
+        @keyframes slowSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-slow-spin {
+            animation: slowSpin 35s linear infinite;
+        }
+        .sunset-bg {
+            background: radial-gradient(circle at center, rgba(120, 30, 20, 0.8) 0%, rgba(43, 7, 10, 0.95) 70%), url('https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?q=80&w=1920&auto=format&fit=crop') no-repeat center center/cover;
+        }
+        @keyframes floatCard {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: floatCard 4s ease-in-out infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.5); }
+        }
+        .animate-glow {
+            animation: pulseGlow 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-warmWhite text-maroonDark antialiased selection:bg-goldPrimary selection:text-maroonDark m-0 p-0">
+
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-50 bg-maroonDark/95 backdrop-blur-md border-b border-goldPrimary/30 text-warmWhite shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-goldPrimary shadow-md group-hover:scale-105 transition-transform duration-300">
+                    <img src="swami atmajagran logo.png" alt="Swami Atma Jagran Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <span class="font-cinzel text-lg sm:text-xl font-bold tracking-wider text-goldPrimary block">Swami Atma Jagran</span>
+                    <span class="text-[10px] tracking-widest text-goldLight uppercase font-medium">The Digital Monk</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                <a href="#secret-ai-prompts" class="hover:text-goldPrimary transition-colors flex items-center gap-1.5"><i class="fa-solid fa-fire text-goldPrimary"></i> Secret AI Prompts</a>
+                <a href="#sacred-reports" class="hover:text-goldPrimary transition-colors flex items-center gap-1.5"><i class="fa-solid fa-scroll text-goldPrimary"></i> Reports</a>
+                <a href="#rashifal" class="hover:text-goldPrimary transition-colors flex items-center gap-1.5"><i class="fa-solid fa-star-and-crescent text-goldPrimary"></i> राशिफल</a>
+                <a href="#kundli-milan-section" class="hover:text-goldPrimary transition-colors flex items-center gap-1.5"><i class="fa-solid fa-ring text-goldPrimary"></i> गुण मिलन</a>
+                <a href="#comparison" class="hover:text-goldPrimary transition-colors flex items-center gap-1.5"><i class="fa-solid fa-table-cells text-goldPrimary"></i> Comparison</a>
+                <button onclick="openConsultationModal()" class="hover:text-goldPrimary transition-colors flex items-center gap-1.5"><i class="fa-solid fa-calendar-days text-goldPrimary"></i> Consultation</button>
+                <button onclick="openConsultationModal()" class="bg-goldPrimary text-maroonDark px-4 py-2 rounded-full font-semibold hover:bg-goldLight transition-all shadow-md flex items-center gap-2 animate-glow cursor-pointer">
+                    <i class="fa-solid fa-phone-volume"></i> Schedule Meet
+                </button>
+                <a href="#jigyasu-patal" class="bg-maroonMain border border-goldPrimary/60 text-goldLight px-4 py-2 rounded-full font-semibold hover:bg-maroonLight transition-all shadow-md flex items-center gap-2">
+                    <i class="fa-solid fa-om"></i> जिज्ञासु पटल
+                </a>
+            </nav>
+
+            <div class="md:hidden flex items-center gap-2">
+                <button onclick="openConsultationModal()" class="bg-goldPrimary text-maroonDark px-3 py-1.5 text-xs rounded-full font-semibold animate-glow">Call</button>
+                <a href="#jigyasu-patal" class="bg-maroonMain text-goldLight px-3 py-1.5 text-xs rounded-full font-semibold border border-goldPrimary/40">पटल</a>
+                <button id="menu-btn" onclick="toggleMobileMenu()" class="text-goldPrimary text-2xl focus:outline-none"><i class="fa-solid fa-bars"></i></button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-maroonDark border-t border-goldPrimary/20 px-4 pt-2 pb-4 space-y-3">
+            <a href="#secret-ai-prompts" class="block py-2 hover:text-goldPrimary">Secret AI Prompts</a>
+            <a href="#sacred-reports" class="block py-2 hover:text-goldPrimary">Sacred Reports</a>
+            <a href="#rashifal" class="block py-2 hover:text-goldPrimary">दैनिक राशिफल</a>
+            <a href="#kundli-milan-section" class="block py-2 hover:text-goldPrimary">कुंडली मिलन</a>
+            <a href="#comparison" class="block py-2 hover:text-goldPrimary">Comparison</a>
+            <button onclick="openConsultationModal()" class="block py-2 hover:text-goldPrimary">Consultation</button>
+            <button onclick="openConsultationModal()" class="w-full text-left py-2 text-goldPrimary font-bold flex items-center gap-2"><i class="fa-solid fa-phone-volume"></i> Schedule Meet with Swami Ji</button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[90vh] sunset-bg flex items-center justify-center text-warmWhite overflow-hidden px-4 py-20">
+        <div class="absolute inset-0 bg-gradient-to-t from-maroonDark via-transparent to-amber-900/30 pointer-events-none"></div>
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+            <div class="lg:col-span-6 flex justify-center items-center relative">
+                <div class="relative w-72 h-72 sm:w-96 sm:h-96 flex items-center justify-center">
+                    <div class="absolute inset-0 border-2 border-dashed border-goldPrimary/60 rounded-full animate-slow-spin"></div>
+                    <div class="w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-maroonDark border-4 border-goldPrimary p-2 shadow-2xl flex items-center justify-center relative overflow-hidden animate-float">
+                        <img src="swami atmajagran logo.png" alt="Swami Atma Jagran" class="w-full h-full object-cover rounded-full relative z-10">
+                    </div>
+                </div>
+            </div>
+            <div class="lg:col-span-6 space-y-6 text-center lg:text-left bg-maroonDark/80 p-8 sm:p-10 rounded-3xl border-2 border-goldPrimary/50 shadow-2xl backdrop-blur-md">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-goldPrimary/20 border border-goldPrimary/40 text-goldLight text-xs tracking-widest uppercase font-semibold">
+                    <i class="fa-solid fa-sun text-goldPrimary animate-pulse"></i> Swami Atmajagran Panel · Vedic Wisdom
+                </div>
+                <h1 class="font-cinzel text-3xl sm:text-5xl font-bold tracking-wide leading-tight text-goldLight">
+                    Know the secrets of your stars.
+                </h1>
+                <p class="text-base sm:text-lg text-warmWhite/90 font-light">
+                    Your Karmic & Vedic Blueprint. Discover deeper clarity through your D1, D9, and Chandra charts. Speak directly with Swami Atmajagran for profound life shifts.
+                </p>
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                    <button onclick="openConsultationModal()" class="bg-goldPrimary text-maroonDark font-extrabold px-8 py-4 rounded-full shadow-xl hover:bg-goldLight transition-all animate-glow flex items-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-calendar-check"></i> Schedule Meet with Swami Ji →
+                    </button>
+                    <a href="#secret-ai-prompts" class="bg-maroonMain border border-goldPrimary/60 text-goldLight font-semibold px-6 py-4 rounded-full shadow hover:bg-maroonLight transition-all">
+                        Explore Prompts
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW ADDED SECTION: Our Secret AI Prompts (Products Added Below Jigyasu Portal/Sanctuary area) -->
+    <section id="secret-ai-prompts" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Revolutionary AI Systems</span>
+            <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-maroonDark mb-4">Our Secret AI Prompts</h2>
+            <h3 class="font-cinzel text-xl sm:text-2xl font-bold text-maroonMain mb-3">Bane Khud Ke Jyotish — Apni Destiny Apke Hath Me</h3>
+            <p class="text-maroonMain/80 text-sm sm:text-base leading-relaxed">
+                Purane aur dogle jyotishiyo ke chakkar me padna ya AstroTalk par hajaro rupaye barbad karna ab band kijiye. Yeh koi bhari-barkham ya fuzul kundli report nahi hai, balki ek revolutionary AI system hai jo aapko zindagi bhar ke liye aatmanirbhar banata hai. Sirf 2 minute me apni ya parivar ki kundli ka sach khud dekhein—bina kisi pandit ya expert par nirbhar rahe.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+            
+            <!-- Product 1: LAGAN MAYA SUTRA -->
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/40 p-8 shadow-xl flex flex-col justify-between relative overflow-hidden hover:shadow-2xl transition-all">
+                <div class="absolute top-4 right-4 bg-maroonMain text-goldPrimary text-xs uppercase font-bold px-3 py-1 rounded-full">₹1 TEST</div>
+                <div>
+                    <!-- Transparent Thumbnail (No Background) -->
+                    <div class="w-full h-72 sm:h-80 flex items-center justify-center overflow-hidden mb-6">
+                        <img src="image 3.png" alt="Lagan Maya Sutra" class="max-h-full max-w-full object-contain filter drop-shadow-xl hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-maroonDark mb-1">Who Am I? The Lagan Maya Sutra</h3>
+                    <p class="text-xs font-bold text-maroonMain/70 mb-4">Charts Covered: D1 Lagan & Aruda Lagan</p>
+                    <p class="text-sm text-maroonMain/80 mb-6 leading-relaxed">Apne mool swaroop aur public mask (Maya) ka nanga sach dekhein. Bina kisi sugar-coated bhasha ke yeh prompt apke hidden ego aur asli psychological blueprint ko samne lata hai.</p>
+                    <ul class="space-y-2 mb-8 text-xs text-maroonDark font-medium">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> Format: 3-Page PDF Report + Lifetime AI Access</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> D1 Lagan & Aruda Lagan Breakdown</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-center text-2xl font-extrabold text-maroonDark mb-4">₹299/-</div>
+                    <button onclick="openPaidProductForm('Lagan Maya Sutra', 299)" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-3.5 rounded-xl shadow transition-all cursor-pointer">GET MY LAGAN SUTRA →</button>
+                    <p class="text-[11px] text-maroonMain/75 mt-3 text-center leading-relaxed">🔒 Payment ke baad hi aapki details Swami Ji tak submit hongi.</p>
+                </div>
+            </div>
+
+            <!-- Product 2: SHUKRA MAYA SUTRA -->
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary p-8 shadow-2xl flex flex-col justify-between relative overflow-hidden ring-4 ring-goldPrimary/20 hover:shadow-2xl transition-all">
+                <div class="absolute top-4 right-4 bg-goldPrimary text-maroonDark text-xs uppercase font-extrabold px-3 py-1 rounded-full shadow">₹399</div>
+                <div>
+                    <!-- Transparent Thumbnail (No Background) -->
+                    <div class="w-full h-72 sm:h-80 flex items-center justify-center overflow-hidden mb-6">
+                        <img src="image 4.png" alt="Shukra Maya Sutra" class="max-h-full max-w-full object-contain filter drop-shadow-xl hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-maroonDark mb-1">Love & Shackles | The Shukra Maya Sutra</h3>
+                    <p class="text-xs font-bold text-maroonMain/70 mb-4">Charts: D1, D9, Chandra Chart & Venus Analysis</p>
+                    <p class="text-sm text-maroonMain/80 mb-6 leading-relaxed">Kya aapka rishta sacha prem hai ya karmic bandhan? Romantic life, emotional patterns aur marriage trials ka 100% nishpaksh aur gehra vishleshan karein.</p>
+                    <ul class="space-y-2 mb-8 text-xs text-maroonDark font-medium">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> Format: 3-Page PDF Report + Lifetime AI Access</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> D1, D9, Chandra & Venus Deep Dive</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-center text-2xl font-extrabold text-maroonDark mb-4">₹399/-</div>
+                    <button onclick="openPaidProductForm('Shukra Maya Sutra', 399)" class="w-full bg-maroonMain hover:bg-maroonDark text-goldPrimary font-bold py-3.5 rounded-xl shadow-lg transition-all cursor-pointer">GET SHUKRA MAYA SUTRA →</button>
+                </div>
+            </div>
+
+            <!-- Product 3: D10 DESTINY SUTRA -->
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/40 p-8 shadow-xl flex flex-col justify-between relative overflow-hidden hover:shadow-2xl transition-all">
+                <div class="absolute top-4 right-4 bg-maroonMain text-goldPrimary text-xs uppercase font-bold px-3 py-1 rounded-full">₹799</div>
+                <div>
+                    <!-- Transparent Thumbnail (No Background) -->
+                    <div class="w-full h-72 sm:h-80 flex items-center justify-center overflow-hidden mb-6">
+                        <img src="image 5.png" alt="D10 Destiny Sutra" class="max-h-full max-w-full object-contain filter drop-shadow-xl hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-maroonDark mb-1">The Trap of Kingdom / The D10 Destiny Sutra</h3>
+                    <p class="text-xs font-bold text-maroonMain/70 mb-4">Charts: D1, D9, D10, Nakshatra Degrees & Aspects</p>
+                    <p class="text-sm text-maroonMain/80 mb-6 leading-relaxed">Career ki uchaiyo aur wealth ke raaste me aane wale har avarodh ko toda gaya hai. Nakshatra degrees ke sath apni safalta aur destiny ka permanent master key prapt karein.</p>
+                    <ul class="space-y-2 mb-8 text-xs text-maroonDark font-medium">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> Format: 5-Page Master PDF + Master Prompt Suite</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-green-600"></i> D1, D9, D10 & Nakshatra Master Analysis</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-center text-2xl font-extrabold text-maroonDark mb-4">₹799/-</div>
+                    <button onclick="openPaidProductForm('D10 Destiny Sutra', 799)" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-3.5 rounded-xl shadow transition-all cursor-pointer">GET D10 DESTINY SUTRA →</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- NEW ADDED TOOLS: The Cosmic Sanctuary Portal -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Interactive Astral Portal</span>
+            <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-maroonDark mt-1">The Cosmic Sanctuary Portal</h2>
+            <p class="text-maroonMain/80 text-sm mt-2">Sync with today's astral frequency and receive instant intuitive guidance from Guru Ji.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            
+            <!-- Tool 1: Daily Cosmic Energy Meter & Mantra Generator -->
+            <div class="p-8 rounded-3xl bg-maroonDark border-2 border-gold/40 backdrop-blur-md shadow-2xl flex flex-col justify-between text-warmWhite relative">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs uppercase tracking-widest text-gold font-bold px-3 py-1 rounded-full bg-gold/10 border border-gold/30">Live Daily Energy</span>
+                        <i class="fa-solid fa-fire text-gold text-xl animate-pulse"></i>
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-gold mb-2">Daily Cosmic Energy & Mantra</h3>
+                    <p class="text-sm text-gray-300 mb-6">Select your zodiac to sync with today's astral frequency & get your live mantra.</p>
+                    
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <div id="zodiac-buttons-container" class="flex flex-wrap gap-2 w-full">
+                            <!-- Dynamic buttons -->
+                        </div>
+                    </div>
+                </div>
+
+                <div id="energy-tool-box">
+                    <button id="energy-sync-btn" onclick="generateDailyEnergy()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-gold/90 to-amber-600 text-black font-bold text-base hover:opacity-90 transition-opacity shadow-lg cursor-pointer">
+                        Reveal Daily Alignment
+                    </button>
+
+                    <div id="energy-result-panel" class="hidden mt-6 p-5 rounded-2xl bg-gold/10 border border-gold/30 animate-fade-in space-y-3">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-gold uppercase tracking-wider font-bold" id="res-sign-title">Energy Index (Aries)</span>
+                            <span class="text-base font-extrabold text-white" id="res-score">88%</span>
+                        </div>
+                        <p class="text-xs sm:text-sm text-gray-200"><strong>Vibe:</strong> <span id="res-vibe">High Spiritual Clarity & Manifestation Power</span></p>
+                        <p class="text-xs sm:text-sm text-gray-200"><strong>Auspicious Window:</strong> <span id="res-time">06:15 AM - 07:45 AM</span></p>
+                        <p class="text-xs sm:text-sm text-gold italic mt-2 font-medium" id="res-mantra">"Om Vam Vam Namah - Channeling inner cosmic sovereignty."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool 2: Ask a Question to Guru Ji Live Mini-Oracle -->
+            <div class="p-8 rounded-3xl bg-maroonDark border-2 border-gold/40 backdrop-blur-md shadow-2xl flex flex-col justify-between text-warmWhite relative">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs uppercase tracking-widest text-gold font-bold px-3 py-1 rounded-full bg-gold/10 border border-gold/30">Live Mini-Oracle</span>
+                        <i class="fa-solid fa-om text-gold text-xl animate-pulse"></i>
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-gold mb-2">Ask Guru Ji — Mini Oracle</h3>
+                    <p class="text-sm text-gray-300 mb-6">Type your inner question and receive an instant intuitive reflection.</p>
+                    
+                    <form onsubmit="consultGuruOracle(event)" class="space-y-4">
+                        <input
+                            type="text"
+                            id="oracle-question-input"
+                            placeholder="e.g., What is blocking my career path right now?"
+                            required
+                            class="w-full px-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-gray-400 text-sm focus:outline-none focus:border-gold"
+                        />
+                        <button
+                            type="submit"
+                            id="oracle-submit-btn"
+                            class="w-full py-3.5 rounded-xl bg-white/10 border border-gold/50 text-gold font-bold text-sm hover:bg-gold hover:text-black transition-all cursor-pointer shadow-md"
+                        >
+                            Seek Insight
+                        </button>
+                    </form>
+                </div>
+
+                <div id="oracle-insight-box" class="hidden mt-6 p-5 rounded-2xl bg-gold/15 border border-gold/40 animate-fade-in flex flex-col justify-between space-y-4">
+                    <div>
+                        <span class="text-[11px] text-gold uppercase tracking-widest block mb-1 font-bold">Initial Oracle Guidance</span>
+                        <p class="text-xs sm:text-sm text-gray-100 italic leading-relaxed" id="oracle-insight-text">"The cosmos reveals a temporary block in your professional flow caused by unaligned timing. Surrender the haste; deep clarity requires stillness."</p>
+                    </div>
+                    <a
+                        href="#consultation"
+                        onclick="openConsultationModal()"
+                        class="text-center py-3 rounded-xl bg-gold text-black text-xs sm:text-sm font-extrabold hover:bg-amber-400 transition-colors shadow"
+                    >
+                        Book Deep Personal Session with Guru Ji →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- दैनिक राशिफल (12 Rashiyan) -->
+    <section id="rashifal" class="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-12">
+            <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Daily Guidance — 12 Rashiyan</span>
+            <h2 class="font-cinzel text-3xl font-bold text-maroonDark mt-1 mb-2">सभी 12 राशियों का दैनिक राशिफल व मंत्र</h2>
+            <p class="text-maroonMain/70 text-sm">ग्रहों की चाल के आधार पर जानिए आज का दिन आपके लिए कैसा रहेगा। अपनी राशि पर क्लिक करें।</p>
+        </div>
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div onclick="openRashifalModal('मेष (Aries)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-fire"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">मेष (Aries)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: लाल</span>
+            </div>
+            <div onclick="openRashifalModal('वृषभ (Taurus)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-seedling"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">वृषभ (Taurus)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: सफेद</span>
+            </div>
+            <div onclick="openRashifalModal('मिथुन (Gemini)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-wind"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">मिथुन (Gemini)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: हरा</span>
+            </div>
+            <div onclick="openRashifalModal('कर्क (Cancer)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-water"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">कर्क (Cancer)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: पीला</span>
+            </div>
+            <div onclick="openRashifalModal('सिंह (Leo)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-sun"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">सिंह (Leo)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: नारंगी</span>
+            </div>
+            <div onclick="openRashifalModal('कन्या (Virgo)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-mountain"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">कन्या (Virgo)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: आसमानी</span>
+            </div>
+            <div onclick="openRashifalModal('तुला (Libra)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-scale-balanced"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">तुला (Libra)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: गुलाबी</span>
+            </div>
+            <div onclick="openRashifalModal('वृश्चिक (Scorpio)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-water"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">वृश्चिक (Scorpio)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: मैरून</span>
+            </div>
+            <div onclick="openRashifalModal('धनु (Sagittarius)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-bow-arrow"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">धनु (Sagittarius)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: पीला</span>
+            </div>
+            <div onclick="openRashifalModal('मकर (Capricorn)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-earth-americas"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">मकर (Capricorn)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: नीला</span>
+            </div>
+            <div onclick="openRashifalModal('कुंभ (Aquarius)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-droplet"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">कुंभ (Aquarius)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: बैंगनी</span>
+            </div>
+            <div onclick="openRashifalModal('मीन (Pisces)')" class="bg-cardBg border border-goldPrimary/30 p-5 rounded-2xl text-center cursor-pointer hover:border-goldPrimary hover:shadow-xl transition-all group">
+                <div class="text-3xl text-goldPrimary mb-2 group-hover:scale-110 transition-transform"><i class="fa-solid fa-fish"></i></div>
+                <h4 class="font-cinzel font-bold text-maroonDark text-base">मीन (Pisces)</h4>
+                <span class="text-xs text-maroonMain/60 block mt-1">शुभ रंग: सुनहरा</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sacred Reports Selection Section -->
+    <section id="sacred-reports" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-maroonDark mb-4">Choose Your Sacred Text</h2>
+            <p class="text-maroonMain/80 text-base">Begin free with the Swarnima Janm Patrika, or unlock your complete karmic blueprint with the Divya Bhagya Sutra.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/40 p-8 shadow-xl flex flex-col justify-between relative overflow-hidden hover:shadow-2xl transition-all">
+                <div class="absolute top-4 right-4 bg-maroonMain text-goldPrimary text-xs uppercase font-bold px-3 py-1 rounded-full">Free Report</div>
+                <div>
+                    <div class="w-full h-64 rounded-2xl bg-maroonDark flex items-center justify-center overflow-hidden mb-6 border border-goldPrimary/30 shadow-inner">
+                        <img src="SWARNIMA JANM PATRIKA .png" alt="Swarnima Janm Patrika" class="max-h-full object-contain">
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-maroonDark mb-2">Swarnima Janm Patrika</h3>
+                    <p class="text-sm text-maroonMain/70 mb-6">Essential planetary insights to begin your journey into self-discovery.</p>
+                    <ul class="space-y-3 mb-8 text-sm text-maroonDark">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-green-600"></i> D1 Chart Analysis & Core Insights</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-green-600"></i> Planetary Transits (Grah Gochar)</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-green-600"></i> Love & Marriage Guidance</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-center text-2xl font-bold text-maroonDark mb-4">₹1 <span class="text-xs font-semibold text-maroonMain/60">(TEST)</span></div>
+                    <button onclick="openPaidProductForm('Swarnima Janm Patrika', 1)" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT →</button>
+                </div>
+            </div>
+
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary p-8 shadow-2xl flex flex-col justify-between relative overflow-hidden ring-4 ring-goldPrimary/20 hover:shadow-2xl transition-all">
+                <div class="absolute top-4 right-4 bg-goldPrimary text-maroonDark text-xs uppercase font-extrabold px-3 py-1 rounded-full shadow">PREMIUM BUNDLE</div>
+                <div>
+                    <div class="w-full h-64 rounded-2xl bg-maroonDark flex items-center justify-center overflow-hidden mb-6 border border-goldPrimary/40 shadow-inner">
+                        <img src="DIVYA BHAGYE SUTRA.png" alt="Divya Bhagya Sutra" class="max-h-full object-contain">
+                    </div>
+                    <h3 class="font-cinzel text-2xl font-bold text-maroonDark mb-2">Divya Bhagya Sutra</h3>
+                    <p class="text-sm text-maroonMain/70 mb-6">सत्य की खोज और कर्म का सही ज्ञान जाने — the complete master edition.</p>
+                    <ul class="space-y-3 mb-8 text-sm text-maroonDark">
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-green-600"></i> Comprehensive Life Overview & Predictions</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-green-600"></i> D1, D9 & Chandra Chart Deep Analysis</li>
+                        <li class="flex items-center gap-3"><i class="fa-solid fa-circle-check text-green-600"></i> Nakshatra Predictions & Dasha Periods</li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="text-center mb-4">
+                        <span class="line-through text-maroonMain/50 text-lg mr-2">₹2,999/-</span>
+                        <span class="text-3xl font-extrabold text-maroonDark">₹999/-</span>
+                    </div>
+                    <button onclick="openPaidProductForm('Divya Bhagya Sutra', 999)" class="w-full bg-maroonMain hover:bg-maroonDark text-goldPrimary font-bold py-4 rounded-xl shadow-lg transition-all cursor-pointer">UNLOCK FULL EDITION →</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- कुंडली गुण मिलन -->
+    <section id="kundli-milan-section" class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div class="bg-maroonDark border-2 border-goldPrimary/50 rounded-3xl p-8 sm:p-10 shadow-2xl text-warmWhite">
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Vivah Sahyog</span>
+                <h2 class="font-cinzel text-3xl font-bold text-goldLight mt-1">फ्री कुंडली गुण मिलन (Ashta Koot Milan)</h2>
+                <p class="text-warmWhite/80 text-sm mt-2">वर और वधू के जन्म विवरण दर्ज करके जानिए कितने गुण मिलते हैं और वैवाहिक जीवन कैसा रहेगा।</p>
+            </div>
+            <form id="kundli-milan-form" onsubmit="submitKundliMilan(event)" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-maroonMain/60 p-6 rounded-2xl border border-goldPrimary/30">
+                    <div>
+                        <h4 class="font-cinzel font-bold text-goldPrimary mb-3 text-base"><i class="fa-solid fa-mars mr-2"></i>वर का विवरण (Boy's Details)</h4>
+                        <div class="space-y-3">
+                            <input type="text" id="boy-name" placeholder="वर का नाम (Boy's Name)" required class="w-full px-4 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-sm focus:outline-none">
+                            <input type="date" id="boy-dob" required class="w-full px-4 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-sm focus:outline-none">
+                            <input type="text" id="boy-place" placeholder="जन्म स्थान (Birth Place)" required class="w-full px-4 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-sm focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="font-cinzel font-bold text-goldPrimary mb-3 text-base"><i class="fa-solid fa-venus mr-2"></i>वधू का विवरण (Girl's Details)</h4>
+                        <div class="space-y-3">
+                            <input type="text" id="girl-name" placeholder="वधू का नाम (Girl's Name)" required class="w-full px-4 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-sm focus:outline-none">
+                            <input type="date" id="girl-dob" required class="w-full px-4 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-sm focus:outline-none">
+                            <input type="text" id="girl-place" placeholder="जन्म स्थान (Birth Place)" required class="w-full px-4 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-sm focus:outline-none">
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold px-8 py-4 rounded-xl shadow-lg transition-all text-base cursor-pointer">
+                        <i class="fa-solid fa-calculator mr-2"></i> चेक गुण मिलन स्कोर (CHECK GUN MILAN)
+                    </button>
+                </div>
+            </form>
+            <div id="milan-result-box" class="hidden mt-6 bg-goldPrimary/10 border border-goldPrimary p-6 rounded-2xl text-center space-y-3 animate-glow">
+                <h3 class="font-cinzel text-2xl font-bold text-goldPrimary" id="result-score-title">गुण मिलन स्कोर: 28 / 36 (उत्तम मिलन)</h3>
+                <p class="text-sm text-warmWhite/90" id="result-desc">आपकी कुंडली का मिलन बहुत शुभ रहा है। मंगल दोष व नाड़ी दोष का समाधान स्वामी जी से WhatsApp पर निःशुल्क प्राप्त करें।</p>
+                <a id="milan-whatsapp-btn" href="#" target="_blank" class="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all shadow">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> स्वामी जी से विस्तृत रिपोर्ट WhatsApp पर मंगाएँ
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section id="comparison" class="py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <div class="bg-maroonDark border-2 border-goldPrimary/40 rounded-3xl p-6 sm:p-10 shadow-2xl text-warmWhite relative overflow-hidden animate-glow">
+            <div class="text-center mb-10">
+                <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">What is included where</span>
+                <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-goldLight mt-1">Free vs. Master Edition</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-goldPrimary/40 text-goldPrimary font-cinzel text-sm sm:text-base">
+                            <th class="py-4 px-4">FEATURE</th>
+                            <th class="py-4 px-4 text-center">स्वर्णिमा जन्म-पत्रिका<br><span class="text-xs text-goldLight font-sans">Free</span></th>
+                            <th class="py-4 px-4 text-center">दिव्य भाग्य सूत्र<br><span class="text-xs text-goldLight font-sans">₹999 Master</span></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-goldPrimary/15 text-sm sm:text-base">
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">D1 Chart Analysis</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Planetary Transits (Grah Gochar)</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Love & Marriage Guidance</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Career & Professional Advice</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">D9 Chart (Navamsha) Analysis</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Chandra (Moon) Chart Analysis</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Nakshatra Predictions</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Dasha Periods Breakdown</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Samast Bhavishya Vivran (Full Life Overview)</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Soul Purpose Guidance</td>
+                            <td class="py-3.5 px-4 text-center text-warmWhite/30">-</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary"><i class="fa-solid fa-check text-green-400"></i></td>
+                        </tr>
+                        <tr class="hover:bg-maroonMain/40 transition-colors">
+                            <td class="py-3.5 px-4 font-medium">Secret AI Prompts</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary text-xs">D1 only</td>
+                            <td class="py-3.5 px-4 text-center text-goldPrimary text-xs font-bold">D1 + D9 + Chandra (All Enabled)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Complete Janm Patrika Solution -->
+    <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Complete Janm Patrika Solution</span>
+            <h2 class="font-cinzel text-3xl sm:text-4xl font-bold text-maroonDark mt-1 mb-4">Everything You Need, In One Report</h2>
+            <p class="text-maroonMain/80 text-base">अब हर छोटी-बड़ी समस्या के लिए अलग-अलग रिपोर्ट्स खरीदने की कोई जरूरत नहीं है। हमारी संपूर्ण जन्मपत्रिका के माध्यम से आपकी जिंदगी के सभी पहलुओं पर विस्तार से प्रकाश डाला जाएगा।</p>
+        </div>
+
+        <!-- IMAGE 1 PANEL -->
+        <div class="max-w-5xl mx-auto mb-16 bg-cardBg border-4 border-goldPrimary rounded-3xl p-8 sm:p-12 shadow-2xl flex flex-col md:flex-row items-center gap-10 ring-8 ring-goldPrimary/20 animate-glow">
+            <div class="w-full md:w-5/12 shrink-0 flex justify-center">
+                <div class="w-72 h-72 sm:w-80 sm:h-80 rounded-3xl overflow-hidden border-4 border-goldPrimary shadow-2xl">
+                    <img src="image 1.png" alt="Swami Atma Jagran - Zorba Buddha Sanyasi" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                </div>
+            </div>
+            <div class="w-full md:w-7/12 space-y-4 text-center md:text-left">
+                <span class="bg-maroonMain text-goldPrimary text-xs uppercase font-extrabold px-4 py-1.5 rounded-full border border-goldPrimary/40">VIP & Premium Master Panel</span>
+                <h3 class="font-cinzel text-3xl sm:text-4xl font-bold text-maroonDark">Who is Swami Atma Jagran?</h3>
+                <p class="text-sm sm:text-base text-maroonMain/90 leading-relaxed font-medium">
+                    I am a Zorba the Buddha sanyasi who took sannyas in the presence of Osho. I am a modern-age youth monk standing fiercely against orthodox fundamentalism, blind dogmas, and religious exploiters. In my relentless quest for truth, I dive deep into the mysteries of meditation, samadhi, and the profound secrets of astrology to guide earnest seekers toward true inner sovereignty and awakening.
+                </p>
+                <div class="pt-3">
+                    <button onclick="openConsultationModal()" class="bg-goldPrimary text-maroonDark hover:bg-goldLight font-extrabold px-8 py-4 rounded-xl text-xs uppercase tracking-wider shadow-lg transition-all cursor-pointer">
+                        Connect Directly with Swami Ji →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/30 p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:border-goldPrimary group">
+                <div class="w-14 h-14 rounded-2xl bg-maroonDark text-goldPrimary flex items-center justify-center text-xl mb-6 shadow group-hover:scale-110 transition-transform duration-300">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark mb-3">Love & Marriage Compatibility</h3>
+                <p class="text-sm text-maroonMain/80 leading-relaxed">विवाह योग्य योग, वैवाहिक जीवन में तालमेल, प्रेम संबंधों की सच्चाई और भावी जीवनसाथी के साथ सामंजस्य का संपूर्ण विश्लेषण।</p>
+            </div>
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/30 p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:border-goldPrimary group">
+                <div class="w-14 h-14 rounded-2xl bg-maroonDark text-goldPrimary flex items-center justify-center text-xl mb-6 shadow group-hover:scale-110 transition-transform duration-300 animate-float">
+                    <i class="fa-solid fa-briefcase"></i>
+                </div>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark mb-3">Career & Job Prospects</h3>
+                <p class="text-sm text-maroonMain/80 leading-relaxed">नौकरी में प्रमोशन के योग, सही करियर चुनाव, व्यापार में सफलता या बदलाव के सटीक संकेत — ताकि आपका पेशेवर जीवन हमेशा ऊँचाइयों पर रहे।</p>
+            </div>
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/30 p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:border-goldPrimary group">
+                <div class="w-14 h-14 rounded-2xl bg-maroonDark text-goldPrimary flex items-center justify-center text-xl mb-6 shadow group-hover:scale-110 transition-transform duration-300">
+                    <i class="fa-solid fa-vault"></i>
+                </div>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark mb-3">Wealth & Financial Stability</h3>
+                <p class="text-sm text-maroonMain/80 leading-relaxed">धन योग, संपत्ति प्राप्ति के योग, कर्ज से मुक्ति पाने के मार्ग और आपकी वित्तीय स्थिरता को मजबूत करने वाले अचूक ज्योतिषीय सूत्र।</p>
+            </div>
+            <!-- Added Feature: Soul Purpose in Life -->
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/30 p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:border-goldPrimary group">
+                <div class="w-14 h-14 rounded-2xl bg-maroonDark text-goldPrimary flex items-center justify-center text-xl mb-6 shadow group-hover:scale-110 transition-transform duration-300">
+                    <i class="fa-solid fa-star-of-life"></i>
+                </div>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark mb-3">Soul Purpose in Life</h3>
+                <p class="text-sm text-maroonMain/80 leading-relaxed">आपकी जन्म कुंडली के ग्रहों के आधार पर आपके इस जन्म के परम लक्ष्य, कर्म बंधन और आत्मा के वास्तविक उद्देश्य की गहरी खोज व प्रकाश।</p>
+            </div>
+            <!-- Added Feature: Spiritual Path Guidance -->
+            <div class="bg-cardBg rounded-3xl border-2 border-goldPrimary/30 p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:border-goldPrimary group">
+                <div class="w-14 h-14 rounded-2xl bg-maroonDark text-goldPrimary flex items-center justify-center text-xl mb-6 shadow group-hover:scale-110 transition-transform duration-300">
+                    <i class="fa-solid fa-om"></i>
+                </div>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark mb-3">Spiritual Path Guidance</h3>
+                <p class="text-sm text-maroonMain/80 leading-relaxed">ध्यान, समाधि, और आंतरिक शांति की यात्रा में आने वाले अवरोधों को दूर करने तथा सही आध्यात्मिक मार्ग चुनने के अचूक ज्योतिषीय व तांत्रिक सूत्र।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="py-16 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Testimonials</span>
+            <h2 class="font-cinzel text-3xl font-bold text-maroonDark mt-1">संतुष्ट जिज्ञासुओं के अनुभव</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-cardBg border border-goldPrimary/30 p-6 rounded-3xl shadow">
+                <div class="text-goldPrimary mb-3"><i class="fa-solid fa-quote-left text-2xl"></i></div>
+                <p class="text-sm text-maroonMain/90 italic mb-4">"मैंने 'दिव्य भाग्य सूत्र' लिया था। स्वामी जी का विश्लेषण इतना सटीक और स्पष्ट है कि मुझे मेरे करियर के सारे सवालों के जवाब तुरंत मिल गए।"</p>
+                <div class="font-cinzel font-bold text-maroonDark text-sm">— राहुल शर्मा, दिल्ली</div>
+            </div>
+            <div class="bg-cardBg border border-goldPrimary/30 p-6 rounded-3xl shadow">
+                <div class="text-goldPrimary mb-3"><i class="fa-solid fa-quote-left text-2xl"></i></div>
+                <p class="text-sm text-maroonMain/90 italic mb-4">"बाजार की 250 पेज की बेकार किताबों से तंग आ चुकी थी। यहाँ सिर्फ 10 पेज में वो बातें बताई गईं जो 100% सच निकलीं। बहुत आभार!"</p>
+                <div class="font-cinzel font-bold text-maroonDark text-sm">— प्रिया वर्मा, मुंबई</div>
+            </div>
+            <div class="bg-cardBg border border-goldPrimary/30 p-6 rounded-3xl shadow">
+                <div class="text-goldPrimary mb-3"><i class="fa-solid fa-quote-left text-2xl"></i></div>
+                <p class="text-sm text-maroonMain/90 italic mb-4">"WhatsApp पर तुरंत रिस्पॉन्स मिला और पहली कंसल्टेशन फ्री होने से मेरा मार्गदर्शन हो गया। डिजिटल मॉन का यह प्रयास अद्भुत है।"</p>
+                <div class="font-cinzel font-bold text-maroonDark text-sm">— अमित त्रिवेदी, भोपाल</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- जिज्ञासु पटल -->
+    <section id="jigyasu-patal" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="bg-maroonDark border-2 border-goldPrimary/40 rounded-3xl p-6 sm:p-10 shadow-2xl text-warmWhite">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 border-b border-goldPrimary/30 pb-6">
+                <div>
+                    <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Live Submissions</span>
+                    <h2 class="font-cinzel text-3xl font-bold text-goldLight">जिज्ञासु पटल (Jigyasu Patal)</h2>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="clearJigyasuStorage()" class="text-xs bg-red-900/50 hover:bg-red-800 text-red-200 px-3 py-1.5 rounded-xl border border-red-500/30">Clear History</button>
+                    <div class="bg-goldPrimary/20 border border-goldPrimary/40 px-4 py-2 rounded-xl text-xs text-goldLight">
+                        <i class="fa-solid fa-shield-halved text-goldPrimary mr-1"></i> Status: Active & Secured
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-goldPrimary/30 text-goldPrimary font-cinzel text-sm">
+                            <th class="py-3 px-4">Name / Seeker</th>
+                            <th class="py-3 px-4">Report Type</th>
+                            <th class="py-3 px-4 text-center">24-Hour Delivery</th>
+                            <th class="py-3 px-4 text-center">Payment Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jigyasu-table-body" class="divide-y divide-goldPrimary/10 text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL: राशिफल विवरण -->
+    <div id="rashifal-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 border-2 border-goldPrimary shadow-2xl text-center space-y-4 relative">
+            <button onclick="closeRashifalModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl">&times;</button>
+            <div class="w-16 h-16 bg-maroonDark text-goldPrimary rounded-full flex items-center justify-center mx-auto text-2xl shadow">
+                <i class="fa-solid fa-star"></i>
+            </div>
+            <h3 class="font-cinzel text-2xl font-bold text-maroonDark" id="rashifal-title">मेष राशिफल</h3>
+            <p class="text-sm text-maroonMain/90 leading-relaxed" id="rashifal-desc">आज का दिन आपके लिए ऊर्जावान रहेगा। कार्यक्षेत्र में नए अवसर मिलेंगे और परिवार का सहयोग प्राप्त होगा। अपने स्वास्थ्य का ध्यान रखें।</p>
+            <div class="p-3 bg-goldPrimary/10 rounded-xl border border-goldPrimary/30">
+                <span class="text-xs font-bold text-maroonDark block uppercase">दैनिक विशेष मंत्र:</span>
+                <p class="text-xs text-maroonMain font-serif italic mt-1" id="rashifal-mantra">"ॐ अं अंगारकाय नमः"</p>
+            </div>
+            <button onclick="closeRashifalModal()" class="w-full bg-maroonMain text-goldPrimary py-3 rounded-xl font-bold shadow cursor-pointer">बंद करें</button>
+        </div>
+    </div>
+
+    <!-- MODAL: Lagan Maya Sutra Details Chat -->
+    <div id="lagan-chat-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-lg w-full rounded-3xl p-6 sm:p-7 border-2 border-goldPrimary shadow-2xl relative my-6">
+            <button onclick="closeLaganChat()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl">&times;</button>
+            <div class="text-center mb-5">
+                <div class="w-14 h-14 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-xl shadow"><i class="fa-solid fa-comment-dots"></i></div>
+                <h3 class="font-cinzel text-2xl font-bold text-maroonDark mt-3">Share Your Details</h3>
+                <p class="text-xs text-maroonMain/80 mt-2 leading-relaxed">Payment confirmed ✅ Ab apni janm details Swami Ji ko bhejne ke liye neeche ki information complete karein.</p>
+            </div>
+            <div id="lagan-chat-form" class="space-y-3">
+                <input type="text" id="lagan-name" placeholder="Full Name" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="date" id="lagan-dob" class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required>
+                    <select id="lagan-gender" class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="lagan-time" placeholder="Birth Time (e.g. 10:30)" class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required>
+                    <select id="lagan-ampm" class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required><option value="">AM / PM</option><option>AM</option><option>PM</option></select>
+                </div>
+                <input type="text" id="lagan-place" placeholder="Birth Place / Location" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required>
+                <input type="tel" id="lagan-whatsapp" placeholder="WhatsApp Number (10 digits)" maxlength="10" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" required>
+                <button onclick="submitLaganDetails()" class="w-full bg-maroonMain hover:bg-maroonDark text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all">SEND DETAILS TO SWAMI JI →</button>
+            </div>
+            <div id="lagan-chat-success" class="hidden text-center py-5">
+                <div class="w-16 h-16 rounded-full bg-emerald-600 text-white flex items-center justify-center mx-auto text-2xl shadow">✓</div>
+                <h4 class="font-cinzel text-xl font-bold text-maroonDark mt-4">Details Submitted Successfully</h4>
+                <p class="text-sm text-maroonMain/90 mt-2 leading-relaxed">Namaste 🙏 Your payment and details have been received safely. Your personalized report preparation has started. ✨<br><br>Your report will be delivered to you on WhatsApp within 24 hours. Please be assured that your report will reach you within the promised time.<br><br>Thank you for your trust. ❤️</p>
+                <button onclick="closeLaganChat()" class="mt-5 w-full bg-goldPrimary text-maroonDark font-extrabold py-3 rounded-xl">DONE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Product Direct Payment & WhatsApp Checkout Modal (Same as Divya Bhagya Sutra) -->
+
+    <!-- MODAL: Free Report Form -->
+    <div id="free-report-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-lg w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl relative my-8">
+            <button onclick="closeFreeReportModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl hover:text-maroonMain">&times;</button>
+            <h3 class="font-cinzel text-2xl font-bold text-maroonDark mb-2">स्वर्णिमा जन्म-पत्रिका</h3>
+            <p class="text-xs text-maroonMain/70 mb-6">अपनी जन्म विवरण भरें ताकि स्वामी आत्मकल्याण तक जानकारी पहुँच सके।</p>
+            <form id="free-report-form" onsubmit="submitFreeReport(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase text-maroonDark mb-1">पूरा नाम (Full Name)</label>
+                    <input type="text" id="free-name" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-maroonDark mb-1">लिंग (Gender)</label>
+                        <select id="free-gender" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                            <option value="Male">Male (पुरुष)</option>
+                            <option value="Female">Female (स्त्री)</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-maroonDark mb-1">जन्म तारीख (DOB)</label>
+                        <input type="date" id="free-dob" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-maroonDark mb-1">जन्म समय (Birth Time)</label>
+                        <div class="flex gap-2">
+                            <input type="time" id="free-time" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                            <select id="free-ampm" class="px-2 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-sm font-bold">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-maroonDark mb-1">जन्म स्थान (Place)</label>
+                        <input type="text" id="free-place" placeholder="City / State" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase text-maroonDark mb-1">WhatsApp No (रिपोर्ट पाने के लिए)</label>
+                    <input type="tel" id="free-whatsapp" placeholder="10-digit mobile number" pattern="[0-9]{10}" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                </div>
+                <button type="submit" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-3.5 rounded-xl shadow-md transition-all cursor-pointer">
+                    GET MY CHART REPORT →
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Free Report Success -->
+    <div id="free-success-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl text-center space-y-4">
+            <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="font-cinzel text-xl font-bold text-maroonDark">आपका बहुत-बहुत शुक्रिया!</h3>
+            <p class="text-sm text-maroonMain/90 leading-relaxed">आपकी दी हुई जानकारी हम तक पहुँच गई है। हम आपकी रिपोर्ट 24 घंटे के अंदर आपके WhatsApp नंबर पर भेज देंगे।</p>
+            <div class="pt-2">
+                <button onclick="sendToWhatsAppDirect()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> GET UPDATE ON WHATSAPP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Paid Payment Modal (Divya Bhagya Sutra) -->
+
+    <!-- FULL-SCREEN CONSULTATION TAB MODAL -->
+    <div id="consultation-modal" class="fixed inset-0 bg-maroonDark z-[9999] hidden flex flex-col m-0 p-0 overflow-hidden w-screen h-screen">
+        
+        <div class="bg-maroonDark/95 border-b border-goldPrimary/30 text-warmWhite px-6 py-4 flex items-center justify-between shrink-0 shadow-lg">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-goldPrimary shadow-md">
+                    <img src="swami atmajagran logo.png" alt="Swami Atma Jagran Logo" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <span class="font-cinzel text-base font-bold text-goldPrimary block">Swami Atma Jagran — Consultation Hub</span>
+                    <span class="text-[10px] tracking-widest text-goldLight uppercase font-medium">Direct Booking & Spiritual Guidance</span>
+                </div>
+            </div>
+            <button onclick="closeConsultationModal()" class="bg-maroonMain hover:bg-maroonLight text-goldPrimary border border-goldPrimary/50 px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow transition-all cursor-pointer">
+                <i class="fa-solid fa-arrow-left"></i> Back to Home Screen
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto w-full bg-[#fcf8f2] text-[#4A0E17] px-4 sm:px-12 py-10 space-y-16">
+            
+            <div class="text-center max-w-3xl mx-auto space-y-4">
+                <h2 class="font-cinzel text-xs sm:text-sm tracking-widest uppercase font-extrabold text-[#5C1D24]">
+                    One Honest Conversation Can Help You See Everything Clearly.
+                </h2>
+                <h1 class="font-cinzel text-3xl sm:text-5xl font-extrabold text-[#4A0E17] leading-tight">
+                    Speak Directly with Swami Atmajagran — <br class="hidden sm:inline">The Guide Behind Profound Life Shifts.
+                </h1>
+                <p class="text-sm sm:text-base text-maroonMain/80 font-medium">
+                    Integrated direct-booking widget connected seamlessly to the interactive calendar.
+                </p>
+            </div>
+
+            <div class="max-w-7xl mx-auto bg-cardBg border-2 border-[#5C1D24]/30 rounded-3xl p-8 sm:p-12 shadow-xl">
+                <div class="text-center max-w-2xl mx-auto mb-10">
+                    <span class="text-xs uppercase font-bold tracking-widest text-[#5C1D24]">Core Value Proposition</span>
+                    <h3 class="font-cinzel text-2xl font-bold text-[#4A0E17] mt-1">Designed for seekers, professionals, and individuals navigating hurdles in career, finance, and relationships.</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-warmWhite p-6 rounded-2xl border border-[#5C1D24]/20 shadow-sm">
+                        <div class="w-12 h-12 bg-[#4A0E17] text-goldPrimary rounded-xl flex items-center justify-center text-xl mb-4 shadow"><i class="fa-solid fa-om"></i></div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-base mb-2">Spiritual Precision</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Decades of Vedic insights and karmic alignment translated into clear direction.</p>
+                    </div>
+                    <div class="bg-warmWhite p-6 rounded-2xl border border-[#5C1D24]/20 shadow-sm">
+                        <div class="w-12 h-12 bg-[#4A0E17] text-goldPrimary rounded-xl flex items-center justify-center text-xl mb-4 shadow"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-base mb-2">Absolute Authenticity</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Grounded wisdom with zero vague generalizations.</p>
+                    </div>
+                    <div class="bg-warmWhite p-6 rounded-2xl border border-[#5C1D24]/20 shadow-sm">
+                        <div class="w-12 h-12 bg-[#4A0E17] text-goldPrimary rounded-xl flex items-center justify-center text-xl mb-4 shadow"><i class="fa-solid fa-bolt"></i></div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-base mb-2">Immediate Shifts</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Transition from heavy confusion to an actionable, centered roadmap.</p>
+                    </div>
+                    <div class="bg-warmWhite p-6 rounded-2xl border border-[#5C1D24]/20 shadow-sm">
+                        <div class="w-12 h-12 bg-[#4A0E17] text-goldPrimary rounded-xl flex items-center justify-center text-xl mb-4 shadow"><i class="fa-solid fa-seedling"></i></div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-base mb-2">Root-Level Remedies</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Practical, personalized planetary layout solutions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-[#4A0E17]">Let’s Get to the Root of What’s Holding You Back</h3>
+                    <p class="text-xs sm:text-sm text-maroonMain/80 mt-1">Pinpoint the blocks in your life</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-cardBg border border-[#5C1D24]/30 rounded-3xl p-6 shadow-md">
+                        <div class="w-full h-40 rounded-2xl overflow-hidden mb-4 bg-maroonDark flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1495616811223-4d98c6e9c869?q=80&w=600&auto=format&fit=crop" alt="Career" class="w-full h-full object-cover opacity-80">
+                        </div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-lg mb-2">Career & Purpose</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Unblocking stagnant growth, evaluating pivots, and finding true direction.</p>
+                    </div>
+                    <div class="bg-cardBg border border-[#5C1D24]/30 rounded-3xl p-6 shadow-md">
+                        <div class="w-full h-40 rounded-2xl overflow-hidden mb-4 bg-maroonDark flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?q=80&w=600&auto=format&fit=crop" alt="Relationships" class="w-full h-full object-cover opacity-80">
+                        </div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-lg mb-2">Love & Relationships</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Resolving emotional distance and building authentic partnership harmony.</p>
+                    </div>
+                    <div class="bg-cardBg border border-[#5C1D24]/30 rounded-3xl p-6 shadow-md">
+                        <div class="w-full h-40 rounded-2xl overflow-hidden mb-4 bg-maroonDark flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?q=80&w=600&auto=format&fit=crop" alt="Money and Stability AI Generated" class="w-full h-full object-cover opacity-90">
+                        </div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-lg mb-2">Money & Stability</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Securing financial energy leakage and stabilizing long-term wealth growth.</p>
+                    </div>
+                    <div class="bg-cardBg border border-[#5C1D24]/30 rounded-3xl p-6 shadow-md">
+                        <div class="w-full h-40 rounded-2xl overflow-hidden mb-4 bg-maroonDark flex items-center justify-center">
+                            <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=600&auto=format&fit=crop" alt="Peace" class="w-full h-full object-cover opacity-80">
+                        </div>
+                        <h4 class="font-cinzel font-bold text-[#4A0E17] text-lg mb-2">Inner Peace & Well-being</h4>
+                        <p class="text-xs text-maroonMain/80 leading-relaxed">Restoring mental equilibrium and dissolving chronic stress loops.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-4xl mx-auto bg-[#4A0E17] border-2 border-goldPrimary/60 rounded-3xl p-6 sm:p-8 shadow-2xl text-warmWhite">
+                <h3 class="font-cinzel text-xl font-bold text-goldLight mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-user-pen text-goldPrimary"></i> Enter Your Details for Consultation
+                </h3>
+                <p class="text-xs text-warmWhite/80 mb-6">कृपया नीचे अपनी सही जानकारी भरें ताकि पेमेंट के बाद सारी डिटेल्स सीधे आपके WhatsApp से स्वामी जी तक पहुँच सकें।</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">पूरा नाम (Name)</label>
+                        <input type="text" id="consult-name" placeholder="आपका नाम" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म तारीख (DOB)</label>
+                        <input type="date" id="consult-dob" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म समय (Time & AM/PM)</label>
+                        <input type="text" id="consult-time" placeholder="जैसे 10:30 AM या PM" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म स्थान (Place)</label>
+                        <input type="text" id="consult-location" placeholder="शहर / राज्य" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">लिंग (Gender)</label>
+                        <select id="consult-gender" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                            <option value="Male">Male (पुरुष)</option>
+                            <option value="Female">Female (स्त्री)</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">WhatsApp No.</label>
+                        <input type="tel" id="consult-whatsapp" placeholder="10 अंक मोबाइल नंबर" pattern="[0-9]{10}" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="text-center max-w-2xl mx-auto">
+                    <h3 class="font-cinzel text-3xl font-bold text-[#4A0E17]">Choose the One That Fits You Best</h3>
+                    <p class="text-sm text-maroonMain/80 mt-1">Sometimes, one call to the right person can change everything.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                    
+                    <div class="bg-cardBg border-2 border-[#5C1D24]/40 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 rounded-full overflow-hidden border border-[#5C1D24] shrink-0">
+                                    <img src="swami atmajagran logo.png" alt="Swami" class="w-full h-full object-cover">
+                                </div>
+                                <h4 class="font-cinzel text-2xl font-bold text-[#4A0E17]">Individual Clarity Session</h4>
+                            </div>
+                            <p class="text-xs text-maroonMain/80 mb-6 font-medium">Target: Focused personal alignment and life direction.</p>
+                            
+                            <div class="space-y-4 mb-6 bg-warmWhite/70 p-4 rounded-2xl border border-[#5C1D24]/20">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold uppercase text-[#4A0E17]">Duration:</span>
+                                    <select id="pkg1-duration" class="px-3 py-1.5 rounded-xl bg-white border border-[#5C1D24]/30 text-xs font-bold text-[#4A0E17] focus:outline-none">
+                                        <option value="30 Min">30 Min</option>
+                                        <option value="1 Hour" selected>1 Hour</option>
+                                        <option value="2 Hours">2 Hours</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold uppercase text-[#4A0E17]">Consultation Type:</span>
+                                    <div class="inline-flex rounded-xl p-1 bg-maroonDark/10 border border-[#5C1D24]/20">
+                                        <button type="button" onclick="setConsultType('pkg1', 'audio')" id="pkg1-audio" class="px-3 py-1 text-xs font-bold rounded-lg bg-[#4A0E17] text-goldPrimary transition-all cursor-pointer">Audio</button>
+                                        <button type="button" onclick="setConsultType('pkg1', 'video')" id="pkg1-video" class="px-3 py-1 text-xs font-bold rounded-lg text-[#4A0E17] transition-all cursor-pointer">Video</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-xs font-bold uppercase tracking-wider text-[#5C1D24] mb-2">Highlights:</div>
+                            <ul class="space-y-2 text-xs text-maroonMain/90 mb-6">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i> Comprehensive energy and chart layout analysis</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i> Custom guidance for career & personal growth</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i> Practical alignment practices</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹999</div>
+                            <button onclick="openPaidProductForm('Individual Clarity Session', 999)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-cardBg border-2 border-[#5C1D24]/40 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="w-12 h-12 rounded-full overflow-hidden border border-[#5C1D24] shrink-0">
+                                    <img src="swami atmajagran logo.png" alt="Swami" class="w-full h-full object-cover">
+                                </div>
+                                <h4 class="font-cinzel text-2xl font-bold text-[#4A0E17]">Partnership & Harmony</h4>
+                            </div>
+                            <p class="text-xs text-maroonMain/80 mb-6 font-medium">Target: Couples navigating relationship dynamics, compatibility, or marriage decisions.</p>
+                            
+                            <div class="space-y-4 mb-6 bg-warmWhite/70 p-4 rounded-2xl border border-[#5C1D24]/20">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold uppercase text-[#4A0E17]">Duration:</span>
+                                    <select id="pkg2-duration" class="px-3 py-1.5 rounded-xl bg-white border border-[#5C1D24]/30 text-xs font-bold text-[#4A0E17] focus:outline-none">
+                                        <option value="30 Min">30 Min</option>
+                                        <option value="1 Hour" selected>1 Hour</option>
+                                        <option value="2 Hours">2 Hours</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-bold uppercase text-[#4A0E17]">Consultation Type:</span>
+                                    <div class="inline-flex rounded-xl p-1 bg-maroonDark/10 border border-[#5C1D24]/20">
+                                        <button type="button" onclick="setConsultType('pkg2', 'audio')" id="pkg2-audio" class="px-3 py-1 text-xs font-bold rounded-lg bg-[#4A0E17] text-goldPrimary transition-all cursor-pointer">Audio</button>
+                                        <button type="button" onclick="setConsultType('pkg2', 'video')" id="pkg2-video" class="px-3 py-1 text-xs font-bold rounded-lg text-[#4A0E17] transition-all cursor-pointer">Video</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-xs font-bold uppercase tracking-wider text-[#5C1D24] mb-2">Highlights:</div>
+                            <ul class="space-y-2 text-xs text-maroonMain/90 mb-6">
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i> Deep compatibility insights & matching</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i> Clarity on relationship bottlenecks</li>
+                                <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-600"></i> Joint spiritual growth alignment</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹1,299</div>
+                            <button onclick="openPaidProductForm('Partnership & Harmony', 1299)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                                Book Now
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bg-cardBg border-4 border-goldPrimary rounded-3xl p-8 sm:p-12 shadow-2xl grid grid-cols-1 lg:grid-cols-12 gap-10 items-center ring-8 ring-goldPrimary/20 animate-glow">
+                    <div class="lg:col-span-7 space-y-4">
+                        <span class="bg-goldPrimary text-maroonDark text-xs uppercase font-extrabold px-4 py-1.5 rounded-full shadow">VIP Ashram Master Panel</span>
+                        <h4 class="font-cinzel text-3xl sm:text-4xl font-bold text-[#4A0E17]">Meet Swami Atmajagran Ji in Ashram</h4>
+                        <p class="text-sm sm:text-base text-maroonMain/90 font-medium leading-relaxed">This is not for everyone. It is only for those who truly want answers, direction, and powerful results in life.</p>
+                        
+                        <div class="space-y-2.5 text-xs sm:text-sm text-maroonMain/90 pt-2 font-medium">
+                            <div class="flex items-center gap-2.5"><i class="fa-solid fa-check text-green-600 font-bold"></i> Your kundli will be checked and explained in front of you</div>
+                            <div class="flex items-center gap-2.5"><i class="fa-solid fa-check text-green-600 font-bold"></i> One on one spiritual and astrological advice</div>
+                            <div class="flex items-center gap-2.5"><i class="fa-solid fa-check text-green-600 font-bold"></i> Remedies and energy solutions shared instantly</div>
+                            <div class="flex items-center gap-2.5"><i class="fa-solid fa-check text-green-600 font-bold"></i> You can ask anything that is troubling you</div>
+                            <div class="flex items-center gap-2.5"><i class="fa-solid fa-check text-green-600 font-bold"></i> Powerful insights you will not find anywhere else</div>
+                        </div>
+
+                        <div class="pt-4 flex items-center gap-4 bg-warmWhite p-4 rounded-2xl border-2 border-[#5C1D24]/30 max-w-sm shadow">
+                            <span class="text-xs font-bold uppercase text-[#4A0E17]">Duration:</span>
+                            <select id="pkg3-duration" class="px-3 py-2 rounded-xl bg-white border border-[#5C1D24]/30 text-xs font-bold text-[#4A0E17] focus:outline-none">
+                                <option value="1 Hour" selected>1 Hour</option>
+                                <option value="2 Hours">2 Hours</option>
+                                <option value="3 Hours">3 Hours</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 space-y-6 bg-warmWhite p-6 rounded-3xl border-2 border-goldPrimary shadow-2xl text-center">
+                        <div class="w-full h-72 rounded-2xl overflow-hidden border-4 border-goldPrimary shadow-xl">
+                            <img src="image 2.png" alt="Swami Atmajagran sitting on chair in ashram" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <div class="text-left text-xs space-y-1.5 text-maroonMain/90 font-semibold px-2">
+                            <div><i class="fa-solid fa-clock text-[#5C1D24] mr-1.5"></i> Duration: <span id="ashram-dur-text">1 Hour</span></div>
+                            <div><i class="fa-solid fa-location-dot text-[#5C1D24] mr-1.5"></i> Location: Ashram in Bhopal (Face-to-Face)</div>
+                        </div>
+                        <div class="text-2xl font-extrabold text-[#4A0E17]">Price Starting from: ₹1,999 <span class="text-[10px] font-normal">(Incl. GST)</span></div>
+                        <button onclick="openPaidProductForm('Meet Swami Ji Ashram Session', 1999)" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-xl transition-all text-base cursor-pointer animate-glow">
+                            Consult Now
+                        </button>
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer id="consultation" class="bg-maroonDark border-t-2 border-goldPrimary/40 text-warmWhite py-16 px-4 text-center">
+        <div class="max-w-4xl mx-auto space-y-6">
+            <div class="w-20 h-20 rounded-full mx-auto border-2 border-goldPrimary overflow-hidden shadow-lg">
+                <img src="swami atmajagran logo.png" alt="Swami Atma Jagran" class="w-full h-full object-cover">
+            </div>
+            <h3 class="font-cinzel text-2xl font-bold text-goldPrimary">Swami Atma Jagran — The Digital Monk</h3>
+            <p class="text-sm text-goldLight/90">किसी भी समस्या या सहायता के लिए संपर्क करें:</p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-sm font-medium">
+                <a href="https://wa.me/917000534788" class="text-goldPrimary hover:underline"><i class="fa-brands fa-whatsapp mr-2"></i>WhatsApp / Call: +91 7000534788</a>
+            </div>
+            <p class="text-xs text-warmWhite/60 pt-4">धन्यवाद! आपका भविष्य आपके अपने हाथों में है।</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Automation Logic -->
+    <script>
+        let currentUserData = {};
+        let activeConsultationPlan = { name: '', price: '', duration: '', type: '' };
+        let activeProductDetails = { name: '', price: '' };
+        let pkgTypes = { pkg1: 'audio', pkg2: 'audio' };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadJigyasuStorage();
+            renderZodiacButtons();
+        });
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function openConsultationModal() {
+            document.getElementById('consultation-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeConsultationModal() {
+            document.getElementById('consultation-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Product Modal Logic (Lagan Maya, Shukra Maya, D10 Destiny)
+        function openProductModal(prodName, prodPrice) {
+            activeProductDetails = { name: prodName, price: prodPrice };
+            document.getElementById('modal-product-title').innerText = prodName + " (₹" + prodPrice + ")";
+            document.getElementById('modal-product-price-tag').innerText = "₹" + prodPrice;
+            document.getElementById('product-payment-modal').classList.remove('hidden');
+        }
+        function closeProductModal() {
+            document.getElementById('product-payment-modal').classList.add('hidden');
+        }
+
+        function submitProductOrder() {
+            const name = document.getElementById('prod-name').value.trim();
+            const dob = document.getElementById('prod-dob').value.trim();
+            const time = document.getElementById('prod-time').value.trim();
+            const place = document.getElementById('prod-place').value.trim();
+            const whatsapp = document.getElementById('prod-whatsapp').value.trim();
+
+            if (!name || !dob || !time || !place || !whatsapp) {
+                alert('कृपया अपनी सभी जन्म डिटेल्स भरें।');
+                return;
+            }
+
+            const submission = {
+                name: name,
+                type: activeProductDetails.name + ' (₹' + activeProductDetails.price + ')',
+                whatsapp: whatsapp,
+                details: `DOB: ${dob}, Time: ${time}, Place: ${place}`,
+                status: 'Payment Done / Pending Verification'
+            };
+            saveJigyasuSubmission(submission);
+
+            const msg = `Namaste Swami Ji, I have paid ₹${activeProductDetails.price} for *${activeProductDetails.name}*.\n\n*My Details:*\n- Name: ${name}\n- DOB: ${dob}\n- Birth Time: ${time}\n- Birth Place: ${place}\n- WhatsApp: ${whatsapp}\n\nPlease send my report and prompt access.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+            closeProductModal();
+        }
+
+        // Free Report Modal
+        function openFreeReportModal() {
+            document.getElementById('free-report-modal').classList.remove('hidden');
+        }
+        function closeFreeReportModal() {
+            document.getElementById('free-report-modal').classList.add('hidden');
+        }
+        function submitFreeReport(e) {
+            e.preventDefault();
+            const name = document.getElementById('free-name').value;
+            const gender = document.getElementById('free-gender').value;
+            const dob = document.getElementById('free-dob').value;
+            const time = document.getElementById('free-time').value + ' ' + document.getElementById('free-ampm').value;
+            const place = document.getElementById('free-place').value;
+            const whatsapp = document.getElementById('free-whatsapp').value;
+
+            currentUserData = { name, gender, dob, time, place, whatsapp };
+
+            const submission = {
+                name: name,
+                type: 'Swarnima Janm Patrika (Free)',
+                whatsapp: whatsapp,
+                details: `DOB: ${dob}, Time: ${time}, Place: ${place}`,
+                status: 'Free Report Requested'
+            };
+            saveJigyasuSubmission(submission);
+
+            closeFreeReportModal();
+            document.getElementById('free-success-modal').classList.remove('hidden');
+        }
+        function sendToWhatsAppDirect() {
+            const d = currentUserData;
+            const msg = `Namaste Swami Ji, I have requested the free *Swarnima Janm Patrika*.\n\n*My Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}\n\nPlease check my chart.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+            document.getElementById('free-success-modal').classList.add('hidden');
+        }
+
+        // Paid Modal (Divya Bhagya Sutra)
+        function openPaidModal() {
+            document.getElementById('paid-payment-modal').classList.remove('hidden');
+        }
+        function closePaidModal() {
+            document.getElementById('paid-payment-modal').classList.add('hidden');
+        }
+        function submitPaidOrder() {
+            const name = document.getElementById('paid-name').value;
+            const dob = document.getElementById('paid-dob').value;
+            const time = document.getElementById('paid-time').value;
+            const place = document.getElementById('paid-place').value;
+            const whatsapp = document.getElementById('paid-whatsapp').value;
+
+            if(!name || !dob || !time || !place || !whatsapp) {
+                alert('कृपया सभी डिटेल्स भरें।');
+                return;
+            }
+
+            const submission = {
+                name: name,
+                type: 'Divya Bhagya Sutra (₹999 Master)',
+                whatsapp: whatsapp,
+                details: `DOB: ${dob}, Time: ${time}, Place: ${place}`,
+                status: 'Paid / Verification Pending'
+            };
+            saveJigyasuSubmission(submission);
+
+            const msg = `Namaste Swami Ji, I have paid ₹999 for *Divya Bhagya Sutra (Master Edition)*.\n\n*My Details:*\n- Name: ${name}\n- DOB: ${dob}\n- Time: ${time}\n- Place: ${place}\n- WhatsApp: ${whatsapp}\n\nPlease verify and send my complete master report.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+            closePaidModal();
+        }
+
+        // Kundli Milan
+        function submitKundliMilan(e) {
+            e.preventDefault();
+            const bName = document.getElementById('boy-name').value;
+            const bDob = document.getElementById('boy-dob').value;
+            const bPlace = document.getElementById('boy-place').value;
+            const gName = document.getElementById('girl-name').value;
+            const gDob = document.getElementById('girl-dob').value;
+            const gPlace = document.getElementById('girl-place').value;
+
+            const score = Math.floor(Math.random() * 7) + 26; // 26 to 32
+            document.getElementById('result-score-title').innerText = `गुण मिलन स्कोर: ${score} / 36 (उत्तम मिलन)`;
+            document.getElementById('milan-result-box').classList.remove('hidden');
+
+            const submission = {
+                name: `${bName} & ${gName}`,
+                type: `Kundli Milan (${score}/36 Guna)`,
+                whatsapp: 'Provided via Form',
+                details: `Boy: ${bDob} (${bPlace}) | Girl: ${gDob} (${gPlace})`,
+                status: 'Gun Milan Calculated'
+            };
+            saveJigyasuSubmission(submission);
+
+            const msg = `Namaste Swami Ji, हमने कुंडली गुण मिलन किया है और हमारा स्कोर ${score}/36 आया है।\n\n*वर (Boy):* ${bName}, DOB: ${bDob}, Place: ${bPlace}\n*वधू (Girl):* ${gName}, DOB: ${gDob}, Place: ${gPlace}\n\nकृपया मंगल दोष व विवाह मिलन की विस्तृत रिपोर्ट प्रदान करें।`;
+            document.getElementById('milan-whatsapp-btn').href = `https://wa.me/917000534788?text=${encodeURIComponent(msg)}`;
+        }
+
+        // Horoscope Modal
+        const rashifalData = {
+            'मेष (Aries)': { desc: 'आज का दिन आपके लिए ऊर्जावान रहेगा। कार्यक्षेत्र में नए अवसर मिलेंगे और परिवार का सहयोग प्राप्त होगा। अपने स्वास्थ्य का ध्यान रखें।', mantra: 'ॐ अं अंगारकाय नमः' },
+            'वृषभ (Taurus)': { desc: 'धन लाभ के योग बन रहे हैं। वाणी पर संयम रखें। व्यवसाय में रुका हुआ पैसा वापस मिल सकता है। पारिवारिक माहौल शांत रहेगा।', mantra: 'ॐ शुं शुक्राय नमः' },
+            'मिथुन (Gemini)': { desc: 'बुद्धि और विवेक से किए गए कार्यों में सफलता मिलेगी। यात्रा के योग हैं। विद्यार्थियों के लिए समय उत्तम है।', mantra: 'ॐ बुं बुधाय नमः' },
+            'कर्क (Cancer)': { desc: 'मन में थोड़े उतार-चढ़ाव रह सकते हैं। माता का स्वास्थ्य उत्तम रहेगा। महत्वपूर्ण निर्णय सोच-समझकर लें।', mantra: 'ॐ सूं सोमाय नमः' },
+            'सिंह (Leo)': { desc: 'मान-सम्मान में वृद्धि होगी। नेतृत्व क्षमता निखर कर आएगी। नौकरीपेशा लोगों के लिए प्रमोशन के योग बन रहे हैं।', mantra: 'ॐ घृणि सूर्याय नमः' },
+            'कन्या (Virgo)': { desc: 'अचानक धन प्राप्ति के योग हैं। विरोधियों पर विजय प्राप्त होगी। कानूनी मामलों में राहत मिल सकती है।', mantra: 'ॐ बुं बुधाय नमः' },
+            'तुला (Libra)': { desc: 'प्रेम प्रसंगों में सफलता मिलेगी। दांपत्य जीवन मधुर रहेगा। साझीदारी के व्यापार में लाभ होगा।', mantra: 'ॐ शुं शुक्राय नमः' },
+            'वृश्चिक (Scorpio)': { desc: 'कार्यक्षेत्र में अधिक परिश्रम करना पड़ेगा। गुप्त शत्रुओं से सावधान रहें। हनुमान चालीसा का पाठ करें।', mantra: 'ॐ अं अंगारकाय नमः' },
+            'धनु (Sagittarius)': { desc: 'भाग्य का पूरा साथ मिलेगा। धार्मिक कार्यों में रुचि बढ़ेगी। उच्च शिक्षा के लिए विद्यार्थियों को विदेश जाने के अवसर मिल सकते हैं।', mantra: 'ॐ बृं बृहस्पतये नमः' },
+            'मकर (Capricorn)': { desc: 'भूमि या वाहन खरीदने के योग हैं। कार्यस्थल पर सहकर्मियों का सहयोग मिलेगा। स्वास्थ्य का ध्यान रखें।', mantra: 'ॐ शं शनैश्चराय नमः' },
+            'कुंभ (Aquarius)': { desc: 'मित्रों से मुलाकात होगी जो लाभदायक सिद्ध होगी। रचनात्मक कार्यों में मन लगेगा। आर्थिक स्थिति मजबूत होगी।', mantra: 'ॐ शं शनैश्चराय नमः' },
+            'मीन (Pisces)': { desc: 'आध्यात्मिक उन्नति होगी। मन शांत और प्रसन्न रहेगा। व्यापार में नए अनुबंध हो सकते हैं।', mantra: 'ॐ बृं बृहस्पतये नमः' }
+        };
+        function openRashifalModal(signName) {
+            const data = rashifalData[signName] || { desc: 'आज का दिन आपके लिए मंगलमय रहेगा।', mantra: 'ॐ नमः शिवाय' };
+            document.getElementById('rashifal-title').innerText = signName + ' राशिफल';
+            document.getElementById('rashifal-desc').innerText = data.desc;
+            document.getElementById('rashifal-mantra').innerText = `"${data.mantra}"`;
+            document.getElementById('rashifal-modal').classList.remove('hidden');
+        }
+        function closeRashifalModal() {
+            document.getElementById('rashifal-modal').classList.add('hidden');
+        }
+
+        // Consultation Flow
+        function setConsultType(pkgId, type) {
+            pkgTypes[pkgId] = type;
+            if(type === 'audio') {
+                document.getElementById(`${pkgId}-audio`).className = 'px-3 py-1 text-xs font-bold rounded-lg bg-[#4A0E17] text-goldPrimary transition-all cursor-pointer';
+                document.getElementById(`${pkgId}-video`).className = 'px-3 py-1 text-xs font-bold rounded-lg text-[#4A0E17] transition-all cursor-pointer';
+            } else {
+                document.getElementById(`${pkgId}-video`).className = 'px-3 py-1 text-xs font-bold rounded-lg bg-[#4A0E17] text-goldPrimary transition-all cursor-pointer';
+                document.getElementById(`${pkgId}-audio`).className = 'px-3 py-1 text-xs font-bold rounded-lg text-[#4A0E17] transition-all cursor-pointer';
+            }
+        }
+
+        function selectConsultationPackage(planName, price, pkgKey) {
+            const name = document.getElementById('consult-name').value.trim();
+            const dob = document.getElementById('consult-dob').value.trim();
+            const time = document.getElementById('consult-time').value.trim();
+            const location = document.getElementById('consult-location').value.trim();
+            const gender = document.getElementById('consult-gender').value.trim();
+            const whatsapp = document.getElementById('consult-whatsapp').value.trim();
+
+            if (!name || !dob || !time || !location || !whatsapp) {
+                alert('कृपया कंसल्टेशन बुक करने से पहले ऊपर दिए गए फॉर्म में अपनी सारी डिटेल्स (नाम, DOB, समय, स्थान, WhatsApp) भरें।');
+                document.getElementById('consult-name').focus();
+                return;
+            }
+
+            let duration = document.getElementById(`${pkgKey}-duration`) ? document.getElementById(`${pkgKey}-duration`).value : '1 Hour';
+            let cType = pkgTypes[pkgKey] || 'audio';
+
+            activeConsultationPlan = { name, price, duration, type: cType, planTitle: planName };
+
+            document.getElementById('selected-plan-title').innerText = `${planName} (${duration} - ${cType.toUpperCase()})`;
+            document.getElementById('selected-plan-price').innerText = `₹${price}`;
+
+            document.getElementById('consult-payment-card').classList.remove('hidden');
+            document.getElementById('consult-payment-card').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function sendConsultationToWhatsApp() {
+            const name = document.getElementById('consult-name').value;
+            const dob = document.getElementById('consult-dob').value;
+            const time = document.getElementById('consult-time').value;
+            const location = document.getElementById('consult-location').value;
+            const gender = document.getElementById('consult-gender').value;
+            const whatsapp = document.getElementById('consult-whatsapp').value;
+            const p = activeConsultationPlan;
+
+            const submission = {
+                name: name,
+                type: `Consultation: ${p.planTitle} (${p.duration} ${p.type})`,
+                whatsapp: whatsapp,
+                details: `DOB: ${dob}, Time: ${time}, Place: ${location}`,
+                status: 'Consultation Booked & Paid'
+            };
+            saveJigyasuSubmission(submission);
+
+            const msg = `Namaste Swami Ji, I have paid ₹${p.price} for *${p.planTitle}* (${p.duration}, ${p.type.toUpperCase()}).\n\n*My Personal Details:*\n- Name: ${name}\n- Gender: ${gender}\n- DOB: ${dob}\n- Birth Time: ${time}\n- Birth Place: ${location}\n- WhatsApp: ${whatsapp}\n\nPlease confirm my consultation slot.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Cosmic Sanctuary & Oracle
+        const zodiacSigns = ['मेष (Aries)', 'वृषभ (Taurus)', 'मिथुन (Gemini)', 'कर्क (Cancer)', 'सिंह (Leo)', 'कन्या (Virgo)', 'तुला (Libra)', 'वृश्चिक (Scorpio)', 'धनु (Sagittarius)', 'मकर (Capricorn)', 'कुंभ (Aquarius)', 'मीन (Pisces)'];
+        let selectedEnergySign = 'मेष (Aries)';
+
+        function renderZodiacButtons() {
+            const container = document.getElementById('zodiac-buttons-container');
+            if(!container) return;
+            container.innerHTML = zodiacSigns.map(sign => `
+                <button type="button" onclick="selectEnergySign('${sign}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${sign === selectedEnergySign ? 'bg-gold text-black border-gold' : 'bg-white/10 text-gray-300 border-white/20 hover:bg-white/20'}">
+                    ${sign}
+                </button>
+            `).join('');
+        }
+
+        function selectEnergySign(sign) {
+            selectedEnergySign = sign;
+            renderZodiacButtons();
+        }
+
+        function generateDailyEnergy() {
+            const score = Math.floor(Math.random() * 15) + 84;
+            const vibes = [
+                'High Spiritual Clarity & Manifestation Power',
+                'Karmic Breakthrough & Deep Intuitive Alignment',
+                'Financial Flow & Professional Opportunity Window',
+                'Inner Transformation & Emotional Sovereignty'
+            ];
+            const times = ['06:15 AM - 07:45 AM', '11:30 AM - 01:00 PM', '04:20 PM - 05:50 PM', '08:00 PM - 09:30 PM'];
+            const mantras = [
+                `"Om Vam Vam Namah — Channeling inner cosmic sovereignty for ${selectedEnergySign}."`,
+                `"Om Hreem Suryaya Namah — Radiating supreme vital frequency."`,
+                `"Om Aim Kleem Brihaspataye Namah — Unlocking divine wisdom & grace."`
+            ];
+
+            document.getElementById('res-sign-title').innerText = `Energy Index (${selectedEnergySign})`;
+            document.getElementById('res-score').innerText = score + '%';
+            document.getElementById('res-vibe').innerText = vibes[Math.floor(Math.random() * vibes.length)];
+            document.getElementById('res-time').innerText = times[Math.floor(Math.random() * times.length)];
+            document.getElementById('res-mantra').innerText = mantras[Math.floor(Math.random() * mantras.length)];
+            document.getElementById('energy-result-panel').classList.remove('hidden');
+        }
+
+        function consultGuruOracle(e) {
+            e.preventDefault();
+            const q = document.getElementById('oracle-question-input').value.trim();
+            if(!q) return;
+
+            const insights = [
+                `"The cosmos reflects that your question regarding '${q}' holds a karmic lesson of patience. Stop forcing outcomes; the planetary gates open favorably by next Tuesday."`,
+                `"Through the lens of your query on '${q}', your chart reveals an unconscious fear of success. Surrender the old identity; a profound breakthrough is knocking."`,
+                `"Regarding '${q}', the celestial alignment advises a complete pivot in your approach. Trust the silence within; the answer is already written in your D1 chart."`
+            ];
+
+            const text = insights[Math.floor(Math.random() * insights.length)];
+            document.getElementById('oracle-insight-text').innerText = text;
+            document.getElementById('oracle-insight-box').classList.remove('hidden');
+        }
+
+        // Jigyasu Patal — PUBLIC SAFE VIEW
+        // Only non-sensitive order status is shown here. DOB, birth time/place, WhatsApp and Payment ID stay private.
+        function loadJigyasuStorage() {
+            const tbody = document.getElementById('jigyasu-table-body');
+            if(!tbody) return;
+            let list=[];
+            try { list=JSON.parse(localStorage.getItem('swami_public_order_status_v1') || '[]'); } catch(e) { list=[]; }
+            if(list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-6 text-center text-warmWhite/50 text-xs italic">No active paid orders yet.</td></tr>`;
+                return;
+            }
+            const escPub=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+            const countdownPub=ms=>{ if(ms<=0)return 'Due now'; const h=Math.floor(ms/3600000),m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60; return h+'h '+m+'m '+s+'s'; };
+            const paymentBadge=item=>{
+                const st=item.paymentStatus||'PAYMENT_PENDING';
+                if(st==='PAYMENT_ID_RECEIVED' || st==='PAYMENT_RETURNED') return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-900/60 text-amber-200 border border-amber-500/30"><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-300 animate-pulse"></span>Awaiting Verification</span>`;
+                if(st==='PAYMENT_VERIFIED' || st==='PAYMENT_SUCCESS_CALLBACK') return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-900/60 text-emerald-300 border border-emerald-500/30">✓ Payment Verified</span>`;
+                return `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-red-950/70 text-red-300 border border-red-500/40"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full border border-red-400 animate-pulse">×</span> Payment Not Verified</span>`;
+            };
+            tbody.innerHTML = list.map(item=>{
+                const due=Number(item.dueAt||0), left=due-Date.now();
+                return `<tr class="hover:bg-maroonMain/30 transition-colors border-b border-goldPrimary/10">
+                    <td class="py-3 px-4 font-bold text-goldLight">${escPub(item.name)}</td>
+                    <td class="py-3 px-4 text-warmWhite text-xs">${escPub(item.product)}</td>
+                    <td class="py-3 px-4 text-center"><span class="font-mono text-xs text-goldLight jigyasu-countdown" data-due="${due}">${countdownPub(left)}</span></td>
+                    <td class="py-3 px-4 text-center">${paymentBadge(item)}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        function clearJigyasuStorage() {
+            if(confirm('Are you sure you want to clear public order tracking history?')) {
+                localStorage.removeItem('swami_public_order_status_v1');
+                loadJigyasuStorage();
+            }
+        }
+
+        setInterval(()=>{
+            document.querySelectorAll('.jigyasu-countdown').forEach(el=>{
+                const ms=Number(el.dataset.due)-Date.now();
+                if(ms<=0){el.textContent='Due now';return;}
+                const h=Math.floor(ms/3600000),m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60;
+                el.textContent=h+'h '+m+'m '+s+'s';
+            });
+        },1000);
+
+    </script>
+
+    <!-- UNIVERSAL RAZORPAY PAYMENT-BUTTON FLOW — CLOUDFLARE DIRECT UPLOAD / NO WORKERS -->
+    <!-- IMPORTANT: A custom email cannot be sent automatically from this static page using the customer's
+         email entered inside Razorpay Checkout. the old hosted payment button exposed limited client data
+         to this page. Custom post-payment email requires a server/webhook or an external email automation
+         service. Do not put SMTP/API secrets in this HTML file. -->
+<script>
+(function(){
+  const OWNER_WA='917000534788';
+  const ORDER_KEY='swami_all_product_orders_direct_v2';
+  const PRODUCTS={
+    'Swarnima Janm Patrika':{price:1},
+    'Lagan Maya Sutra':{price:299},
+    'Shukra Maya Sutra':{price:399},
+    'D10 Destiny Sutra':{price:799},
+    'Divya Bhagya Sutra':{price:999},
+    'Individual Clarity Session':{price:999},
+    'Partnership & Harmony':{price:1299},
+    'Meet Swami Ji Ashram Session':{price:1999}
+  };
+  let active=null;
+  const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const PUBLIC_STATUS_KEY='swami_public_order_status_v1';
+  const PRIVATE_PASSWORD='2580';
+  const SECURE_KEY_VERSION=1;
+  const te=new TextEncoder(),td=new TextDecoder();
+  function bytesToB64(a){let x='';for(const b of a)x+=String.fromCharCode(b);return btoa(x);}
+  function b64ToBytes(s){const x=atob(s),a=new Uint8Array(x.length);for(let i=0;i<x.length;i++)a[i]=x.charCodeAt(i);return a;}
+  async function makeCryptoKey(password,salt){
+    const base=await crypto.subtle.importKey('raw',te.encode(password),'PBKDF2',false,['deriveKey']);
+    return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:120000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  }
+  async function encryptPrivateData(order){
+    if(!window.crypto?.subtle) return null;
+    const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+    const key=await makeCryptoKey(PRIVATE_PASSWORD,salt);
+    const privatePart={dob:order.dob,gender:order.gender,birthTime:order.birthTime,birthAmPm:order.birthAmPm,birthPlace:order.birthPlace,razorpayPaymentId:order.razorpayPaymentId||'',paymentReturnedAt:order.paymentReturnedAt||'',createdAt:order.createdAt};
+    const cipher=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,te.encode(JSON.stringify(privatePart)));
+    return {v:SECURE_KEY_VERSION,s:bytesToB64(salt),i:bytesToB64(iv),d:bytesToB64(new Uint8Array(cipher))};
+  }
+  async function decryptPrivateData(blob,password){
+    try{
+      const key=await makeCryptoKey(password,b64ToBytes(blob.s));
+      const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64ToBytes(blob.i)},key,b64ToBytes(blob.d));
+      return JSON.parse(td.decode(plain));
+    }catch(e){return null;}
+  }
+  let secureSaveSeq=0;
+  function saveOrdersSecure(a){
+    const seq=++secureSaveSeq;
+    // Immediately persist only the non-sensitive fields needed by the payment-return flow.
+    const minimal=a.map(o=>({id:o.id,product:o.product,price:o.price,name:o.name,status:o.status,paymentStatus:o.paymentStatus||o.status,createdAt:o.createdAt,reportStatus:o.reportStatus||'Pending',_private:o._private||null}));
+    localStorage.setItem(ORDER_KEY,JSON.stringify(minimal));
+    (async()=>{
+      const secured=[];
+      for(const o of a){
+        const m=minimal.find(x=>x.id===o.id); secured.push({...m,_private:await encryptPrivateData(o)});
+      }
+      if(seq===secureSaveSeq) localStorage.setItem(ORDER_KEY,JSON.stringify(secured));
+    })();
+  }
+  function savePublicOrder(order){
+    const publicOrder={id:order.id,name:order.name,product:order.product,dueAt:new Date(order.createdAt).getTime()+86400000,paymentStatus:order.paymentStatus||order.status||'PAYMENT_PENDING',updatedAt:new Date().toISOString()};
+    let list=[];try{list=JSON.parse(localStorage.getItem(PUBLIC_STATUS_KEY)||'[]')}catch(e){}
+    const i=list.findIndex(x=>x.id===order.id);if(i>=0)list[i]=publicOrder;else list.unshift(publicOrder);
+    localStorage.setItem(PUBLIC_STATUS_KEY,JSON.stringify(list.slice(0,100)));
+    if(typeof window.loadJigyasuStorage==='function') window.loadJigyasuStorage();
+  }
+  const orders=()=>{try{return JSON.parse(localStorage.getItem(ORDER_KEY)||'[]')}catch(e){return[]}};
+  const saveOrders=a=>saveOrdersSecure(a);
+  window.__swamiDecryptPrivateData=decryptPrivateData;
+  window.__swamiSaveOrdersSecure=saveOrdersSecure;
+
+  function ensureModal(){
+    let m=document.getElementById('universal-paid-modal');
+    if(m)return m;
+    m=document.createElement('div');
+    m.id='universal-paid-modal';
+    m.className='fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[115] hidden items-center justify-center p-4 overflow-y-auto';
+    m.innerHTML=`<div id="universal-paid-box" class="bg-cardBg max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl relative my-6"></div>`;
+    document.body.appendChild(m);
+    return m;
+  }
+
+  function renderDetails(){
+    const m=ensureModal(),box=document.getElementById('universal-paid-box'),p=active.product;
+    box.innerHTML=`
+      <button onclick="closeUniversalPaidModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl">&times;</button>
+      <div class="text-center mb-5">
+        <div class="w-16 h-16 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-2xl shadow">✦</div>
+        <p class="text-[10px] tracking-[.22em] uppercase text-maroonMain/60 mt-4">Secure Order • Razorpay</p>
+        <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">${esc(p)}</h3>
+        <p class="text-sm text-maroonMain/70 mt-2">Apni janm-jankari neeche bhariye. Details ke turant neeche official Razorpay Standard Checkout diya gaya hai.</p>
+      </div>
+      <form id="universal-details-form" class="space-y-3" onsubmit="return false;">
+        <input id="u-name" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name">
+        <div class="grid grid-cols-2 gap-3">
+          <input id="u-dob" type="date" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
+          <select id="u-gender" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <input id="u-time" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Time (e.g. 10:30)">
+          <select id="u-ampm" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">AM / PM</option><option>AM</option><option>PM</option></select>
+        </div>
+        <input id="u-place" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Place / Location">
+      </form>
+      <div class="mt-5 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-left text-xs sm:text-sm text-amber-900 leading-relaxed">
+        <b>🔐 Important:</b> Payment complete hone ke baad Razorpay aapko unique <b>Payment ID</b> dega. Website par wapas aane ke baad aapko wahi Payment ID copy karke paste karni hogi. Payment ID ke bina report processing start nahi hogi.
+      </div>
+      <div class="mt-4 rounded-2xl bg-white border-2 border-goldPrimary/30 p-5 shadow-inner">
+        <div class="text-center text-xs font-bold text-maroonMain/70 mb-3">SECURE PAYMENT</div>
+        <div id="universal-rzp-host-${p.replace(/[^a-z0-9]/gi,'-')}-${Date.now()}" class="min-h-[58px] flex items-center justify-center"></div>
+        <p id="universal-rzp-note" class="text-[11px] text-maroonMain/60 text-center mt-3">Upar apni details complete karke neeche diye gaye official Razorpay button se secure payment karein.</p>
+      </div>`;
+
+    const host=[...box.querySelectorAll('[id^="universal-rzp-host-"]')][0];
+    const source=document.getElementById('rzp-static-form-'+active.product.replace(/[^a-z0-9]/gi,'-'));
+    if(!host || !source){
+      alert('Razorpay Standard Checkout could not be loaded. Please refresh the page and try again.');
+      return;
+    }
+    const activeForm=source;
+    activeForm.dataset.originalRzpId=source.id;
+    activeForm.id='rzp-active-form-'+Date.now();
+    activeForm.classList.remove('hidden');
+    host.appendChild(activeForm);
+
+    const fields=['u-name','u-dob','u-gender','u-time','u-ampm','u-place'].map(id=>document.getElementById(id));
+    const syncOrder=()=>{
+      const [name,dob,gender,time,ampm,place]=fields.map(x=>x.value.trim());
+      const valid=!!(name&&dob&&gender&&time&&ampm&&place);
+      if(valid){
+        active.customer={name,dob,gender,time,ampm,place};
+        const order={id:'ORD-'+Date.now().toString(36).toUpperCase(),product:active.product,price:active.price,name,dob,gender,birthTime:time,birthAmPm:ampm,birthPlace:place,status:'PAYMENT_PENDING',createdAt:new Date().toISOString(),reportStatus:'Pending'};
+        active.order=order;
+        const a=orders();
+        const existing=a.findIndex(o=>o.id===order.id);
+        if(existing<0){a.unshift(order);saveOrders(a);} else {a[existing]=order;saveOrders(a);}
+        savePublicOrder(order);
+        localStorage.setItem('swami_active_product_order',JSON.stringify(order));
+        sessionStorage.setItem('swami_waiting_payment_return','1');
+        sessionStorage.setItem('swami_waiting_payment_order_id',order.id);
+      }
+      return valid;
+    };
+    fields.forEach(f=>f.addEventListener('input',syncOrder));
+    fields.forEach(f=>f.addEventListener('change',syncOrder));
+    // Official Razorpay Standard Checkout is shown directly below the details.
+    // Customer completes the details first, then uses the Razorpay button.
+    // Details are saved locally as they are entered so the post-payment Payment ID flow can continue.
+    fields.forEach(f=>f.addEventListener('blur',syncOrder));
+  }
+  function showPaymentIdEntry(){ return; }
+  window.verifyEnteredPaymentId=function(){ return; };
+
+  function observeReturnToPage(orderId){
+    // Static Direct Upload has no server to verify a payment ID. This fallback only asks the
+    // customer to enter the ID after returning; it does NOT cryptographically verify payment.
+  }
+
+  function confirmPaid(id){
+    // Legacy callback hook retained for compatibility. Payment-ID flow is the active Direct Upload flow.
+    return;
+  }
+
+  function showGetReport(o){ showCongrats(o); }
+
+  function showCongrats(o){
+    const box=document.getElementById('universal-paid-box');
+    box.innerHTML=`
+      <div class="text-center py-4">
+        <div class="w-24 h-24 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-5xl shadow-xl">✦</div>
+        <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-5">🎉 Congratulations</h3>
+        <p class="text-lg font-semibold text-maroonMain mt-4">Namaste ${esc(o.name)} 🙏</p>
+        <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapki <b>details &amp; payment receive ho gayi hai.</b><br>Humne aapki details Swami Ji tak pohacha di hain.<br><b>Report processing started.</b></p>
+        <div class="mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-sm text-emerald-900 text-left leading-relaxed">
+          ✓ Payment received<br>✓ Details received<br>✓ Swami Ji ko details forward kar di gayi hain<br>✓ Report processing started<br>📲 Report <b>24 hours ke andar</b> aapke WhatsApp par pohach jayegi.
+        </div>
+        <p class="text-sm text-maroonMain/80 mt-6 leading-relaxed">Dhanyawad 🙏 Aapke vishwas ke liye hum aabhari hain.</p>
+        <button onclick="closeUniversalPaidModal()" class="mt-5 w-full bg-goldPrimary text-maroonDark font-extrabold py-3.5 rounded-xl">DONE</button>
+      </div>`;
+  }
+
+  window.openPaidProductForm=function(name,price,buttonId){
+    // Backward compatibility: if an old URL was accidentally passed, use the configured product button ID.
+    const cfg=PRODUCTS[name];
+    active={product:name,price:Number(price)||cfg?.price||0,buttonId:(cfg?.buttonId||buttonId||'')};
+    ensureModal();renderDetails();
+    const m=document.getElementById('universal-paid-modal');m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+  };
+  window.closeUniversalPaidModal=function(){
+    const m=document.getElementById('universal-paid-modal');
+    const activeForm=m?.querySelector('form[id^="rzp-active-form-"]');
+    const pool=document.getElementById('razorpay-static-buttons');
+    if(activeForm && pool){
+      const originalId=activeForm.dataset.originalRzpId;
+      if(originalId) activeForm.id=originalId;
+      activeForm.classList.add('hidden');
+      pool.appendChild(activeForm);
+    }
+    if(m){m.classList.add('hidden');m.classList.remove('flex');}
+    document.body.style.overflow='';
+  };
+
+  // Keep the old Lagan function name working if any hidden/legacy markup still references it.
+  window.openLaganPayment=function(){window.openPaidProductForm('Lagan Maya Sutra',299,PRODUCTS['Lagan Maya Sutra'].buttonId);};
+  window.closeLaganPayment=window.closeUniversalPaidModal;
+
+  // If Razorpay does not redirect back with a callback, show the Payment ID fallback
+  // when the customer returns to this page after leaving the payment flow.
+  let paymentIdPanelShownFor='';
+  function maybeShowPaymentIdFallback(){
+    if(sessionStorage.getItem('swami_waiting_payment_return')!=='1') return;
+    const orderId=sessionStorage.getItem('swami_waiting_payment_order_id')||'';
+    const raw=localStorage.getItem('swami_active_product_order');
+    if(!raw) return;
+    let o;try{o=JSON.parse(raw)}catch(e){return}
+    if(orderId && o.id!==orderId) return;
+    if((o.status||'').startsWith('PAYMENT_SUCCESS')) return;
+    if(paymentIdPanelShownFor===o.id) return;
+    paymentIdPanelShownFor=o.id;
+    ensureModal();
+    const m=document.getElementById('universal-paid-modal');
+    m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+    showPaymentIdEntry(o);
+  }
+  // Razorpay Standard Checkout can return to this page without a full manual refresh.
+  // Keep watching for the checkout to hand control back to the page so the Payment ID
+  // panel appears immediately for every product. This is intentionally a UI hand-off;
+  // it does not claim cryptographic payment verification.
+  let paymentReturnWatcher=null;
+  function startPaymentReturnWatcher(){
+    if(paymentReturnWatcher) return;
+    paymentReturnWatcher=setInterval(()=>{
+      maybeShowPaymentIdFallback();
+      if(sessionStorage.getItem('swami_waiting_payment_return')!=='1'){
+        clearInterval(paymentReturnWatcher);paymentReturnWatcher=null;
+      }
+    },100);
+    maybeShowPaymentIdFallback();
+  }
+  window.addEventListener('message',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
+  window.addEventListener('pageshow',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
+  window.addEventListener('focus',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible'){
+      maybeShowPaymentIdFallback();
+      startPaymentReturnWatcher();
+    }
+  });
+  window.addEventListener('load',()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();});
+  setTimeout(()=>{maybeShowPaymentIdFallback();startPaymentReturnWatcher();},250);
+
+  // Razorpay Standard Checkout success/redirect signal. If the button is configured in
+  // Razorpay Dashboard with Redirect URL = this page, the Payment ID panel opens
+  // immediately after the successful checkout returns here.
+  const q=new URLSearchParams(location.search);
+  const razorpaySuccess=(q.get('razorpay_payment_link_status')||'').toLowerCase()==='paid'
+    || !!q.get('razorpay_payment_id')
+    || q.get('payment')==='success';
+  if(razorpaySuccess){
+    const raw=localStorage.getItem('swami_active_product_order');
+    if(raw){
+      try{
+        const o=JSON.parse(raw);
+        ensureModal();
+        const m=document.getElementById('universal-paid-modal');
+        m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+        const a=orders(),i=a.findIndex(x=>x.id===o.id);
+        if(i>=0){
+          a[i].status='PAYMENT_RETURNED';
+          a[i].paymentStatus='PAYMENT_RETURNED';
+          a[i].paymentReturnedAt=new Date().toISOString();
+          if(q.get('razorpay_payment_id')) a[i].razorpayPaymentId=q.get('razorpay_payment_id');
+          saveOrders(a); savePublicOrder(a[i]); o=a[i];localStorage.setItem('swami_active_product_order',JSON.stringify(o));
+        }
+        paymentIdPanelShownFor=o.id;
+        showPaymentIdEntry(o);
+        const returnedId=q.get('razorpay_payment_id') || q.get('payment_id') || '';
+        if(returnedId){
+          const input=document.getElementById('customer-payment-id');
+          if(input) input.value=returnedId;
+          setTimeout(()=>{
+            const verifyBtn=document.getElementById('verify-payment-id-btn');
+            if(verifyBtn && !verifyBtn.disabled) verifyBtn.click();
+          },180);
+        }
+        setTimeout(()=>window.history.replaceState({},document.title,window.location.pathname+window.location.hash),50);
+      }catch(e){}
+    }
+  }
+})();
+</script>
+
+
+<!-- Owner-only panel entry (password protected) -->
+<button onclick="openChartsAdmin()" title="Private Owner Panel" class="fixed bottom-5 right-5 z-[110] bg-maroonDark text-goldPrimary border border-goldPrimary/60 px-4 py-3 rounded-full shadow-2xl text-xs font-extrabold hover:bg-maroonMain transition-all">🔒 Your Charts Data</button>
+
+<!-- ================================================================
+     YOUR CHARTS DATA — OWNER PANEL (DIRECT UPLOAD TEST MODE)
+     Password: 2580
+     ================================================================ -->
+<div id="charts-admin-modal" class="fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[120] hidden items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-[#21070b] text-white w-full max-w-7xl rounded-3xl border-2 border-goldPrimary/50 shadow-2xl my-6 overflow-hidden">
+    <div class="p-5 sm:p-7 border-b border-goldPrimary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <p class="text-[10px] tracking-[.25em] text-goldPrimary uppercase">Private Operations</p>
+        <h2 class="font-cinzel text-2xl sm:text-3xl font-bold text-[#f2d675]">Your Charts Data</h2>
+        <p class="text-white/60 text-xs mt-1">All Razorpay products & sessions — 24-hour delivery tracking</p>
+      </div>
+      <button onclick="closeChartsAdmin()" class="px-4 py-2 rounded-xl border border-goldPrimary/40 text-goldLight font-bold">✕ Close</button>
+    </div>
+
+    <div id="charts-admin-login" class="max-w-md mx-auto p-7 sm:p-10">
+      <div class="text-center mb-5"><div class="w-16 h-16 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-2xl">🔒</div></div>
+      <h3 class="text-xl font-bold text-[#f2d675] text-center">Private Access</h3>
+      <p class="text-white/60 text-sm text-center mt-2">Enter your owner password to open Your Charts Data.</p>
+      <input id="charts-admin-password" type="password" inputmode="numeric" maxlength="20" class="w-full mt-5 p-3 rounded-xl text-black" placeholder="Password">
+      <button onclick="loginChartsAdmin()" class="w-full mt-3 bg-goldPrimary text-[#21070b] font-bold p-3 rounded-xl">OPEN YOUR CHARTS DATA</button>
+      <p id="charts-admin-error" class="text-red-300 text-sm mt-3 text-center"></p>
+    </div>
+
+    <div id="charts-admin-dashboard" class="hidden p-5 sm:p-7">
+      <div class="grid md:grid-cols-4 gap-4 mb-6">
+        <div class="bg-[#3a0d14] border border-goldPrimary/30 rounded-2xl p-5"><p class="text-white/50 text-xs">Total Orders</p><b id="cad-total" class="text-3xl text-[#f2d675]">0</b></div>
+        <div class="bg-[#3a0d14] border border-goldPrimary/30 rounded-2xl p-5"><p class="text-white/50 text-xs">Paid / Pending</p><b id="cad-paid" class="text-3xl text-[#f2d675]">0 / 0</b></div>
+        <div class="bg-[#3a0d14] border border-goldPrimary/30 rounded-2xl p-5"><p class="text-white/50 text-xs">New Orders</p><b id="cad-new" class="text-3xl text-[#f2d675]">0</b></div>
+        <div class="bg-[#3a0d14] border border-goldPrimary/30 rounded-2xl p-5"><p class="text-white/50 text-xs">Storage</p><b class="text-lg text-emerald-300">This Browser</b></div>
+      </div>
+      <div class="bg-amber-50/5 border border-goldPrimary/20 rounded-2xl p-4 mb-5 text-xs text-white/70 leading-relaxed">
+        <b class="text-goldLight">ORDER SYSTEM:</b> Payment is now handled through Razorpay Standard Checkout with secure Vercel server-side verification. Existing browser-side order panel remains available for local records.
+      </div>
+      <div class="bg-[#3a0d14] rounded-3xl border border-goldPrimary/30 overflow-x-auto">
+        <table class="w-full text-sm min-w-[1050px]">
+          <thead><tr class="text-left border-b border-white/10 text-[#d4af37]"><th class="p-4">Customer / Order</th><th class="p-4">Birth Details</th><th class="p-4">WhatsApp / Razorpay</th><th class="p-4">Payment</th><th class="p-4">24h Delivery</th><th class="p-4">Report</th></tr></thead>
+          <tbody id="charts-admin-rows"></tbody>
+        </table>
+      </div>
+      <div class="mt-5 flex flex-wrap gap-3">
+        <button onclick="refreshChartsAdmin()" class="px-4 py-3 rounded-xl bg-goldPrimary text-[#21070b] font-bold">↻ Refresh</button>
+        <button onclick="clearChartsTestOrders()" class="px-4 py-3 rounded-xl border border-red-400/40 text-red-300 font-bold">Clear TEST Orders</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const ADMIN_PASSWORD='2580';
+  const KEY='swami_all_product_orders_direct_v2';
+  const ADMIN_PASS='2580';
+  const escA=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  function ordersRaw(){ try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]} }
+  async function ordersSecure(){
+    const raw=ordersRaw(), out=[];
+    for(const o of raw){
+      const priv=o._private?await window.__swamiDecryptPrivateData(o._private,ADMIN_PASS):null;
+      out.push(priv?{...o,...priv}:o);
+    }
+    return out;
+  }
+  function save(a){window.__swamiSaveOrdersSecure(a);}
+  function due(o){ const t=new Date(o.paymentReturnedAt||o.createdAt).getTime()+86400000; return t; }
+  function countdown(ms){ if(ms<=0)return 'Due now'; const h=Math.floor(ms/3600000),m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60; return h+'h '+m+'m '+s+'s'; }
+  window.openChartsAdmin=function(){
+    const m=document.getElementById('charts-admin-modal'); m.classList.remove('hidden'); m.classList.add('flex'); document.body.style.overflow='hidden';
+    document.getElementById('charts-admin-login').classList.remove('hidden'); document.getElementById('charts-admin-dashboard').classList.add('hidden'); document.getElementById('charts-admin-password').value=''; document.getElementById('charts-admin-error').textContent='';
+  };
+  window.closeChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.add('hidden');m.classList.remove('flex');document.body.style.overflow='';};
+  window.loginChartsAdmin=function(){
+    if(document.getElementById('charts-admin-password').value!==ADMIN_PASSWORD){document.getElementById('charts-admin-error').textContent='Incorrect password.';return;}
+    document.getElementById('charts-admin-login').classList.add('hidden'); document.getElementById('charts-admin-dashboard').classList.remove('hidden'); refreshChartsAdmin();
+  };
+  window.refreshChartsAdmin=async function(){
+    const a=await ordersSecure(); const paid=a.filter(o=>o.status==='PAYMENT_VERIFIED' || o.status==='PAYMENT_SUCCESS_CALLBACK').length;
+    document.getElementById('cad-total').textContent=a.length; document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);
+    const seen=Number(localStorage.getItem('swami_lagan_admin_seen_count')||'0'); document.getElementById('cad-new').textContent=Math.max(0,a.length-seen);
+    document.getElementById('charts-admin-rows').innerHTML=a.length?a.map(o=>{
+      const left=due(o)-Date.now();
+      const paymentStatus=o.status==='PAYMENT_VERIFIED' || o.status==='PAYMENT_SUCCESS_CALLBACK' ? '<span class="px-2 py-1 rounded-full bg-emerald-900 text-emerald-200">✓ Payment Verified</span>' : (o.status==='PAYMENT_ID_RECEIVED'||o.status==='PAYMENT_RETURNED' ? '<span class="px-2 py-1 rounded-full bg-amber-900 text-amber-200">Payment ID Received — Manual Check</span>' : '<span class="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-950 text-red-300 border border-red-500/40"><span class="inline-flex items-center justify-center w-4 h-4 rounded-full border border-red-400 animate-pulse">×</span> Payment Not Verified</span>');
+      return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20">
+        <td class="p-4"><b class="text-[#f2d675]">${escA(o.name)}</b><div class="text-xs text-white/40 mt-1">${escA(o.product)}<br>${escA(o.id)}<br>${new Date(o.createdAt).toLocaleString('en-IN')}</div></td>
+        <td class="p-4 text-xs">DOB: ${escA(o.dob||'—')}<br>Gender: ${escA(o.gender||'—')}<br>Time: ${escA(o.birthTime||'—')} ${escA(o.birthAmPm||'')}<br>Place: ${escA(o.birthPlace||'—')}</td>
+        <td class="p-4 text-xs text-white/70">Razorpay Reference: <span class="font-mono text-goldLight">${escA(o.razorpayPaymentId||'—')}</span></td>
+        <td class="p-4">${paymentStatus}<div class="mt-2"><button onclick="markPaymentVerified('${escA(o.id)}')" class="px-2.5 py-1.5 rounded-lg bg-emerald-800/70 border border-emerald-400/30 text-emerald-200 text-[11px] font-bold">✓ MARK VERIFIED</button></div></td>
+        <td class="p-4"><b class="countdown" data-due="${due(o)}">${countdown(left)}</b><div class="text-xs text-white/40 mt-1">${new Date(due(o)).toLocaleString('en-IN')}</div></td>
+        <td class="p-4"><select onchange="updateChartReportStatus('${escA(o.id)}',this.value)" class="bg-[#21070b] border border-white/10 rounded-lg p-2"><option ${o.reportStatus==='Pending'?'selected':''}>Pending</option><option ${o.reportStatus==='In Progress'?'selected':''}>In Progress</option><option ${o.reportStatus==='Delivered'?'selected':''}>Delivered</option></select></td>
+      </tr>`;
+    }).join(''):'<tr><td colspan="6" class="p-8 text-center text-white/50">No paid product orders yet.</td></tr>';
+    localStorage.setItem('swami_lagan_admin_seen_count',String(a.length));
+  };
+  window.updateChartReportStatus=async function(id,v){const a=await ordersSecure();const i=a.findIndex(o=>o.id===id);if(i<0)return;a[i].reportStatus=v;save(a);refreshChartsAdmin();};
+  window.markPaymentVerified=async function(id){const a=await ordersSecure();const i=a.findIndex(o=>o.id===id);if(i<0)return;a[i].status='PAYMENT_VERIFIED';a[i].paymentStatus='PAYMENT_VERIFIED';a[i].paymentVerifiedAt=new Date().toISOString();save(a);savePublicOrder(a[i]);refreshChartsAdmin();};
+  window.clearChartsTestOrders=function(){if(!confirm('Clear all TEST orders from this browser?'))return;localStorage.removeItem(KEY);localStorage.removeItem('swami_active_product_order');localStorage.setItem('swami_lagan_admin_seen_count','0');refreshChartsAdmin();};
+  setInterval(()=>{document.querySelectorAll('#charts-admin-dashboard .countdown').forEach(el=>{el.textContent=countdown(Number(el.dataset.due)-Date.now())})},1000);
+  document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.getElementById('charts-admin-modal')&&!document.getElementById('charts-admin-modal').classList.contains('hidden')&&document.activeElement.id==='charts-admin-password')loginChartsAdmin();});
+})();
+</script>
+
+
+<!-- VERCEL + RAZORPAY STANDARD CHECKOUT -->
+<script>
+(function(){
+  const PRODUCTS={
+    'Swarnima Janm Patrika':1,
+    'Lagan Maya Sutra':299,
+    'Shukra Maya Sutra':399,
+    'D10 Destiny Sutra':799,
+    'Divya Bhagya Sutra':999,
+    'Individual Clarity Session':999,
+    'Partnership & Harmony':1299,
+    'Meet Swami Ji Ashram Session':1999
+  };
+  let activeProduct=null;
+  const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+  function ensureCheckoutModal(){
+    let m=document.getElementById('universal-paid-modal');
+    if(!m){
+      m=document.createElement('div');
+      m.id='universal-paid-modal';
+      m.className='fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[115] hidden items-center justify-center p-4 overflow-y-auto';
+      m.innerHTML='<div id="universal-paid-box" class="bg-cardBg max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl relative my-6"></div>';
+      document.body.appendChild(m);
+    }
+    return m;
+  }
+
+  function loadRazorpay(){
+    return new Promise((resolve,reject)=>{
+      if(window.Razorpay) return resolve();
+      const existing=document.querySelector('script[data-sj-rzp="1"]');
+      if(existing){existing.addEventListener('load',()=>resolve());existing.addEventListener('error',()=>reject(new Error('Razorpay Checkout could not load.')));return;}
+      const s=document.createElement('script');
+      s.src='https://checkout.razorpay.com/v1/checkout.js';
+      s.async=true;s.dataset.sjRzp='1';
+      s.onload=()=>resolve();s.onerror=()=>reject(new Error('Razorpay Checkout could not load.'));
+      document.head.appendChild(s);
+    });
+  }
+
+  function getDetails(){
+    const ids=['u-name','u-dob','u-gender','u-time','u-ampm','u-place','u-whatsapp'];
+    const v={}; ids.forEach(id=>v[id]=document.getElementById(id)?.value.trim()||'');
+    if(!v['u-name']||!v['u-dob']||!v['u-gender']||!v['u-time']||!v['u-ampm']||!v['u-place']||!/^[0-9]{10}$/.test(v['u-whatsapp'])){
+      throw new Error('Please fill Full Name, DOB, Gender, Birth Time, AM/PM, Birth Place and a valid 10-digit WhatsApp number.');
+    }
+    return {name:v['u-name'],dob:v['u-dob'],gender:v['u-gender'],time:v['u-time'],ampm:v['u-ampm'],place:v['u-place'],whatsapp:v['u-whatsapp']};
+  }
+
+  function showForm(){
+    const m=ensureCheckoutModal(),box=document.getElementById('universal-paid-box');
+    box.innerHTML=`
+      <button onclick="closeUniversalPaidModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
+      <div class="text-center mb-5">
+        <div class="w-16 h-16 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-2xl shadow">✦</div>
+        <p class="text-[10px] tracking-[.22em] uppercase text-maroonMain/60 mt-4">Secure Order • Razorpay</p>
+        <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">${esc(activeProduct.name)}</h3>
+        <p class="text-sm text-maroonMain/70 mt-2">Apni janm-jankari bhariye aur secure payment complete kijiye.</p>
+      </div>
+      <form id="vercel-details-form" class="space-y-3" onsubmit="return false;">
+        <input id="u-name" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name">
+        <div class="grid grid-cols-2 gap-3">
+          <input id="u-dob" type="date" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
+          <select id="u-gender" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <input id="u-time" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Time (e.g. 10:30)">
+          <select id="u-ampm" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">AM / PM</option><option>AM</option><option>PM</option></select>
+        </div>
+        <input id="u-place" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Place / Location">
+        <input id="u-whatsapp" required inputmode="numeric" maxlength="10" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="WhatsApp Number (10 digits)">
+      </form>
+      <div class="mt-5 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-left text-xs sm:text-sm text-emerald-900 leading-relaxed">
+        <b>🔐 Secure payment:</b> Razorpay Standard Checkout will open after you click PAY NOW. Payment is verified automatically on our secure Vercel server.
+      </div>
+      <div id="vercel-pay-error" class="hidden mt-4 rounded-2xl bg-red-50 border border-red-200 p-4 text-sm font-semibold text-red-800"></div>
+      <button id="vercel-pay-btn" onclick="startVercelRazorpayPayment()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all">PAY NOW — ₹${activeProduct.price} 🔒</button>`;
+    m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+  }
+
+  window.startVercelRazorpayPayment=async function(){
+    const btn=document.getElementById('vercel-pay-btn'),err=document.getElementById('vercel-pay-error');
+    if(err){err.classList.add('hidden');err.textContent='';}
+    try{
+      const customer=getDetails();
+      btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='CREATING SECURE PAYMENT…';
+      const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:activeProduct.name,customer})});
+      const data=await response.json();
+      if(!response.ok) throw new Error(data.error||'Unable to create Razorpay order.');
+      await loadRazorpay();
+      btn.textContent='OPENING RAZORPAY…';
+      const rzp=new Razorpay({
+        key:data.keyId,
+        amount:data.amount,
+        currency:data.currency,
+        name:'Swami Atma Jagran',
+        description:activeProduct.name,
+        order_id:data.orderId,
+        prefill:{name:customer.name,contact:'+91'+customer.whatsapp},
+        notes:{product:activeProduct.name},
+        theme:{color:'#5C1D24'},
+        modal:{ondismiss:function(){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+activeProduct.price+' 🔒';}},
+        handler:async function(resp){
+          btn.textContent='VERIFYING PAYMENT…';
+          try{
+            const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:activeProduct.name,customer})});
+            const vd=await vr.json();
+            if(!vr.ok) throw new Error(vd.error||'Payment verification failed.');
+            localStorage.setItem('swami_last_verified_order',JSON.stringify({...vd,customer}));
+            showVercelCongrats({...vd,name:customer.name,product:activeProduct.name,whatsapp:customer.whatsapp});
+          }catch(e){
+            if(err){err.textContent='Payment was received, but secure verification could not be completed. Please contact support. '+e.message;err.classList.remove('hidden');}
+            btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='TRY PAYMENT AGAIN — ₹'+activeProduct.price;
+          }
+        }
+      });
+      rzp.on('payment.failed',function(){
+        if(err){err.textContent='Payment failed or was cancelled. Please try again.';err.classList.remove('hidden');}
+        btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+activeProduct.price+' 🔒';
+      });
+      rzp.open();
+    }catch(e){
+      if(err){err.textContent=e.message||'Something went wrong. Please try again.';err.classList.remove('hidden');}
+      btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+activeProduct.price+' 🔒';
+    }
+  };
+
+  function showVercelCongrats(order){
+    const m=ensureCheckoutModal(),box=document.getElementById('universal-paid-box');
+    box.innerHTML=`
+      <div class="text-center py-4">
+        <div class="w-24 h-24 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-5xl shadow-xl">✓</div>
+        <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-5">🎉 Congratulations!</h3>
+        <p class="text-lg font-semibold text-maroonMain mt-4">Namaste ${esc(order.name)} 🙏</p>
+        <p class="text-base text-maroonMain/90 mt-4 leading-relaxed"><b>Your payment &amp; details have been received successfully.</b><br>Your order has been assigned to Swami Ji for processing.</p>
+        <div class="mt-6 rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-sm text-emerald-900 text-left leading-relaxed">
+          ✓ Payment successfully verified<br>
+          ✓ Your details received<br>
+          ✓ Assigned to Swami Ji<br>
+          ✓ ${esc(order.product)} processing started<br>
+          📲 Your <b>custom Sutra report &amp; AI prompt</b> will be delivered on your WhatsApp <b>within 24 hours</b>.
+        </div>
+        <p class="text-sm text-maroonMain/80 mt-6 leading-relaxed">Thank you for your trust in us. 🙏</p>
+        <button onclick="closeUniversalPaidModal()" class="mt-5 w-full bg-goldPrimary text-maroonDark font-extrabold py-3.5 rounded-xl">DONE</button>
+      </div>`;
+    m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+  }
+
+  window.openPaidProductForm=function(name,price){
+    const serverPrice=PRODUCTS[name];
+    activeProduct={name,price:serverPrice||Number(price)||0};
+    showForm();
+  };
+  window.openLaganPayment=function(){window.openPaidProductForm('Lagan Maya Sutra',PRODUCTS['Lagan Maya Sutra']);};
+  window.openConsultationModal=function(){ window.openPaidProductForm('Individual Clarity Session',PRODUCTS['Individual Clarity Session']); };
+  window.openProductModal=function(name,price){ window.openPaidProductForm(name,price); };
+  window.selectConsultationPackage=function(planName,price){
+    const map={'Individual Clarity Session':'Individual Clarity Session','Partnership & Harmony':'Partnership & Harmony','Meet Swami Ji Ashram Session':'Meet Swami Ji Ashram Session'};
+    window.openPaidProductForm(map[planName]||planName,price);
+  };
+  window.closeUniversalPaidModal=function(){
+    const m=document.getElementById('universal-paid-modal');
+    if(m){m.classList.add('hidden');m.classList.remove('flex');}
+    document.body.style.overflow='';
+  };
+  window.closeLaganPayment=window.closeUniversalPaidModal;
+})();
+</script>
+
+</body>
+</html>
