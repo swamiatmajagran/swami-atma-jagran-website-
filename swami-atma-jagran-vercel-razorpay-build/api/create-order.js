@@ -43,17 +43,9 @@ export default async function handler(req, res) {
     // They are read server-side by the private Your Chart Data panel and the webhook.
     const consultationProducts = new Set(['Individual Clarity Session','Partnership & Harmony','Meet Swami Ji Ashram Session']);
     const isConsultation = consultationProducts.has(product);
-    if (isConsultation) {
-      const slotDate = String(customer.consultation_slot_date || '');
-      const slotTime = String(customer.consultation_slot_time || '');
-      const day = slotDate ? new Date(slotDate + 'T12:00:00').getDay() : -1;
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(slotDate) || day === 0 || day === 6) return res.status(400).json({ error: 'Consultation sessions are available Monday to Friday only.' });
-      const tm = slotTime.match(/^(\d{1,2}):00\s*(AM|PM)$/i);
-      if (!tm) return res.status(400).json({ error: 'Please select a valid consultation time.' });
-      let h = Number(tm[1]); if (h < 1 || h > 12) return res.status(400).json({ error: 'Invalid consultation time.' });
-      if (tm[2].toUpperCase() === 'PM' && h !== 12) h += 12; if (tm[2].toUpperCase() === 'AM' && h === 12) h = 0;
-      if (h < 12 || h > 20) return res.status(400).json({ error: 'Consultation timings are strictly 12:00 PM to 8:00 PM.' });
-    }
+    // Consultation date/time are intentionally NOT required at payment time.
+    // The customer selects only a Monday-Friday date after Razorpay payment;
+    // the exact time is confirmed separately by WhatsApp.
 
     const notes = {
       product,
@@ -64,6 +56,7 @@ export default async function handler(req, res) {
       birth_time: `${customer.time} ${customer.ampm}`.slice(0, 255),
       birth_place: String(customer.place).slice(0, 255),
       whatsapp: String(customer.whatsapp).slice(0, 255),
+      ...(isConsultation ? { consultation_question: String(customer.consultation_question || '').slice(0, 1000) } : {}),
       ...(isConsultation ? { consultation_slot_date: String(customer.consultation_slot_date).slice(0,255), consultation_slot_time: String(customer.consultation_slot_time).slice(0,255), consultation_duration: String(customer.consultation_duration || '').slice(0,255), consultation_type: String(customer.consultation_type || '').slice(0,255) } : {}),
     };
 
