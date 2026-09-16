@@ -9,32 +9,26 @@
     <meta name="author" content="Swami Atma Jagran">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- PAYMENT SUCCESS MODAL -->
-    <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
-            <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
-            <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
-            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
-            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
-            <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
-            <p class="text-lg font-black text-emerald-800 mt-5">24 HOURS DELIVERY</p>
-            <p class="text-sm text-maroonMain/80 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi. Confirmation email bhi automatically bheja jayega.</p>
-            <button onclick="document.getElementById('payment-success-modal').classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
-        </div>
-    </div>
-
     <script>
 
         let activePaidProduct = null;
 
         function openPaidProductForm(name, price, link) {
             activePaidProduct = { name, price, link };
-            document.getElementById('modal-product-title').innerText = name;
-            document.getElementById('modal-product-price-tag').innerText = `₹${price}`;
-            const qr = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`)}`;
-            document.getElementById('modal-qr-code-img').src = qr;
-            document.getElementById('modal-upi-anchor').href = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
-            document.getElementById('product-payment-modal').classList.remove('hidden');
+            const title = document.getElementById('modal-product-title');
+            const priceTag = document.getElementById('modal-product-price-tag');
+            const qrImg = document.getElementById('modal-qr-code-img');
+            const upiAnchor = document.getElementById('modal-upi-anchor');
+            const modal = document.getElementById('product-payment-modal');
+            if (title) title.innerText = name;
+            if (priceTag) priceTag.innerText = `₹${price}`;
+            const upiUrl = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
+            if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
+            if (upiAnchor) upiAnchor.href = upiUrl;
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
         }
 
         function getPaidCustomerDetails() {
@@ -177,17 +171,31 @@
             const paid = params.get('razorpay_payment_link_status') === 'paid' || params.get('payment') === 'success';
             if (!paid) return;
             const raw = localStorage.getItem('swamiAtmaJagran_pending_payment');
-            const d = raw ? JSON.parse(raw) : null;
+            let d = null;
+            if (raw) {
+                try {
+                    d = JSON.parse(raw);
+                } catch (parseError) {
+                    console.warn('Invalid pending payment data in localStorage; ignoring it.', parseError);
+                    localStorage.removeItem('swamiAtmaJagran_pending_payment');
+                    return;
+                }
+            }
             if (!d) return;
-            document.getElementById('payment-success-summary').innerHTML = `<strong>Product:</strong> ${escapeHtml(d.product)}<br><strong>Name:</strong> ${escapeHtml(d.name)}<br><strong>DOB:</strong> ${escapeHtml(d.dob)}<br><strong>Gender:</strong> ${escapeHtml(d.gender)}<br><strong>Birth Time:</strong> ${escapeHtml(d.time)} ${escapeHtml(d.ampm)}<br><strong>Birth Place:</strong> ${escapeHtml(d.place)}<br><strong>WhatsApp:</strong> ${escapeHtml(d.whatsapp)}`;
+            const summary = document.getElementById('payment-success-summary');
+            if (summary) {
+                summary.innerHTML = `<strong>Product:</strong> ${escapeHtml(d.product)}<br><strong>Name:</strong> ${escapeHtml(d.name)}<br><strong>DOB:</strong> ${escapeHtml(d.dob)}<br><strong>Gender:</strong> ${escapeHtml(d.gender)}<br><strong>Birth Time:</strong> ${escapeHtml(d.time)} ${escapeHtml(d.ampm)}<br><strong>Birth Place:</strong> ${escapeHtml(d.place)}<br><strong>WhatsApp:</strong> ${escapeHtml(d.whatsapp)}`;
+            }
             const msg = `Namaste Swami Ji, my payment for *${d.product}* is complete.\n\n*My Kundli Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time} ${d.ampm}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}\n\nPlease prepare my kundli/report.`;
-            document.getElementById('payment-success-whatsapp').onclick = () => window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
-            document.getElementById('payment-success-modal').classList.remove('hidden');
+            const waBtn = document.getElementById('payment-success-whatsapp');
+            if (waBtn) waBtn.onclick = () => window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+            const modal = document.getElementById('payment-success-modal');
+            if (modal) modal.classList.remove('hidden');
             localStorage.removeItem('swamiAtmaJagran_pending_payment');
         }
 
         function escapeHtml(v) {
-            return String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
+            return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -343,6 +351,21 @@
     </style>
 </head>
 <body class="bg-warmWhite text-maroonDark antialiased selection:bg-goldPrimary selection:text-maroonDark m-0 p-0">
+
+    <!-- PAYMENT SUCCESS MODAL -->
+    <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
+            <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
+            <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
+            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
+            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
+            <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
+            <p class="text-lg font-black text-emerald-800 mt-5">24 HOURS DELIVERY</p>
+            <p class="text-sm text-maroonMain/80 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi. Confirmation email bhi automatically bheja jayega.</p>
+            <button id="payment-success-whatsapp" type="button" class="mt-3 w-full bg-maroonMain text-goldPrimary font-bold py-2.5 rounded-xl">Send Details on WhatsApp</button>
+            <button onclick="document.getElementById('payment-success-modal')?.classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
+        </div>
+    </div>
 
     <!-- Top Navigation Bar -->
     <header class="sticky top-0 z-50 bg-maroonDark/95 backdrop-blur-md border-b border-goldPrimary/30 text-warmWhite shadow-lg">
@@ -1200,7 +1223,7 @@
     </div>
 
     <!-- FULL-SCREEN CONSULTATION TAB MODAL -->
-    <div id="consultation-modal" class="fixed inset-0 bg-maroonDark z-[9999] hidden flex flex-col m-0 p-0 overflow-hidden w-screen h-screen">
+    <div id="consultation-modal" class="fixed inset-0 bg-maroonDark z-[9999] hidden flex-col m-0 p-0 overflow-hidden w-screen h-screen" style="display:none">
         
         <div class="bg-maroonDark/95 border-b border-goldPrimary/30 text-warmWhite px-6 py-4 flex items-center justify-between shrink-0 shadow-lg">
             <div class="flex items-center space-x-3">
@@ -1529,11 +1552,19 @@
         }
 
         function openConsultationModal() {
-            document.getElementById('consultation-modal').classList.remove('hidden');
+            const m = document.getElementById('consultation-modal');
+            if (!m) return;
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            m.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
         function closeConsultationModal() {
-            document.getElementById('consultation-modal').classList.add('hidden');
+            const m = document.getElementById('consultation-modal');
+            if (!m) return;
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+            m.style.display = 'none';
             document.body.style.overflow = 'auto';
         }
 
@@ -1954,7 +1985,7 @@
         try{
           btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='CREATING SECURE PAYMENT…';
           const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:activeProduct.name,customer})});
-          const data=await response.json();
+          const responseText=await response.text();let data={};try{data=responseText?JSON.parse(responseText):{};}catch(parseError){throw new Error('Payment server returned an invalid response. Please try again.');}
           if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
           const rzp=new Razorpay({
             key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:activeProduct.name,order_id:data.orderId,
@@ -1966,7 +1997,7 @@
               btn.textContent='VERIFYING PAYMENT…';
               try{
                 const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:activeProduct.name,customer})});
-                const vd=await vr.json();
+                const verifyText=await vr.text();let vd={};try{vd=verifyText?JSON.parse(verifyText):{};}catch(parseError){throw new Error('Payment verification server returned an invalid response.');}
                 if(!vr.ok)throw new Error(vd.error||'Payment verification failed.');
                 showCongrats({name:customer.name,product:activeProduct.name,whatsapp:customer.whatsapp,email:customer.email,price:activeProduct.price,paymentId:vd.paymentId,orderId:vd.orderId});
                 if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
@@ -2057,12 +2088,25 @@
         const finalPrice=CB_PRODUCTS[name]||price;
         const opts=captureCBOptions(name);
         cb={product:name,price:finalPrice,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:'',duration:opts.duration,sessionType:opts.sessionType};
+
+        // CRITICAL FIX: create the modal container BEFORE rendering its contents.
+        // Previously renderCBStep1() ran first and tried to access a missing
+        // #consult-booking-box, so Book Now / Consult Now appeared to do nothing.
+        const m=ensureCBModal();
+        if(!m) return;
         renderCBStep1();
-        const m=ensureCBModal();m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+        m.style.display='flex';
+        document.body.style.overflow='hidden';
       };
       window.closeConsultBooking=function(){
         const m=document.getElementById('consult-booking-modal');
-        if(m){m.classList.add('hidden');m.classList.remove('flex');}
+        if(m){
+          m.classList.add('hidden');
+          m.classList.remove('flex');
+          m.style.display='none';
+        }
         document.body.style.overflow='';
       };
 
@@ -2076,6 +2120,7 @@
 
       function renderCBStep1(){
         const box=document.getElementById('consult-booking-box');
+        if(!box) return;
         box.innerHTML=`
           <button onclick="closeConsultBooking()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
           <div class="text-center mb-6">
@@ -2273,7 +2318,7 @@
   const countdown=ms=>{if(ms<=0)return 'Due now';const h=Math.floor(ms/3600000),m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60;return h+'h '+m+'m '+s+'s';};
   window.openChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';document.getElementById('charts-admin-login').classList.remove('hidden');document.getElementById('charts-admin-dashboard').classList.add('hidden');document.getElementById('charts-admin-password').value='';document.getElementById('charts-admin-error').textContent='';};
   window.closeChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.add('hidden');m.classList.remove('flex');document.body.style.overflow='';};
-  async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
+  async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const text=await r.text();let d={};try{d=text?JSON.parse(text):{};}catch(parseError){throw new Error('Admin server returned an invalid response.');}if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
   window.loginChartsAdmin=async function(){const err=document.getElementById('charts-admin-error');err.textContent='';try{const {d,pass}=await fetchAdmin();sessionStorage.setItem('swami_admin_pass',pass);document.getElementById('charts-admin-login').classList.add('hidden');document.getElementById('charts-admin-dashboard').classList.remove('hidden');renderAdmin(d.orders||[]);}catch(e){err.textContent=e.message||'Private access denied.';}};
   function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);const hasBooking=o.slotId||o.bookingDate||o.bookingSlot;const bookingCell=hasBooking?`<span class="font-mono text-goldLight">${esc(o.slotId||'—')}</span><div class="text-white/70 mt-1">${esc(o.bookingDate||'—')} · ${esc(o.bookingSlot||'—')}</div>${(o.sessionDuration||o.sessionType)?`<div class="text-white/60 mt-1">${esc(o.sessionDuration||'')} ${o.sessionType?'· '+esc(o.sessionType):''}</div>`:''}${o.consultReason?`<div class="text-white/40 mt-1">${esc(o.consultReason)}</div>`:''}${o.consultQuestion?`<div class="text-white/40 mt-1 italic">"${esc(o.consultQuestion)}"</div>`:''}`:'—';return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4 text-xs">${bookingCell}</td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="7" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
   window.refreshChartsAdmin=async function(){const status=document.getElementById('charts-admin-status');status.className='mb-4 rounded-xl p-3 text-sm bg-goldPrimary/10 border border-goldPrimary/20 text-goldLight';status.textContent='Refreshing secure customer data…';status.classList.remove('hidden');try{const {d}=await fetchAdmin();renderAdmin(d.orders||[]);status.textContent='✓ Live data refreshed.';setTimeout(()=>status.classList.add('hidden'),1800);}catch(e){status.className='mb-4 rounded-xl p-3 text-sm bg-red-50/10 border border-red-400/20 text-red-200';status.textContent=e.message||'Unable to load data.';}};
