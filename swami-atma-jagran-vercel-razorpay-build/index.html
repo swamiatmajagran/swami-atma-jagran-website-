@@ -9,6 +9,7 @@
     <meta name="author" content="Swami Atma Jagran">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <!-- PAYMENT SUCCESS MODAL -->
     <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
@@ -1844,12 +1845,16 @@
             if(!plan)return;
 
             // Keep the complete consultation payload available until payment verification returns.
+            const timeParts=String(plan.time).trim().match(/^(.*?)(?:\s*)(AM|PM)$/i);
             const customer={
-                name:plan.name,email:plan.email,dob:plan.dob,gender:plan.gender,time:plan.time,
-                ampm:'',place:plan.location,whatsapp:plan.whatsapp,
+                name:plan.name,email:plan.email,dob:plan.dob,gender:plan.gender,
+                time:timeParts?timeParts[1].trim():plan.time,
+                ampm:timeParts?timeParts[2].toUpperCase():'',
+                place:plan.location,whatsapp:plan.whatsapp,
                 product:plan.planTitle,price:plan.price,
                 consultation_duration:plan.duration,consultation_type:plan.type,
-                consultation_question:plan.question,consultation_plan:plan.planTitle
+                consultation_question:plan.question,consultation_plan:plan.planTitle,
+                consultation_slot_date:'',consultation_slot_time:''
             };
             try{localStorage.setItem('swamiAtmaJagran_pending_consultation',JSON.stringify(customer));}catch(_e){}
 
@@ -1937,7 +1942,7 @@
         if(day===0||day===6){if(err){err.textContent='Saturday and Sunday are not available. Please choose a Monday–Friday date.';err.classList.remove('hidden');}return;}
         try{
           btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='BOOKING YOUR SLOT…';
-          const br=await fetch('/api/book-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId,date,time:'WhatsApp',slotId:o.slotId,consultationDate:date,consultationTime:'Exact time will be sent on WhatsApp',customer:o.customer})});
+          const br=await fetch('/api/book-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId,paymentId:o.paymentId,date,slotId:o.slotId,consultationDate:date,consultationTime:'Exact time will be sent on WhatsApp',customer:o.customer})});
           const bd=await br.json();
           if(!br.ok)throw new Error(bd.error||'This consultation date could not be booked. Please choose another date.');
           const bookingRecord={orderId:o.orderId,paymentId:o.paymentId,product:o.product,price:o.price,slotId:o.slotId,slotDate:date,slotTime:'Exact time will be sent on WhatsApp',customer:o.customer,consultation_status:'DATE BOOKED'};
