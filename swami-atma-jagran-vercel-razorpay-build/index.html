@@ -9,26 +9,32 @@
     <meta name="author" content="Swami Atma Jagran">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PAYMENT SUCCESS MODAL -->
+    <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
+            <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
+            <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
+            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
+            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
+            <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
+            <p class="text-lg font-black text-emerald-800 mt-5">24 HOURS DELIVERY</p>
+            <p class="text-sm text-maroonMain/80 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi. Confirmation email bhi automatically bheja jayega.</p>
+            <button onclick="document.getElementById('payment-success-modal').classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
+        </div>
+    </div>
+
     <script>
 
         let activePaidProduct = null;
 
         function openPaidProductForm(name, price, link) {
             activePaidProduct = { name, price, link };
-            const title = document.getElementById('modal-product-title');
-            const priceTag = document.getElementById('modal-product-price-tag');
-            const qrImg = document.getElementById('modal-qr-code-img');
-            const upiAnchor = document.getElementById('modal-upi-anchor');
-            const modal = document.getElementById('product-payment-modal');
-            if (title) title.innerText = name;
-            if (priceTag) priceTag.innerText = `₹${price}`;
-            const upiUrl = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
-            if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
-            if (upiAnchor) upiAnchor.href = upiUrl;
-            if (modal) {
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-            }
+            document.getElementById('modal-product-title').innerText = name;
+            document.getElementById('modal-product-price-tag').innerText = `₹${price}`;
+            const qr = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`)}`;
+            document.getElementById('modal-qr-code-img').src = qr;
+            document.getElementById('modal-upi-anchor').href = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
+            document.getElementById('product-payment-modal').classList.remove('hidden');
         }
 
         function getPaidCustomerDetails() {
@@ -171,31 +177,17 @@
             const paid = params.get('razorpay_payment_link_status') === 'paid' || params.get('payment') === 'success';
             if (!paid) return;
             const raw = localStorage.getItem('swamiAtmaJagran_pending_payment');
-            let d = null;
-            if (raw) {
-                try {
-                    d = JSON.parse(raw);
-                } catch (parseError) {
-                    console.warn('Invalid pending payment data in localStorage; ignoring it.', parseError);
-                    localStorage.removeItem('swamiAtmaJagran_pending_payment');
-                    return;
-                }
-            }
+            const d = raw ? JSON.parse(raw) : null;
             if (!d) return;
-            const summary = document.getElementById('payment-success-summary');
-            if (summary) {
-                summary.innerHTML = `<strong>Product:</strong> ${escapeHtml(d.product)}<br><strong>Name:</strong> ${escapeHtml(d.name)}<br><strong>DOB:</strong> ${escapeHtml(d.dob)}<br><strong>Gender:</strong> ${escapeHtml(d.gender)}<br><strong>Birth Time:</strong> ${escapeHtml(d.time)} ${escapeHtml(d.ampm)}<br><strong>Birth Place:</strong> ${escapeHtml(d.place)}<br><strong>WhatsApp:</strong> ${escapeHtml(d.whatsapp)}`;
-            }
+            document.getElementById('payment-success-summary').innerHTML = `<strong>Product:</strong> ${escapeHtml(d.product)}<br><strong>Name:</strong> ${escapeHtml(d.name)}<br><strong>DOB:</strong> ${escapeHtml(d.dob)}<br><strong>Gender:</strong> ${escapeHtml(d.gender)}<br><strong>Birth Time:</strong> ${escapeHtml(d.time)} ${escapeHtml(d.ampm)}<br><strong>Birth Place:</strong> ${escapeHtml(d.place)}<br><strong>WhatsApp:</strong> ${escapeHtml(d.whatsapp)}`;
             const msg = `Namaste Swami Ji, my payment for *${d.product}* is complete.\n\n*My Kundli Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time} ${d.ampm}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}\n\nPlease prepare my kundli/report.`;
-            const waBtn = document.getElementById('payment-success-whatsapp');
-            if (waBtn) waBtn.onclick = () => window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
-            const modal = document.getElementById('payment-success-modal');
-            if (modal) modal.classList.remove('hidden');
+            document.getElementById('payment-success-whatsapp').onclick = () => window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+            document.getElementById('payment-success-modal').classList.remove('hidden');
             localStorage.removeItem('swamiAtmaJagran_pending_payment');
         }
 
         function escapeHtml(v) {
-            return String(v ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
+            return String(v).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#039;'}[c]));
         }
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -351,21 +343,6 @@
     </style>
 </head>
 <body class="bg-warmWhite text-maroonDark antialiased selection:bg-goldPrimary selection:text-maroonDark m-0 p-0">
-
-    <!-- PAYMENT SUCCESS MODAL -->
-    <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
-            <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
-            <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
-            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
-            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
-            <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
-            <p class="text-lg font-black text-emerald-800 mt-5">24 HOURS DELIVERY</p>
-            <p class="text-sm text-maroonMain/80 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi. Confirmation email bhi automatically bheja jayega.</p>
-            <button id="payment-success-whatsapp" type="button" class="mt-3 w-full bg-maroonMain text-goldPrimary font-bold py-2.5 rounded-xl">Send Details on WhatsApp</button>
-            <button onclick="document.getElementById('payment-success-modal')?.classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
-        </div>
-    </div>
 
     <!-- Top Navigation Bar -->
     <header class="sticky top-0 z-50 bg-maroonDark/95 backdrop-blur-md border-b border-goldPrimary/30 text-warmWhite shadow-lg">
@@ -1223,7 +1200,7 @@
     </div>
 
     <!-- FULL-SCREEN CONSULTATION TAB MODAL -->
-    <div id="consultation-modal" class="fixed inset-0 bg-maroonDark z-[9999] hidden flex-col m-0 p-0 overflow-hidden w-screen h-screen" style="display:none">
+    <div id="consultation-modal" class="fixed inset-0 bg-maroonDark z-[9999] hidden flex flex-col m-0 p-0 overflow-hidden w-screen h-screen">
         
         <div class="bg-maroonDark/95 border-b border-goldPrimary/30 text-warmWhite px-6 py-4 flex items-center justify-between shrink-0 shadow-lg">
             <div class="flex items-center space-x-3">
@@ -1401,8 +1378,8 @@
                             </ul>
                         </div>
                         <div>
-                            <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹1</div>
-                            <button onclick="openConsultBooking('Individual Clarity Session', 1)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                            <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹999</div>
+                            <button onclick="openConsultBooking('Individual Clarity Session', 999)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
                                 Book Now
                             </button>
                         </div>
@@ -1552,19 +1529,11 @@
         }
 
         function openConsultationModal() {
-            const m = document.getElementById('consultation-modal');
-            if (!m) return;
-            m.classList.remove('hidden');
-            m.classList.add('flex');
-            m.style.display = 'flex';
+            document.getElementById('consultation-modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
         function closeConsultationModal() {
-            const m = document.getElementById('consultation-modal');
-            if (!m) return;
-            m.classList.add('hidden');
-            m.classList.remove('flex');
-            m.style.display = 'none';
+            document.getElementById('consultation-modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
 
@@ -1985,7 +1954,7 @@
         try{
           btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='CREATING SECURE PAYMENT…';
           const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:activeProduct.name,customer})});
-          const responseText=await response.text();let data={};try{data=responseText?JSON.parse(responseText):{};}catch(parseError){throw new Error('Payment server returned an invalid response. Please try again.');}
+          const data=await response.json();
           if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
           const rzp=new Razorpay({
             key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:activeProduct.name,order_id:data.orderId,
@@ -1997,7 +1966,7 @@
               btn.textContent='VERIFYING PAYMENT…';
               try{
                 const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:activeProduct.name,customer})});
-                const verifyText=await vr.text();let vd={};try{vd=verifyText?JSON.parse(verifyText):{};}catch(parseError){throw new Error('Payment verification server returned an invalid response.');}
+                const vd=await vr.json();
                 if(!vr.ok)throw new Error(vd.error||'Payment verification failed.');
                 showCongrats({name:customer.name,product:activeProduct.name,whatsapp:customer.whatsapp,email:customer.email,price:activeProduct.price,paymentId:vd.paymentId,orderId:vd.orderId});
                 if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
@@ -2032,12 +2001,11 @@
     })();
     </script>
 
-    <!-- CONSULTATION SECTION BOOKING MODAL — Step 1 (Details & Question) → Step 2 (Date/Slot & Pay) → Success -->
+    <!-- CONSULTATION SECTION BOOKING MODAL — Details → Payment → Date/Slot Booking → Success -->
     <script>
     (function(){
       const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-      const CB_PRODUCTS={'Individual Clarity Session':1,'Partnership & Harmony':1299,'Meet Swami Ji Ashram Session':1999};
-      const CB_PKG_KEY={'Individual Clarity Session':'pkg1','Partnership & Harmony':'pkg2','Meet Swami Ji Ashram Session':'pkg3'};
+      const CB_PRODUCTS={'Individual Clarity Session':999,'Partnership & Harmony':1299,'Meet Swami Ji Ashram Session':1999};
       const CB_REASONS=[
         'Career ya business mein rukavat',
         'Vivah / rishtey mein deri ya confusion',
@@ -2046,8 +2014,9 @@
         'Life purpose / disha spasht nahi hai',
         'Kuch aur (neeche apna sawal likhein)'
       ];
-      const CB_SLOTS=['10:00 AM - 11:00 AM','12:00 PM - 01:00 PM','02:00 PM - 03:00 PM','04:00 PM - 05:00 PM','06:00 PM - 07:00 PM','08:00 PM - 09:00 PM'];
-      let cb={product:'',price:0,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:'',duration:'',sessionType:''};
+      /* Final consultation schedule: Monday-Friday, 12 PM-8 PM only. */
+      const CB_SLOTS=['12:00 PM - 01:00 PM','01:00 PM - 02:00 PM','02:00 PM - 03:00 PM','03:00 PM - 04:00 PM','04:00 PM - 05:00 PM','05:00 PM - 06:00 PM','06:00 PM - 07:00 PM','07:00 PM - 08:00 PM'];
+      let cb={product:'',price:0,reason:'',question:'',name:'',whatsapp:'',email:'',dob:'',birthTime:'',ampm:'',gender:'',birthPlace:'',date:'',slot:'',slotId:'',paymentId:'',orderId:''};
 
       function genSlotId(){
         const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -2055,7 +2024,26 @@
         for(let i=0;i<6;i++)s+=chars[Math.floor(Math.random()*chars.length)];
         return s;
       }
-
+      function isWeekday(dateString){
+        if(!dateString)return false;
+        const d=new Date(dateString+'T12:00:00');
+        const day=d.getDay();
+        return day>=1&&day<=5;
+      }
+      function setDateMinAndRules(){
+        const input=document.getElementById('cb-date');
+        if(!input)return;
+        input.addEventListener('change',function(){
+          if(this.value&&!isWeekday(this.value)){
+            const err=document.getElementById('cb-error-2');
+            if(err){err.textContent='Consultation sirf Monday se Friday tak available hai. Kripya weekday select karein.';err.classList.remove('hidden');}
+            this.value='';
+          }else{
+            const err=document.getElementById('cb-error-2');
+            if(err){err.classList.add('hidden');err.textContent='';}
+          }
+        });
+      }
       function ensureCBModal(){
         let m=document.getElementById('consult-booking-modal');
         if(m)return m;
@@ -2067,46 +2055,16 @@
         return m;
       }
 
-      function captureCBOptions(name){
-        const pkgKey=CB_PKG_KEY[name]||'';
-        let duration='',sessionType='';
-        if(pkgKey){
-          const durEl=document.getElementById(pkgKey+'-duration');
-          duration=durEl?durEl.value:'';
-          const audioBtn=document.getElementById(pkgKey+'-audio');
-          const videoBtn=document.getElementById(pkgKey+'-video');
-          if(audioBtn&&videoBtn){
-            sessionType=(typeof pkgTypes!=='undefined'&&pkgTypes[pkgKey])?pkgTypes[pkgKey]:'audio';
-          }else{
-            sessionType='In-Person (Ashram)';
-          }
-        }
-        return {duration,sessionType};
-      }
-
       window.openConsultBooking=function(name,price){
         const finalPrice=CB_PRODUCTS[name]||price;
-        const opts=captureCBOptions(name);
-        cb={product:name,price:finalPrice,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:'',duration:opts.duration,sessionType:opts.sessionType};
-
-        // CRITICAL FIX: create the modal container BEFORE rendering its contents.
-        // Previously renderCBStep1() ran first and tried to access a missing
-        // #consult-booking-box, so Book Now / Consult Now appeared to do nothing.
+        cb={product:name,price:finalPrice,reason:'',question:'',name:'',whatsapp:'',email:'',dob:'',birthTime:'',ampm:'',gender:'',birthPlace:'',date:'',slot:'',slotId:'',paymentId:'',orderId:''};
         const m=ensureCBModal();
-        if(!m) return;
         renderCBStep1();
-        m.classList.remove('hidden');
-        m.classList.add('flex');
-        m.style.display='flex';
-        document.body.style.overflow='hidden';
+        m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
       };
       window.closeConsultBooking=function(){
         const m=document.getElementById('consult-booking-modal');
-        if(m){
-          m.classList.add('hidden');
-          m.classList.remove('flex');
-          m.style.display='none';
-        }
+        if(m){m.classList.add('hidden');m.classList.remove('flex');}
         document.body.style.overflow='';
       };
 
@@ -2120,14 +2078,12 @@
 
       function renderCBStep1(){
         const box=document.getElementById('consult-booking-box');
-        if(!box) return;
         box.innerHTML=`
           <button onclick="closeConsultBooking()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
           <div class="text-center mb-6">
             <p class="text-[10px] tracking-[.24em] uppercase text-maroonMain/60">${esc(cb.product)}</p>
-            <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">Book Your Session</h3>
-            <p class="text-sm text-maroonMain/80 mt-2">Is session ke liye details bhare or apna sawal bataie</p>
-            ${(cb.duration||cb.sessionType)?`<div class="inline-flex flex-wrap items-center justify-center gap-2 mt-3">${cb.duration?`<span class="text-[11px] font-bold uppercase bg-[#4A0E17] text-goldPrimary px-3 py-1 rounded-full">⏱ ${esc(cb.duration)}</span>`:''}${cb.sessionType?`<span class="text-[11px] font-bold uppercase bg-[#4A0E17] text-goldPrimary px-3 py-1 rounded-full">${esc(cb.sessionType)}</span>`:''}</div>`:''}
+            <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">Your Consultation Details</h3>
+            <p class="text-sm text-maroonMain/80 mt-2">Payment se pehle apni complete details aur consultation reason bharein.</p>
           </div>
           <div class="space-y-3">
             <input id="cb-name" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name" value="${esc(cb.name)}">
@@ -2135,14 +2091,35 @@
               <input id="cb-whatsapp" type="tel" inputmode="numeric" maxlength="10" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="WhatsApp Number (10 digits)" value="${esc(cb.whatsapp)}">
               <input id="cb-email" type="email" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Email Address" value="${esc(cb.email)}">
             </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input id="cb-dob" type="date" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" value="${esc(cb.dob)}">
+              <select id="cb-gender" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
+                <option value="">Gender Select Karein</option>
+                <option value="Male" ${cb.gender==='Male'?'selected':''}>Male</option>
+                <option value="Female" ${cb.gender==='Female'?'selected':''}>Female</option>
+                <option value="Other" ${cb.gender==='Other'?'selected':''}>Other</option>
+              </select>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input id="cb-birth-time" type="text" inputmode="numeric" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Time (e.g. 07:30)" value="${esc(cb.birthTime)}">
+              <select id="cb-ampm" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
+                <option value="">AM / PM</option>
+                <option value="AM" ${cb.ampm==='AM'?'selected':''}>AM</option>
+                <option value="PM" ${cb.ampm==='PM'?'selected':''}>PM</option>
+              </select>
+            </div>
+            <input id="cb-birth-place" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Place / City" value="${esc(cb.birthPlace)}">
             <div class="pt-2">
               <div class="text-xs font-bold uppercase tracking-wider text-[#5C1D24] mb-2">Consultation ka reason chunein:</div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">${reasonRadios()}</div>
             </div>
             <textarea id="cb-question" rows="3" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Apna sawal yahan likhein (optional)">${esc(cb.question)}</textarea>
           </div>
+          <div class="mt-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 p-4 text-xs text-maroonDark">
+            <b>🕐 Session Schedule:</b> Monday to Friday only · 12:00 PM to 8:00 PM.
+          </div>
           <div id="cb-error-1" class="hidden mt-4 rounded-2xl bg-red-50 border border-red-200 p-3 text-xs sm:text-sm font-semibold text-red-800"></div>
-          <button onclick="submitCBStep1()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-base">Next →</button>`;
+          <button onclick="submitCBStep1()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-base">PROCEED TO PAYMENT →</button>`;
       }
 
       window.submitCBStep1=function(){
@@ -2151,84 +2128,59 @@
         const name=(document.getElementById('cb-name').value||'').trim();
         const whatsapp=(document.getElementById('cb-whatsapp').value||'').trim();
         const email=(document.getElementById('cb-email').value||'').trim();
+        const dob=(document.getElementById('cb-dob').value||'').trim();
+        const gender=(document.getElementById('cb-gender').value||'').trim();
+        const birthTime=(document.getElementById('cb-birth-time').value||'').trim();
+        const ampm=(document.getElementById('cb-ampm').value||'').trim();
+        const birthPlace=(document.getElementById('cb-birth-place').value||'').trim();
         const reasonEl=document.querySelector('input[name="cb-reason"]:checked');
         const question=(document.getElementById('cb-question').value||'').trim();
-        if(!name||!/^[0-9]{10}$/.test(whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!reasonEl){
-          if(err){err.textContent='Kripya Name, 10-digit WhatsApp, valid Email aur ek reason zaroor bharein.';err.classList.remove('hidden');}
+        if(!name||!/^[0-9]{10}$/.test(whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||!dob||!gender||!birthTime||!ampm||!birthPlace||!reasonEl){
+          if(err){err.textContent='Kripya Name, WhatsApp, Email, DOB, Gender, Birth Time, AM/PM, Birth Place aur reason sabhi complete karein.';err.classList.remove('hidden');}
           return;
         }
-        cb.name=name;cb.whatsapp=whatsapp;cb.email=email;cb.reason=reasonEl.value;cb.question=question;
+        cb.name=name;cb.whatsapp=whatsapp;cb.email=email;cb.dob=dob;cb.gender=gender;cb.birthTime=birthTime;cb.ampm=ampm;cb.birthPlace=birthPlace;cb.reason=reasonEl.value;cb.question=question;
         renderCBStep2();
       };
 
-      function slotOptions(){
-        return CB_SLOTS.map(s=>`<option value="${esc(s)}" ${cb.slot===s?'selected':''}>${esc(s)}</option>`).join('');
-      }
-
       function renderCBStep2(){
         const box=document.getElementById('consult-booking-box');
-        const today=new Date().toISOString().split('T')[0];
         box.innerHTML=`
           <button onclick="closeConsultBooking()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
           <div class="text-center mb-6">
             <p class="text-[10px] tracking-[.24em] uppercase text-maroonMain/60">${esc(cb.product)}</p>
-            <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">Select Date & Slot</h3>
+            <div class="text-[10px] tracking-[.2em] uppercase text-maroonMain/60 mt-2">Step 2 of 3</div>
+            <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">Secure Payment</h3>
+            <p class="text-sm text-maroonMain/80 mt-2">Your details are ready. Complete the secure Razorpay payment.</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label class="text-xs font-bold uppercase text-[#5C1D24] block mb-1.5">Date chunein</label>
-              <input id="cb-date" type="date" min="${today}" value="${esc(cb.date)}" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
-            </div>
-            <div>
-              <label class="text-xs font-bold uppercase text-[#5C1D24] block mb-1.5">Time Slot chunein</label>
-              <select id="cb-slot" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
-                <option value="">-- Slot Select Karein --</option>
-                ${slotOptions()}
-              </select>
-            </div>
-          </div>
-          <div class="mt-4 rounded-2xl bg-amber-50 border border-amber-200 p-4 text-xs sm:text-sm text-amber-900 leading-relaxed">
-            <b>📱 Note:</b> Time aapko WhatsApp par send hojayega. Aapki booked slot ki exact confirmation humari team 1-3 hours ke andar WhatsApp par bhejegi.
+          <div class="rounded-2xl bg-warmWhite border border-goldPrimary/30 p-4 text-sm text-maroonDark space-y-1.5">
+            <div class="flex justify-between gap-3"><span>Service</span><b>${esc(cb.product)}</b></div>
+            <div class="flex justify-between gap-3"><span>Customer</span><b>${esc(cb.name)}</b></div>
+            <div class="flex justify-between gap-3"><span>Amount</span><b>₹${cb.price}</b></div>
           </div>
           <div id="cb-error-2" class="hidden mt-4 rounded-2xl bg-red-50 border border-red-200 p-3 text-xs sm:text-sm font-semibold text-red-800"></div>
-          <div class="grid grid-cols-2 gap-3 mt-5">
-            <button onclick="backToCBStep1()" class="w-full border border-maroonMain/30 text-maroonDark font-bold py-4 rounded-xl">← Back</button>
-            <button id="cb-pay-btn" onclick="startCBPayment()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-sm sm:text-base">PAY NOW — ₹${cb.price} 🔒</button>
-          </div>`;
+          <button id="cb-pay-btn" onclick="startCBPayment()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-base">PAY NOW — ₹${cb.price} 🔒</button>
+          <p class="text-[11px] text-maroonMain/60 text-center mt-3">UPI · Cards · Netbanking supported by Razorpay Standard Checkout.</p>`;
       }
-
-      window.backToCBStep1=function(){
-        cb.date=(document.getElementById('cb-date')?.value)||cb.date;
-        cb.slot=(document.getElementById('cb-slot')?.value)||cb.slot;
-        renderCBStep1();
-      };
 
       window.startCBPayment=async function(){
         const err=document.getElementById('cb-error-2');
         const btn=document.getElementById('cb-pay-btn');
         if(err){err.classList.add('hidden');err.textContent='';}
-        const date=(document.getElementById('cb-date').value||'').trim();
-        const slot=(document.getElementById('cb-slot').value||'').trim();
-        if(!date||!slot){
-          if(err){err.textContent='Kripya Date aur Time Slot dono select karein.';err.classList.remove('hidden');}
-          return;
-        }
-        cb.date=date;cb.slot=slot;cb.slotId=genSlotId();
-        const customer={
-          name:cb.name, whatsapp:cb.whatsapp, email:cb.email,
-          consultReason:cb.reason, consultQuestion:cb.question,
-          bookingDate:cb.date, bookingSlot:cb.slot, slotId:cb.slotId,
-          sessionDuration:cb.duration, sessionType:cb.sessionType
-        };
         try{
           btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='CREATING SECURE PAYMENT…';
+          const customer={
+            name:cb.name, whatsapp:cb.whatsapp, email:cb.email,
+            dob:cb.dob, gender:cb.gender, time:cb.birthTime, ampm:cb.ampm,
+            place:cb.birthPlace, consultReason:cb.reason, consultQuestion:cb.question
+          };
           const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:cb.product,customer})});
           const data=await response.json();
           if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
           const rzp=new Razorpay({
             key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:cb.product,order_id:data.orderId,
             prefill:{name:cb.name,email:cb.email,contact:'+91'+cb.whatsapp},
-            notes:{product:cb.product,customer_email:cb.email,slot_id:cb.slotId},
+            notes:{product:cb.product,customer_email:cb.email},
             theme:{color:'#5C1D24'},
             modal:{ondismiss:function(){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+cb.price+' 🔒';}},
             handler:async function(resp){
@@ -2237,7 +2189,8 @@
                 const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:cb.product,customer})});
                 const vd=await vr.json();
                 if(!vr.ok)throw new Error(vd.error||'Payment verification failed.');
-                renderCBSuccess();
+                cb.paymentId=vd.paymentId||resp.razorpay_payment_id;cb.orderId=vd.orderId||data.orderId;
+                renderCBPostPayment();
                 if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
               }catch(e){
                 if(err){err.textContent='Payment received, but secure verification could not be completed. Please contact support. '+e.message;err.classList.remove('hidden');}
@@ -2253,32 +2206,99 @@
         }
       };
 
+      function renderCBPostPayment(){
+        const box=document.getElementById('consult-booking-box');
+        box.innerHTML=`
+          <button onclick="closeConsultBooking()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
+          <div class="text-center mb-6">
+            <div class="w-24 h-24 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-5xl shadow-2xl">✓</div>
+            <div class="text-[11px] tracking-[.28em] uppercase text-emerald-700 font-extrabold mt-5">Payment Successfully Received</div>
+            <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-2">🎉 Congratulations!</h3>
+            <p class="text-base text-maroonMain/90 mt-3 leading-relaxed">Aapka payment successfully receive ho gaya hai. Ab apna preferred session date aur time select karke booking complete karein.</p>
+          </div>
+          <div class="rounded-2xl bg-emerald-50 border-2 border-emerald-200 p-4 text-sm text-emerald-900 mb-5">
+            ✓ Payment Received &nbsp; · &nbsp; ✓ Details Received
+          </div>
+          <div class="rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 p-4 text-xs text-maroonDark">
+            <b>📅 Booking Window:</b> Monday to Friday only · <b>12:00 PM to 8:00 PM</b>. No session before 12 PM or after 8 PM.
+          </div>
+          <button onclick="renderCBStep3()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-base">📅 BOOK YOUR SESSION →</button>`;
+      }
+
+      window.renderCBStep3=function(){
+        const box=document.getElementById('consult-booking-box');
+        const today=new Date();
+        const todayStr=today.toISOString().split('T')[0];
+        box.innerHTML=`
+          <button onclick="closeConsultBooking()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
+          <div class="text-center mb-6">
+            <p class="text-[10px] tracking-[.24em] uppercase text-maroonMain/60">${esc(cb.product)}</p>
+            <div class="text-[10px] tracking-[.2em] uppercase text-maroonMain/60 mt-2">Step 3 of 3</div>
+            <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">Book Your Session</h3>
+            <p class="text-sm text-maroonMain/80 mt-2">Preferred date aur available session slot select karein.</p>
+          </div>
+          <div class="rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 p-4 mb-5 text-sm text-maroonDark">
+            <b>🕐 Monday to Friday · 12:00 PM – 8:00 PM</b><br>
+            <span class="text-xs">Saturday aur Sunday sessions available nahi hain.</span>
+          </div>
+          <label class="text-xs font-bold uppercase text-[#5C1D24] block mb-1.5">Choose Your Preferred Date</label>
+          <input id="cb-date" type="date" min="${todayStr}" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
+          <label class="text-xs font-bold uppercase text-[#5C1D24] block mb-1.5 mt-4">Available Session Slot</label>
+          <select id="cb-slot" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm">
+            <option value="">-- Select Time Slot --</option>
+            ${CB_SLOTS.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join('')}
+          </select>
+          <div id="cb-error-2" class="hidden mt-4 rounded-2xl bg-red-50 border border-red-200 p-3 text-xs sm:text-sm font-semibold text-red-800"></div>
+          <button onclick="confirmCBBooking()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-base">CONFIRM SESSION →</button>`;
+        setDateMinAndRules();
+      };
+
+      window.confirmCBBooking=function(){
+        const err=document.getElementById('cb-error-2');
+        if(err){err.classList.add('hidden');err.textContent='';}
+        const date=(document.getElementById('cb-date')?.value||'').trim();
+        const slot=(document.getElementById('cb-slot')?.value||'').trim();
+        if(!date||!isWeekday(date)||!slot){
+          if(err){err.textContent=!date||!slot?'Kripya weekday date aur available time slot select karein.':'Consultation sirf Monday se Friday tak available hai.';err.classList.remove('hidden');}
+          return;
+        }
+        cb.date=date;cb.slot=slot;cb.slotId=genSlotId();
+        localStorage.setItem('swamiAtmaJagran_consultation_booking',JSON.stringify({
+          product:cb.product,price:cb.price,name:cb.name,email:cb.email,whatsapp:cb.whatsapp,
+          dob:cb.dob,gender:cb.gender,birthTime:cb.birthTime+' '+cb.ampm,birthPlace:cb.birthPlace,
+          consultReason:cb.reason,consultQuestion:cb.question,bookingDate:cb.date,bookingSlot:cb.slot,
+          slotId:cb.slotId,paymentId:cb.paymentId,orderId:cb.orderId,bookedAt:new Date().toISOString()
+        }));
+        renderCBSuccess();
+      };
+
       function renderCBSuccess(){
         const box=document.getElementById('consult-booking-box');
         box.innerHTML=`
           <div class="text-center py-4">
             <div class="w-28 h-28 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-6xl shadow-2xl">✓</div>
-            <div class="text-[11px] tracking-[.28em] uppercase text-emerald-700 font-extrabold mt-6">Payment Successfully Received</div>
+            <div class="text-[11px] tracking-[.28em] uppercase text-emerald-700 font-extrabold mt-6">Session Booking Confirmed</div>
             <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-3">🎉 Congratulations!</h3>
-            <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka session book ho gaya hai. Session ki details aur time aapko WhatsApp par 1-3 hours ke andar bhej diya jayega.</p>
+            <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka <b>${esc(cb.product)}</b> session request successfully receive ho gaya hai.</p>
             <div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 text-left shadow-inner">
-              <div class="text-center mb-3"><div class="text-xs font-bold uppercase text-emerald-700">Yeh hai apki Slot ID</div><div class="text-3xl font-black text-emerald-800 tracking-wider mt-1">${esc(cb.slotId)}</div></div>
-              <p class="text-xs sm:text-sm text-emerald-950 text-center">Is ID ko save kar lijiye, humari team apko message bhejegi aap yeh ID unhe dedena.</p>
-              <div class="mt-4 grid grid-cols-2 gap-3 text-xs text-emerald-950 border-t border-emerald-200 pt-3">
+              <div class="text-center mb-4"><div class="text-xs font-bold uppercase text-emerald-700">Your Slot ID</div><div class="text-3xl font-black text-emerald-800 tracking-wider mt-1">${esc(cb.slotId)}</div></div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950 border-t border-emerald-200 pt-4">
                 <div>📅 Date<br><b>${esc(cb.date)}</b></div>
-                <div>⏰ Slot<br><b>${esc(cb.slot)}</b></div>
-                ${cb.duration?`<div>⏱ Duration<br><b>${esc(cb.duration)}</b></div>`:''}
-                ${cb.sessionType?`<div>🎙 Mode<br><b>${esc(cb.sessionType)}</b></div>`:''}
+                <div>⏰ Time<br><b>${esc(cb.slot)}</b></div>
               </div>
             </div>
-            <p class="text-sm text-maroonMain/70 mt-5">Confirmation email bhi aapke diye gaye email address par automatically bheja jayega.</p>
+            <div class="mt-5 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 p-4 text-sm text-maroonDark">
+              <b>WhatsApp + Email Confirmation</b><br>
+              Our team aapki final session confirmation aur joining details aapke WhatsApp/email par share karegi.
+            </div>
+            <p class="text-xs text-maroonMain/60 mt-4">Monday–Friday · 12:00 PM–8:00 PM</p>
             <button onclick="closeConsultBooking()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">DONE</button>
           </div>`;
       }
     })();
     </script>
 
-<!-- Owner-only panel entry (password protected) -->
+    <!-- Owner-only panel entry (password protected) -->
 <button onclick="openChartsAdmin()" title="Private Owner Panel" class="fixed bottom-5 right-5 z-[110] bg-maroonDark text-goldPrimary border border-goldPrimary/60 px-4 py-3 rounded-full shadow-2xl text-xs font-extrabold hover:bg-maroonMain transition-all">🔒 Your Chart Data</button>
 
 <div id="charts-admin-modal" class="fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[120] hidden items-center justify-center p-4 overflow-y-auto">
@@ -2318,9 +2338,9 @@
   const countdown=ms=>{if(ms<=0)return 'Due now';const h=Math.floor(ms/3600000),m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60;return h+'h '+m+'m '+s+'s';};
   window.openChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';document.getElementById('charts-admin-login').classList.remove('hidden');document.getElementById('charts-admin-dashboard').classList.add('hidden');document.getElementById('charts-admin-password').value='';document.getElementById('charts-admin-error').textContent='';};
   window.closeChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.add('hidden');m.classList.remove('flex');document.body.style.overflow='';};
-  async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const text=await r.text();let d={};try{d=text?JSON.parse(text):{};}catch(parseError){throw new Error('Admin server returned an invalid response.');}if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
+  async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
   window.loginChartsAdmin=async function(){const err=document.getElementById('charts-admin-error');err.textContent='';try{const {d,pass}=await fetchAdmin();sessionStorage.setItem('swami_admin_pass',pass);document.getElementById('charts-admin-login').classList.add('hidden');document.getElementById('charts-admin-dashboard').classList.remove('hidden');renderAdmin(d.orders||[]);}catch(e){err.textContent=e.message||'Private access denied.';}};
-  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);const hasBooking=o.slotId||o.bookingDate||o.bookingSlot;const bookingCell=hasBooking?`<span class="font-mono text-goldLight">${esc(o.slotId||'—')}</span><div class="text-white/70 mt-1">${esc(o.bookingDate||'—')} · ${esc(o.bookingSlot||'—')}</div>${(o.sessionDuration||o.sessionType)?`<div class="text-white/60 mt-1">${esc(o.sessionDuration||'')} ${o.sessionType?'· '+esc(o.sessionType):''}</div>`:''}${o.consultReason?`<div class="text-white/40 mt-1">${esc(o.consultReason)}</div>`:''}${o.consultQuestion?`<div class="text-white/40 mt-1 italic">"${esc(o.consultQuestion)}"</div>`:''}`:'—';return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4 text-xs">${bookingCell}</td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="7" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
+  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);const hasBooking=o.slotId||o.bookingDate||o.bookingSlot;const bookingCell=hasBooking?`<span class="font-mono text-goldLight">${esc(o.slotId||'—')}</span><div class="text-white/70 mt-1">${esc(o.bookingDate||'—')} · ${esc(o.bookingSlot||'—')}</div>${o.consultReason?`<div class="text-white/40 mt-1">${esc(o.consultReason)}</div>`:''}`:'—';return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4 text-xs">${bookingCell}</td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="7" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
   window.refreshChartsAdmin=async function(){const status=document.getElementById('charts-admin-status');status.className='mb-4 rounded-xl p-3 text-sm bg-goldPrimary/10 border border-goldPrimary/20 text-goldLight';status.textContent='Refreshing secure customer data…';status.classList.remove('hidden');try{const {d}=await fetchAdmin();renderAdmin(d.orders||[]);status.textContent='✓ Live data refreshed.';setTimeout(()=>status.classList.add('hidden'),1800);}catch(e){status.className='mb-4 rounded-xl p-3 text-sm bg-red-50/10 border border-red-400/20 text-red-200';status.textContent=e.message||'Unable to load data.';}};
   setInterval(()=>document.querySelectorAll('.admin-countdown').forEach(el=>el.textContent=countdown(Number(el.dataset.due)-Date.now())),1000);
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement?.id==='charts-admin-password')loginChartsAdmin();});
