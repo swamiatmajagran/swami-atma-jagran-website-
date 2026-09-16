@@ -9,17 +9,16 @@
     <meta name="author" content="Swami Atma Jagran">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <!-- PAYMENT SUCCESS MODAL -->
     <div id="payment-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
             <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
             <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
-            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you. Your payment and order have been successfully received.</p>
-            <p class="text-sm text-maroonMain/90 mt-2">Aapki details securely save ho gayi hain. Hamari team ab aapka personalised chart/report prepare karegi.</p>
+            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
+            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
             <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
             <p class="text-lg font-black text-emerald-800 mt-5">24 HOURS DELIVERY</p>
-            <p class="text-sm text-maroonMain/80 mt-2">Aapka personalised chart/report aapke diye gaye WhatsApp number par 24 hours ke andar securely deliver kiya jayega. Aapko payment confirmation email bhi bheja jayega.</p>
+            <p class="text-sm text-maroonMain/80 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi. Confirmation email bhi automatically bheja jayega.</p>
             <button onclick="document.getElementById('payment-success-modal').classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
         </div>
     </div>
@@ -29,13 +28,12 @@
         let activePaidProduct = null;
 
         function openPaidProductForm(name, price, link) {
-            activePaidProduct = { name, price };
-            const title = document.getElementById('modal-product-title');
-            const priceTag = document.getElementById('modal-product-price-tag');
-            if (title) title.innerText = name;
-            if (priceTag) priceTag.innerText = `₹${price}`;
-            const email = document.getElementById('prod-email');
-            if (email) email.value = '';
+            activePaidProduct = { name, price, link };
+            document.getElementById('modal-product-title').innerText = name;
+            document.getElementById('modal-product-price-tag').innerText = `₹${price}`;
+            const qr = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`)}`;
+            document.getElementById('modal-qr-code-img').src = qr;
+            document.getElementById('modal-upi-anchor').href = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
             document.getElementById('product-payment-modal').classList.remove('hidden');
         }
 
@@ -48,87 +46,64 @@
             const ampm = document.getElementById('prod-ampm').value;
             const place = document.getElementById('prod-place').value.trim();
             const whatsapp = document.getElementById('prod-whatsapp').value.trim();
-            const email = document.getElementById('prod-email').value.trim();
-            if (!name || !dob || !gender || !time || !ampm || !place || !/^[0-9]{10}$/.test(whatsapp) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                alert('कृपया Name, Email, DOB, Gender, Birth Time, AM/PM, Birth Place और 10-digit WhatsApp Number सभी सही भरें।');
+            if (!name || !dob || !gender || !time || !ampm || !place || !/^[0-9]{10}$/.test(whatsapp)) {
+                alert('कृपया नाम, DOB, Gender, जन्म समय, AM/PM, जन्म स्थान और 10-digit WhatsApp नंबर सभी भरें।');
                 return null;
             }
-            return { name, dob, gender, time, ampm, place, whatsapp, email, product: activePaidProduct.name, price: activePaidProduct.price, savedAt: new Date().toISOString() };
+            return { name, dob, gender, time, ampm, place, whatsapp, product: activePaidProduct.name, price: activePaidProduct.price, savedAt: new Date().toISOString() };
         }
 
-        async function continueToRazorpayPayment() {
+        function submitDetailsThenShowPay() {
             const customer = getPaidCustomerDetails();
             if (!customer) return;
-            const btn = document.getElementById('paid-standard-pay-btn');
-            try {
-                if (btn) { btn.disabled = true; btn.textContent = 'CREATING SECURE PAYMENT…'; btn.classList.add('opacity-60','cursor-not-allowed'); }
-                localStorage.setItem('swamiAtmaJagran_pending_payment', JSON.stringify(customer));
 
-                const response = await fetch('/api/create-order', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ product: customer.product, customer })
-                });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Unable to create secure Razorpay order.');
-                if (typeof Razorpay !== 'function') throw new Error('Razorpay Standard Checkout could not be loaded. Please refresh and try again.');
+            // Keep the exact details on this device until the payment flow returns.
+            localStorage.setItem('swamiAtmaJagran_pending_payment', JSON.stringify(customer));
 
-                const rzp = new Razorpay({
-                    key: data.keyId,
-                    amount: data.amount,
-                    currency: data.currency || 'INR',
-                    name: 'Swami Atma Jagran',
-                    description: customer.product,
-                    order_id: data.orderId,
-                    prefill: { name: customer.name, email: customer.email, contact: '+91' + customer.whatsapp },
-                    notes: { product: customer.product, customer_name: customer.name, customer_email: customer.email },
-                    theme: { color: '#5C1D24' },
-                    modal: { ondismiss: function(){ if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');} } },
-                    handler: async function(resp) {
-                        if (btn) btn.textContent = 'VERIFYING PAYMENT…';
-                        try {
-                            const vr = await fetch('/api/verify-payment', {
-                                method:'POST', headers:{'Content-Type':'application/json'},
-                                body:JSON.stringify({ orderId:data.orderId, razorpay_order_id:resp.razorpay_order_id, razorpay_payment_id:resp.razorpay_payment_id, razorpay_signature:resp.razorpay_signature, product:customer.product })
-                            });
-                            const vd = await vr.json();
-                            if (!vr.ok) throw new Error(vd.error || 'Payment verification failed.');
+            // One-tap WhatsApp message. Customer only needs to press Send in WhatsApp.
+            const msg = `Namaste Swami Ji 🙏\n\n*I am submitting my details for ${customer.product}.*\n\n*My Kundli Details:*\n- Name: ${customer.name}\n- Gender: ${customer.gender}\n- DOB: ${customer.dob}\n- Birth Time: ${customer.time} ${customer.ampm}\n- Birth Place: ${customer.place}\n- WhatsApp: ${customer.whatsapp}\n\nPlease confirm my details. I will now complete the secure Razorpay payment of ₹${customer.price}.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
 
-                            try {
-                                await fetch('/api/order-notification', {
-                                    method:'POST', headers:{'Content-Type':'application/json'},
-                                    body:JSON.stringify({
-                                        eventType:'payment_verified',
-                                        payload:{orderId:data.orderId,paymentId:vd.paymentId,product:customer.product,price:customer.price,customer}
-                                    })
-                                });
-                            } catch (_) {}
-
-                            localStorage.removeItem('swamiAtmaJagran_pending_payment');
-                            closeProductModal();
-                            const modal = document.getElementById('payment-success-modal');
-                            const summary = document.getElementById('payment-success-summary');
-                            if (summary) summary.innerHTML = `<strong>${escapeHtml(customer.product)}</strong><br>Customer: ${escapeHtml(customer.name)}<br>Payment ID: ${escapeHtml(vd.paymentId)}<br>Order ID: ${escapeHtml(vd.orderId)}<br><span class="text-emerald-700 font-bold">Payment successfully received and your details have been securely submitted.</span>`;
-                            if (modal) modal.classList.remove('hidden');
-                            if(typeof window.loadJigyasuStorage==='function') window.loadJigyasuStorage();
-                        } catch (e) {
-                            alert('Payment received, but secure verification could not be completed. Please contact support. ' + e.message);
-                            if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');}
-                        }
-                    }
-                });
-                rzp.on('payment.failed', function(){
-                    alert('Payment failed or was cancelled. Please try again.');
-                    if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');}
-                });
-                rzp.open();
-            } catch (e) {
-                alert(e.message || 'Something went wrong. Please try again.');
-                if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');}
-            }
+            const payBox = document.getElementById('pay-after-details');
+            if (payBox) payBox.classList.remove('hidden');
+            const status = document.getElementById('details-submitted-status');
+            if (status) status.classList.remove('hidden');
         }
 
-        function unlockLaganAfterRazorpaySignal() {}
+        function continueToRazorpayPayment() {
+            const customer = getPaidCustomerDetails();
+            if (!customer) return;
+            localStorage.setItem('swamiAtmaJagran_pending_payment', JSON.stringify(customer));
+            window.location.href = activePaidProduct.link;
+        }
+
+        function unlockLaganAfterRazorpaySignal() {
+            const params = new URLSearchParams(window.location.search);
+            const linkId = params.get('razorpay_payment_link_id') || '';
+            const status = (params.get('razorpay_payment_link_status') || '').toLowerCase();
+            const paymentId = params.get('razorpay_payment_id') || '';
+            const signature = params.get('razorpay_signature') || '';
+
+            // Razorpay Payment Link callback signal. The final secure verification should be done server-side.
+            // For this ₹1 test UX, we only unlock when Razorpay returns a paid callback for our test link.
+            const paidCallback = status === 'paid' && paymentId && linkId && signature;
+            const isLaganTestLink = !linkId || linkId.toLowerCase().includes('4texxjk4') || sessionStorage.getItem('swami_lagan_payment_started') === '1';
+            if (!paidCallback || !isLaganTestLink) return;
+
+            sessionStorage.setItem('swami_lagan_paid', '1');
+            sessionStorage.removeItem('swami_lagan_payment_started');
+            unlockLaganButton();
+
+            const modal = document.getElementById('payment-success-modal');
+            const summary = document.getElementById('payment-success-summary');
+            if (summary) summary.innerHTML = '<strong>Lagan Maya Sutra</strong><br>Payment ID: ' + escapeHtml(paymentId) + '<br><span class="text-emerald-700 font-bold">Payment successfully received.</span>';
+            const waBtn = document.getElementById('payment-success-whatsapp');
+            if (waBtn) waBtn.classList.add('hidden');
+            if (modal) modal.classList.remove('hidden');
+
+            // Clean callback parameters from the address bar without reloading the page.
+            window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
+        }
 
         function unlockLaganButton() {
             const btn = document.getElementById('lagan-share-details-btn');
@@ -463,12 +438,12 @@
     </section>
 
 
-    <!-- जिज्ञासु पटल — LIVE SERVER-BACKED LIMITED STATUS VIEW -->
+    <!-- जिज्ञासु पटल — LIVE SERVER-BACKED ORDER STATUS -->
 <section id="jigyasu-patal" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div class="bg-maroonDark border-2 border-goldPrimary/40 rounded-3xl p-6 sm:p-10 shadow-2xl text-warmWhite">
             <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 border-b border-goldPrimary/30 pb-6">
                 <div>
-                    <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Live Order Status</span>
+                    <span class="text-goldPrimary text-xs tracking-widest uppercase font-semibold">Live Submissions</span>
                     <h2 class="font-cinzel text-3xl font-bold text-goldLight">जिज्ञासु पटल (Jigyasu Patal)</h2>
                 </div>
                 <div class="flex items-center gap-3">
@@ -762,7 +737,7 @@
                 </div>
                 <div>
                     <div class="text-center text-2xl font-bold text-maroonDark mb-4">₹1 <span class="text-xs font-semibold text-maroonMain/60">(TEST)</span></div>
-                    <button onclick="openFreeReportModal()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT → FREE</button>
+                    <button onclick="openPaidProductForm('Swarnima Janm Patrika', 1, 'pl_TcJTZ2f8CsQcl0')" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-4 rounded-xl shadow transition-all cursor-pointer">GET MY CHART REPORT →</button>
                 </div>
             </div>
 
@@ -1078,32 +1053,46 @@
         </div>
     </div>
 
-    <!-- MODAL: Paid Product Details + Razorpay Standard Checkout -->
-    <div id="product-payment-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <!-- MODAL: Product Direct Payment & WhatsApp Checkout Modal (Same as Divya Bhagya Sutra) -->
+    <div id="product-payment-modal" style="display:none!important" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 border-2 border-goldPrimary shadow-2xl relative my-6">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl" aria-label="Close">&times;</button>
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl">&times;</button>
             <div class="text-center space-y-4">
-                <div class="w-14 h-14 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-xl shadow"><i class="fa-solid fa-scroll"></i></div>
-                <h3 class="font-cinzel text-xl font-bold text-maroonDark" id="modal-product-title">Your Report</h3>
-                <p class="text-sm font-bold text-maroonMain">Secure Amount: <span id="modal-product-price-tag" class="text-red-700 text-lg">₹299</span></p>
-                <p class="text-xs text-maroonMain/75 bg-amber-100 border border-goldPrimary/30 rounded-xl p-3 leading-relaxed">Apni poori janm details aur email submit karein. Uske baad official <b>Razorpay Standard Checkout</b> khulega. Payment successful hone ke baad aapko website par confirmation turant milega.</p>
-                <div class="space-y-3 pt-2 text-left border-t border-goldPrimary/20">
-                    <h4 class="text-xs font-bold uppercase text-maroonDark">अपनी जन्म जानकारी दर्ज करें:</h4>
-                    <input type="text" id="prod-name" placeholder="Full Name" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    <input type="email" id="prod-email" placeholder="Email Address (Gmail / Email)" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="date" id="prod-dob" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <select id="prod-gender" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs"><option value="">Gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark" id="modal-product-title">Scan & Pay Securely</h3>
+                <p class="text-sm font-bold text-maroonMain">Amount to Pay: <span id="modal-product-price-tag" class="text-red-700 text-lg">₹299</span></p>
+                <div class="bg-maroonDark p-4 rounded-2xl border-2 border-goldPrimary/60 max-w-[260px] mx-auto shadow-xl">
+                    <div class="text-goldPrimary font-cinzel text-xs font-bold mb-2 tracking-wider">SWAMI ATMA JAGRAN</div>
+                    <div class="bg-white p-2 rounded-xl">
+                        <img id="modal-qr-code-img" src="" alt="Payment QR" class="w-full h-auto mx-auto rounded">
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="prod-time" placeholder="Birth Time (e.g. 10:30)" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <select id="prod-ampm" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs"><option value="">AM / PM</option><option value="AM">AM</option><option value="PM">PM</option></select>
-                    </div>
-                    <input type="text" id="prod-place" placeholder="Birth Place / Location" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    <input type="tel" id="prod-whatsapp" placeholder="WhatsApp Number (10 digits)" maxlength="10" pattern="[0-9]{10}" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    <div class="text-goldLight text-[11px] mt-2 font-mono">UPI: 7000534788-3@ybl</div>
                 </div>
-                <button id="paid-standard-pay-btn" type="button" onclick="continueToRazorpayPayment()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-3.5 rounded-xl shadow-lg transition-all">PAY NOW — ₹299 🔒</button>
-                <p class="text-[10px] text-maroonMain/60">🔒 Secure payment powered by Razorpay Standard Checkout.</p>
+                <a id="modal-upi-anchor" href="#" class="block w-full bg-maroonMain text-goldPrimary py-3 rounded-xl font-bold text-sm shadow hover:bg-maroonDark transition-all">
+                    <i class="fa-solid fa-mobile-screen-button mr-2"></i> Pay Direct via PhonePe / Paytm App
+                </a>
+                <p class="text-[11px] text-maroonMain/80 italic bg-amber-100 p-2 rounded-lg border border-goldPrimary/30">पहले अपनी पूरी जन्म-कुंडली जानकारी भरें। यह जानकारी आपकी कुंडली/रिपोर्ट बनाने के लिए जरूरी है। इसके बाद ही Secure Payment पर जाएँ।</p>
+                <div class="space-y-3 pt-2 text-left border-t border-goldPrimary/20">
+                    <h4 class="text-xs font-bold uppercase text-maroonDark">पहले अपनी पूरी जन्म जानकारी दर्ज करें:</h4>
+                    <input type="text" id="prod-name" placeholder="Full Name" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="date" id="prod-dob" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <select id="prod-gender" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                            <option value="">Gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="prod-time" placeholder="Time (e.g. 10:30)" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <select id="prod-ampm" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                            <option value="">AM / PM</option><option value="AM">AM</option><option value="PM">PM</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="prod-place" placeholder="Birth Place / Location" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <input type="tel" id="prod-whatsapp" placeholder="WhatsApp No (10 digits)" pattern="[0-9]{10}" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    </div>
+                </div>
+                <!-- Legacy submit/continue payment controls intentionally disabled.
+                     The active universal flow below uses the official Razorpay Standard Checkout directly. -->
             </div>
         </div>
     </div>
@@ -1151,11 +1140,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase text-maroonDark mb-1">WhatsApp No (रिपोर्ट पाने के लिए)</label>
-                    <input type="tel" id="free-whatsapp" placeholder="10-digit mobile number" pattern="[0-9]{10}" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:outline-none focus:ring-goldPrimary text-sm">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold uppercase text-maroonDark mb-1">Email Address</label>
-                    <input type="email" id="free-email" placeholder="your@email.com" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
+                    <input type="tel" id="free-whatsapp" placeholder="10-digit mobile number" pattern="[0-9]{10}" required class="w-full px-4 py-2.5 rounded-xl bg-white border border-goldPrimary/40 focus:outline-none focus:ring-2 focus:ring-goldPrimary text-sm">
                 </div>
                 <button type="submit" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-bold py-3.5 rounded-xl shadow-md transition-all cursor-pointer">
                     GET MY CHART REPORT →
@@ -1165,24 +1150,55 @@
     </div>
 
     <!-- MODAL: Free Report Success -->
-    <div id="free-success-modal" class="fixed inset-0 bg-maroonDark/90 backdrop-blur-md z-[105] hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-cardBg max-w-2xl w-full rounded-3xl p-7 sm:p-10 border-2 border-goldPrimary shadow-2xl text-center my-6">
-            <div class="w-24 h-24 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-5xl shadow-2xl">✓</div>
-            <div class="text-[11px] tracking-[.3em] uppercase text-emerald-700 font-extrabold mt-6">FREE REPORT REQUEST RECEIVED</div>
-            <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-3">🎉 Congratulations!</h3>
-            <p class="text-lg font-bold text-maroonMain mt-4">Namaste <span id="free-success-name">🙏</span></p>
-            <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka <b>Swarnima Janm Patrika — FREE Kundli Report</b> request successfully place ho gaya hai.</p>
-            <div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner">
-                <div class="text-center text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS</div>
-                <p class="text-center text-sm font-bold text-emerald-700 mt-2">Aapki personalised Swarnima Janm Patrika aapke WhatsApp number par 24 hours ke andar securely deliver ki jayegi. Nischint rahein, hamari team aapki details ko dhyan se process karegi.</p>
-                <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950">
-                    <div>✓ Details Received</div><div>✓ Free Report Request Placed</div>
-                    <div>✓ Team Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div>
-                </div>
+    <div id="free-success-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl text-center space-y-4">
+            <div class="w-16 h-16 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto text-2xl shadow-lg">
+                <i class="fa-solid fa-check"></i>
             </div>
-            <p class="text-sm text-maroonMain/70 mt-5">Aapko confirmation email bhi aapke diye gaye email address par bheja jayega. Pure hriday se aashvasan hai ki aapki personal kundli details ko surakshit rakhte hue report taiyar ki jayegi aur 24 hours ke andar WhatsApp par deliver ki jayegi.</p>
-            <button onclick="sendToWhatsAppDirect()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg">📱 SEND DETAILS TO WHATSAPP</button>
-            <button onclick="closeFreeSuccessModal()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">DONE</button>
+            <h3 class="font-cinzel text-xl font-bold text-maroonDark">आपका बहुत-बहुत शुक्रिया!</h3>
+            <p class="text-sm text-maroonMain/90 leading-relaxed">आपकी दी हुई जानकारी हम तक पहुँच गई है। हम आपकी रिपोर्ट 24 घंटे के अंदर आपके WhatsApp नंबर पर भेज देंगे।</p>
+            <div class="pt-2">
+                <button onclick="sendToWhatsAppDirect()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-brands fa-whatsapp text-lg"></i> GET UPDATE ON WHATSAPP
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Paid Payment Modal (Divya Bhagya Sutra) -->
+    <div id="paid-payment-modal" style="display:none!important" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 border-2 border-goldPrimary shadow-2xl relative my-6">
+            <button onclick="closePaidModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl">&times;</button>
+            <div class="text-center space-y-4">
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark">Scan & Pay Securely</h3>
+                <p class="text-sm font-bold text-maroonMain">Amount to Pay: <span class="text-red-700 text-lg">₹999</span></p>
+                <div class="bg-maroonDark p-4 rounded-2xl border-2 border-goldPrimary/60 max-w-[260px] mx-auto shadow-xl">
+                    <div class="text-goldPrimary font-cinzel text-xs font-bold mb-2 tracking-wider">SWAMI ATMA JAGRAN</div>
+                    <div class="bg-white p-2 rounded-xl">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=999&cu=INR" alt="Payment QR" class="w-full h-auto mx-auto rounded">
+                    </div>
+                    <div class="text-goldLight text-[11px] mt-2 font-mono">UPI: 7000534788-3@ybl</div>
+                </div>
+                <a href="upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=999&cu=INR" class="block w-full bg-maroonMain text-goldPrimary py-3 rounded-xl font-bold text-sm shadow hover:bg-maroonDark transition-all">
+                    <i class="fa-solid fa-mobile-screen-button mr-2"></i> Pay Direct via PhonePe / Paytm App
+                </a>
+                <p class="text-[11px] text-maroonMain/80 italic bg-amber-100 p-2 rounded-lg border border-goldPrimary/30">पेमेंट पूरा करने के बाद ही नीचे "I Have Paid" बटन पर क्लिक करें।</p>
+                <div class="space-y-3 pt-2 text-left border-t border-goldPrimary/20">
+                    <h4 class="text-xs font-bold uppercase text-maroonDark">अपनी जन्म विवरण दर्ज करें (सत्यापन के लिए):</h4>
+                    <input type="text" id="paid-name" placeholder="Full Name" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="date" id="paid-dob" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <input type="text" id="paid-time" placeholder="Time (e.g. 10:30 AM)" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="text" id="paid-place" placeholder="Birth Place" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <input type="tel" id="paid-whatsapp" placeholder="WhatsApp No" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    </div>
+                </div>
+                <button onclick="submitPaidOrder()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer animate-glow">
+                    I HAVE PAID — COMPLETE ORDER ✓
+                </button>
+            </div>
         </div>
     </div>
 
@@ -1247,20 +1263,6 @@
                 </div>
             </div>
 
-            <div class="max-w-4xl mx-auto rounded-3xl border-2 border-goldPrimary/50 bg-[#4A0E17] p-6 sm:p-8 text-warmWhite shadow-2xl">
-                <div class="text-center">
-                    <div class="text-[11px] tracking-[.28em] uppercase text-goldPrimary font-extrabold">CONSULTATION SCHEDULE</div>
-                    <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-goldLight mt-2">Choose Your Session After Payment</h3>
-                    <p class="text-xs sm:text-sm text-warmWhite/80 mt-3">First complete your secure Razorpay payment. Immediately after payment, you will choose your preferred Monday–Friday session date. Our team will send your exact consultation time to you on WhatsApp.</p>
-                </div>
-                <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 text-center text-xs font-bold">
-                    <div class="rounded-2xl bg-maroonDark/60 border border-goldPrimary/20 p-4">1️⃣ Enter Details</div>
-                    <div class="rounded-2xl bg-maroonDark/60 border border-goldPrimary/20 p-4">2️⃣ Pay Securely</div>
-                    <div class="rounded-2xl bg-maroonDark/60 border border-goldPrimary/20 p-4">3️⃣ Book Your Slot</div>
-                </div>
-                <p class="text-[11px] text-goldLight/80 mt-4 text-center">Session days: Monday–Friday • Exact consultation time will be shared on WhatsApp</p>
-            </div>
-
             <div class="max-w-7xl mx-auto space-y-8">
                 <div class="text-center max-w-2xl mx-auto">
                     <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-[#4A0E17]">Let’s Get to the Root of What’s Holding You Back</h3>
@@ -1298,86 +1300,44 @@
                 </div>
             </div>
 
-            <div id="consult-details-panel" class="max-w-4xl mx-auto bg-[#4A0E17] border-2 border-goldPrimary/60 rounded-3xl p-6 sm:p-8 shadow-2xl text-warmWhite hidden">
-                <div class="flex items-center justify-between gap-4 mb-6">
+            <div class="max-w-4xl mx-auto bg-[#4A0E17] border-2 border-goldPrimary/60 rounded-3xl p-6 sm:p-8 shadow-2xl text-warmWhite">
+                <h3 class="font-cinzel text-xl font-bold text-goldLight mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-user-pen text-goldPrimary"></i> Enter Your Details for Consultation
+                </h3>
+                <p class="text-xs text-warmWhite/80 mb-6">कृपया नीचे अपनी सही जानकारी भरें ताकि पेमेंट के बाद सारी डिटेल्स सीधे आपके WhatsApp से स्वामी जी तक पहुँच सकें।</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
                     <div>
-                        <div class="text-[10px] tracking-[.25em] uppercase text-goldPrimary font-extrabold">PRIVATE SESSION PAGE</div>
-                        <h3 id="consult-selected-title" class="font-cinzel text-2xl sm:text-3xl font-bold text-goldLight mt-1">Enter Your Details</h3>
-                        <p id="consult-selected-meta" class="text-xs text-warmWhite/70 mt-2"></p>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">पूरा नाम (Name)</label>
+                        <input type="text" id="consult-name" placeholder="आपका नाम" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
                     </div>
-                    <button type="button" onclick="backToConsultationChoices()" class="shrink-0 border border-goldPrimary/40 text-goldLight px-3 py-2 rounded-xl text-xs font-bold">← Back</button>
-                </div>
-
-                <div id="consult-personal-step">
-                    <div class="mb-5 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/25 p-4 text-xs text-goldLight/90">
-                        <b class="text-goldPrimary">STEP 1 • YOUR DETAILS</b><br>
-                        कृपया अपनी सही जन्म एवं संपर्क जानकारी भरें। इसके बाद Next दबाकर consultation question भरें।
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म तारीख (DOB)</label>
+                        <input type="date" id="consult-dob" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">पूरा नाम (Name)</label>
-                            <input type="text" id="consult-name" placeholder="आपका नाम" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">Email Address</label>
-                            <input type="email" id="consult-email" placeholder="your@email.com" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म तारीख (DOB)</label>
-                            <input type="date" id="consult-dob" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म समय (Time & AM/PM)</label>
-                            <input type="text" id="consult-time" placeholder="जैसे 10:30 AM या PM" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म स्थान (Place)</label>
-                            <input type="text" id="consult-location" placeholder="शहर / राज्य" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">लिंग (Gender)</label>
-                            <select id="consult-gender" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                                <option value="">Select Gender</option><option value="Male">Male (पुरुष)</option><option value="Female">Female (स्त्री)</option><option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="sm:col-span-2 lg:col-span-6">
-                            <label class="block text-xs font-bold uppercase text-goldLight mb-1">WhatsApp No.</label>
-                            <input type="tel" id="consult-whatsapp" placeholder="10 अंक मोबाइल नंबर" pattern="[0-9]{10}" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
-                        </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म समय (Time & AM/PM)</label>
+                        <input type="text" id="consult-time" placeholder="जैसे 10:30 AM या PM" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
                     </div>
-                    <button type="button" onclick="goToConsultationQuestion()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all">NEXT: CONSULTATION QUESTION →</button>
-                </div>
-
-                <div id="consult-question-step" class="hidden">
-                    <div class="mb-5 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/25 p-4 text-xs text-goldLight/90">
-                        <b class="text-goldPrimary">STEP 2 • WHAT DO YOU WANT TO DISCUSS?</b><br>
-                        Apna main concern ya question clearly likhein, taaki consultation focused rahe.
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">जन्म स्थान (Place)</label>
+                        <input type="text" id="consult-location" placeholder="शहर / राज्य" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
                     </div>
-                    <label class="block text-xs font-bold uppercase text-goldLight mb-1">Consultation Purpose / Question</label>
-                    <textarea id="consult-question" rows="5" placeholder="Aap kis bare mein consultation chahte hain? Apna specific sawal likhein..." required class="w-full px-4 py-4 rounded-xl bg-warmWhite text-maroonDark text-sm font-semibold focus:outline-none resize-none"></textarea>
-                    <div class="mt-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/25 p-4 text-[11px] text-goldLight/90 leading-relaxed">
-                        <div class="font-extrabold uppercase tracking-wide text-goldPrimary mb-2">Question examples</div>
-                        <ul class="space-y-1 list-disc pl-4">
-                            <li>Family mein baar-baar struggle aur tension kyun ho rahi hai?</li>
-                            <li>Money mein dikkat aur income instability ka main reason kya ho sakta hai?</li>
-                            <li>Career mein growth nahi ho rahi, mujhe kis direction mein jaana chahiye?</li>
-                            <li>Job nahi mil rahi ya baar-baar job change ho raha hai, kya guidance hai?</li>
-                            <li>Business mein rukawat, loss ya clients ki problem ko kaise samjhein?</li>
-                            <li>Shaadi kab aur kis tarah ke partner ke saath hone ke yog hain?</li>
-                            <li>Relationship mein misunderstanding ya distance kyun badh rahi hai?</li>
-                            <li>Foreign travel, relocation ya settlement ke chances ko lekar kya dekhna chahiye?</li>
-                            <li>Education, competitive exams ya studies mein baar-baar blockage kyun aa raha hai?</li>
-                            <li>Life ka purpose, direction aur next major step ko lekar clarity kaise milegi?</li>
-                        </ul>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">लिंग (Gender)</label>
+                        <select id="consult-gender" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
+                            <option value="Male">Male (पुरुष)</option>
+                            <option value="Female">Female (स्त्री)</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-6">
-                        <button type="button" onclick="backToConsultationPersonal()" class="w-full border border-goldPrimary/40 text-goldLight font-extrabold py-4 rounded-xl">← BACK TO DETAILS</button>
-                        <button type="button" onclick="startConsultationRazorpayPayment()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">PAY NOW →</button>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-goldLight mb-1">WhatsApp No.</label>
+                        <input type="tel" id="consult-whatsapp" placeholder="10 अंक मोबाइल नंबर" pattern="[0-9]{10}" required class="w-full px-3 py-2.5 rounded-xl bg-warmWhite text-maroonDark text-xs font-semibold focus:outline-none">
                     </div>
                 </div>
             </div>
 
-            <div id="consultation-choice-area" class="max-w-7xl mx-auto space-y-8">
+            <div class="max-w-7xl mx-auto space-y-8">
                 <div class="text-center max-w-2xl mx-auto">
                     <h3 class="font-cinzel text-3xl font-bold text-[#4A0E17]">Choose the One That Fits You Best</h3>
                     <p class="text-sm text-maroonMain/80 mt-1">Sometimes, one call to the right person can change everything.</p>
@@ -1422,7 +1382,7 @@
                         </div>
                         <div>
                             <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹999</div>
-                            <button onclick="startConsultationBooking('Individual Clarity Session', 999, 'pkg1')" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                            <button onclick="openPaidProductForm('Individual Clarity Session', 999, 'pl_TcIISUdUSxq7ld')" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
                                 Book Now
                             </button>
                         </div>
@@ -1465,7 +1425,7 @@
                         </div>
                         <div>
                             <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹1,299</div>
-                            <button onclick="startConsultationBooking('Partnership & Harmony', 1299, 'pkg2')" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                            <button onclick="openPaidProductForm('Partnership & Harmony', 1299, 'pl_TcIQD07gP8Vm86')" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
                                 Book Now
                             </button>
                         </div>
@@ -1506,20 +1466,34 @@
                             <div><i class="fa-solid fa-location-dot text-[#5C1D24] mr-1.5"></i> Location: Ashram in Bhopal (Face-to-Face)</div>
                         </div>
                         <div class="text-2xl font-extrabold text-[#4A0E17]">Price Starting from: ₹1,999 <span class="text-[10px] font-normal">(Incl. GST)</span></div>
-                        <button onclick="startConsultationBooking('Meet Swami Ji Ashram Session', 1999, 'pkg3')" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-xl transition-all text-base cursor-pointer animate-glow">
+                        <button onclick="openPaidProductForm('Meet Swami Ji Ashram Session', 1999, 'pl_TcITsSJqnwm6iS')" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-xl transition-all text-base cursor-pointer animate-glow">
                             Consult Now
                         </button>
                     </div>
                 </div>
 
-                <div id="consult-payment-card" class="hidden bg-[#4A0E17] border-2 border-goldPrimary rounded-3xl p-8 max-w-xl mx-auto text-center space-y-4 shadow-2xl">
-                    <div class="text-[10px] tracking-[.25em] uppercase text-goldPrimary font-extrabold">READY FOR SECURE PAYMENT</div>
+                <div id="consult-payment-card" style="display:none!important" class="hidden bg-[#4A0E17] border-2 border-goldPrimary rounded-3xl p-8 max-w-xl mx-auto text-center space-y-6 shadow-2xl animate-glow">
                     <h3 class="font-cinzel text-2xl font-bold text-goldLight" id="selected-plan-title">Complete Your Payment</h3>
-                    <p class="text-sm text-warmWhite/90">Complete payment first. After successful payment, you will choose your consultation date.</p>
-                    <div class="rounded-2xl bg-maroonDark/70 border border-goldPrimary/30 p-4 text-sm text-goldLight">📅 <span id="selected-consult-slot">Slot will be selected after payment</span></div>
-                    <div class="text-2xl font-black text-goldPrimary" id="selected-plan-price">₹999</div>
-                    <p class="text-xs text-warmWhite/70">Click PAY NOW. Official Razorpay Standard Checkout will open.</p>
-                    <button type="button" onclick="startConsultationRazorpayPayment()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all">PROCEED TO PAYMENT →</button>
+                    <p class="text-sm text-warmWhite/90">Scan below QR code or use UPI ID to pay <span class="text-goldPrimary font-bold text-lg" id="selected-plan-price">₹999</span></p>
+
+                    <div class="bg-maroonDark p-4 rounded-2xl border border-goldPrimary/50 max-w-[240px] mx-auto shadow-xl">
+                        <div class="text-goldPrimary font-cinzel text-xs font-bold mb-2 tracking-wider">SWAMI ATMA JAGRAN</div>
+                        <div class="bg-white p-2 rounded-xl">
+                            <img id="consult-qr-img" src="" alt="UPI QR Code" class="w-full h-auto mx-auto rounded">
+                        </div>
+                        <div class="text-goldLight text-[11px] mt-2 font-mono">UPI: 7000534788-3@ybl</div>
+                    </div>
+
+                    <a id="consult-upi-link" href="#" class="block w-full bg-goldPrimary text-maroonDark font-bold py-3 rounded-xl text-sm shadow hover:bg-goldLight transition-all">
+                        <i class="fa-solid fa-mobile-screen-button mr-2"></i> Pay Direct via GPay / PhonePe / Paytm
+                    </a>
+
+                    <div class="pt-4 border-t border-goldPrimary/30">
+                        <p class="text-xs text-goldLight mb-3 font-medium">पेमेंट करने के बाद नीचे दिए गए बटन पर क्लिक करें:</p>
+                        <button onclick="sendConsultationToWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 text-base cursor-pointer animate-glow">
+                            <i class="fa-brands fa-whatsapp text-xl"></i> I HAVE PAID NOW — SEND TO WHATSAPP ✓
+                        </button>
+                    </div>
                 </div>
 
             </div>
@@ -1612,37 +1586,34 @@
         function closeFreeReportModal() {
             document.getElementById('free-report-modal').classList.add('hidden');
         }
-        async function submitFreeReport(e) {
+        function submitFreeReport(e) {
             e.preventDefault();
-            const name = document.getElementById('free-name').value.trim();
+            const name = document.getElementById('free-name').value;
             const gender = document.getElementById('free-gender').value;
             const dob = document.getElementById('free-dob').value;
-            const time = document.getElementById('free-time').value;
-            const ampm = document.getElementById('free-ampm').value;
-            const place = document.getElementById('free-place').value.trim();
-            const whatsapp = document.getElementById('free-whatsapp').value.trim();
-            const email = document.getElementById('free-email').value.trim();
-            if(!name||!gender||!dob||!time||!ampm||!place||!/^[0-9]{10}$/.test(whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-                alert('कृपया सभी details और valid Email Address भरें।'); return;
-            }
-            const btn=e.submitter; if(btn){btn.disabled=true;btn.textContent='SUBMITTING SECURELY…';}
-            try{
-                const r=await fetch('/api/free-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,gender,dob,time,ampm,place,whatsapp,email})});
-                const d=await r.json(); if(!r.ok) throw new Error(d.error||'Unable to submit free report request.');
-                currentUserData={name,gender,dob,time:time+' '+ampm,place,whatsapp,email,requestId:d.requestId};
-                closeFreeReportModal();
-                const n=document.getElementById('free-success-name'); if(n)n.textContent=name+' 🙏';
-                const m=document.getElementById('free-success-modal');m.classList.remove('hidden');m.classList.add('flex');
-                if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
-            }catch(err){alert(err.message||'Something went wrong. Please try again.');}
-            finally{if(btn){btn.disabled=false;btn.textContent='GET MY CHART REPORT →';}}
+            const time = document.getElementById('free-time').value + ' ' + document.getElementById('free-ampm').value;
+            const place = document.getElementById('free-place').value;
+            const whatsapp = document.getElementById('free-whatsapp').value;
+
+            currentUserData = { name, gender, dob, time, place, whatsapp };
+
+            const submission = {
+                name: name,
+                type: 'Swarnima Janm Patrika (Free)',
+                whatsapp: whatsapp,
+                details: `DOB: ${dob}, Time: ${time}, Place: ${place}`,
+                status: 'Free Report Requested'
+            };
+            saveJigyasuSubmission(submission);
+
+            closeFreeReportModal();
+            document.getElementById('free-success-modal').classList.remove('hidden');
         }
-        function closeFreeSuccessModal(){const m=document.getElementById('free-success-modal');if(m){m.classList.add('hidden');m.classList.remove('flex');}}
-        function sendToWhatsAppDirect(){
-            const d=currentUserData;
-            if(!d?.name)return;
-            const msg=`Namaste Swami Ji, I have requested the free *Swarnima Janm Patrika*.\n\n*My Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}`;
-            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`,'_blank');
+        function sendToWhatsAppDirect() {
+            const d = currentUserData;
+            const msg = `Namaste Swami Ji, I have requested the free *Swarnima Janm Patrika*.\n\n*My Details:*\n- Name: ${d.name}\n- Gender: ${d.gender}\n- DOB: ${d.dob}\n- Birth Time: ${d.time}\n- Birth Place: ${d.place}\n- WhatsApp: ${d.whatsapp}\n\nPlease check my chart.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+            document.getElementById('free-success-modal').classList.add('hidden');
         }
 
         // Paid Modal (Divya Bhagya Sutra)
@@ -1743,272 +1714,294 @@
             }
         }
 
-        function startConsultationBooking(planName, price, pkgKey) {
-            const detailsPanel=document.getElementById('consult-details-panel');
-            const paymentCard=document.getElementById('consult-payment-card');
-            const choiceArea=document.getElementById('consultation-choice-area');
-            const duration=document.getElementById(`${pkgKey}-duration`)?.value || (pkgKey==='pkg3' ? '1 Hour' : '1 Hour');
-            const type=pkgTypes[pkgKey] || 'audio';
-            activeConsultationPlan={name:'',price,duration,type,planTitle:planName,pkgKey,email:'',gender:'',dob:'',time:'',location:'',whatsapp:'',question:''};
-            window.activeConsultationPlan=activeConsultationPlan;
-            document.getElementById('selected-plan-title').innerText=`${planName} (${duration} - ${type.toUpperCase()})`;
-            document.getElementById('selected-plan-price').innerText=`₹${price}`;
-            const slotLabel=document.getElementById('selected-consult-slot');
-            if(slotLabel)slotLabel.textContent='Slot will be selected after payment';
-            const title=document.getElementById('consult-selected-title');
-            const meta=document.getElementById('consult-selected-meta');
-            if(title)title.textContent=planName;
-            if(meta)meta.textContent=`${duration} • ${type.toUpperCase()} • ₹${price}`;
-            // Open the selected consultation as its own focused booking page inside the hub.
-            const scrollArea=document.querySelector('#consultation-modal .flex-1.overflow-y-auto');
-            if(scrollArea){
-                Array.from(scrollArea.children).forEach(el=>{
-                    if(el.id!=='consult-details-panel') el.dataset.consultHubHidden=el.classList.contains('hidden')?'was-hidden':'visible';
-                    if(el.id!=='consult-details-panel') el.classList.add('hidden');
-                });
-            }
-            if(choiceArea)choiceArea.classList.add('hidden');
-            if(paymentCard)paymentCard.classList.add('hidden');
-            document.getElementById('consult-personal-step')?.classList.remove('hidden');
-            document.getElementById('consult-question-step')?.classList.add('hidden');
-            if(detailsPanel){detailsPanel.classList.remove('hidden');detailsPanel.scrollIntoView({behavior:'smooth',block:'start'});}
-        }
-
-        function backToConsultationChoices(){
-            document.getElementById('consult-details-panel')?.classList.add('hidden');
-            document.getElementById('consult-payment-card')?.classList.add('hidden');
-            const scrollArea=document.querySelector('#consultation-modal .flex-1.overflow-y-auto');
-            if(scrollArea){
-                Array.from(scrollArea.children).forEach(el=>{
-                    if(el.id==='consult-details-panel') return;
-                    if(el.dataset.consultHubHidden==='visible') el.classList.remove('hidden');
-                    delete el.dataset.consultHubHidden;
-                });
-            }
-            document.getElementById('consultation-choice-area')?.classList.remove('hidden');
-            document.getElementById('consultation-choice-area')?.scrollIntoView({behavior:'smooth',block:'start'});
-        }
-
-        function validateConsultationPersonal(){
-            const name=document.getElementById('consult-name').value.trim();
-            const email=document.getElementById('consult-email').value.trim();
-            const dob=document.getElementById('consult-dob').value.trim();
-            const time=document.getElementById('consult-time').value.trim();
-            const location=document.getElementById('consult-location').value.trim();
-            const gender=document.getElementById('consult-gender').value;
-            const whatsapp=document.getElementById('consult-whatsapp').value.trim();
-            if(!name||!email||!dob||!time||!location||!gender||!/^[0-9]{10}$/.test(whatsapp)||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-                alert('कृपया Name, Email, DOB, Gender, Birth Time, Birth Place और valid 10-digit WhatsApp number सभी सही भरें।');
-                return false;
-            }
-            return true;
-        }
-
-        function goToConsultationQuestion(){
-            if(!validateConsultationPersonal())return;
-            document.getElementById('consult-personal-step')?.classList.add('hidden');
-            document.getElementById('consult-question-step')?.classList.remove('hidden');
-            document.getElementById('consult-question')?.focus();
-            document.getElementById('consult-details-panel')?.scrollIntoView({behavior:'smooth',block:'start'});
-        }
-
-        function backToConsultationPersonal(){
-            document.getElementById('consult-question-step')?.classList.add('hidden');
-            document.getElementById('consult-personal-step')?.classList.remove('hidden');
-        }
-
-        function goToConsultationPayment(){
-            // Kept for compatibility with any existing markup, but the customer now goes
-            // directly from the question step to the official Razorpay Standard Checkout.
-            startConsultationRazorpayPayment();
-        }
-
         function selectConsultationPackage(planName, price, pkgKey) {
-            const name=document.getElementById('consult-name').value.trim();
-            const email=document.getElementById('consult-email')?.value.trim()||'';
-            const dob=document.getElementById('consult-dob').value.trim();
-            const time=document.getElementById('consult-time').value.trim();
-            const location=document.getElementById('consult-location').value.trim();
-            const gender=document.getElementById('consult-gender').value;
-            const whatsapp=document.getElementById('consult-whatsapp').value.trim();
-            const question=document.getElementById('consult-question')?.value.trim()||'';
-            if(!name||!email||!dob||!time||!location||!gender||!question||!/^[0-9]{10}$/.test(whatsapp)){
-                alert('कृपया Name, Email, DOB, Gender, Birth Time, Birth Place, WhatsApp और Consultation Question सभी सही भरें।');
-                if(!name) document.getElementById('consult-name').focus();
-                return null;
+            const name = document.getElementById('consult-name').value.trim();
+            const dob = document.getElementById('consult-dob').value.trim();
+            const time = document.getElementById('consult-time').value.trim();
+            const location = document.getElementById('consult-location').value.trim();
+            const gender = document.getElementById('consult-gender').value.trim();
+            const whatsapp = document.getElementById('consult-whatsapp').value.trim();
+
+            if (!name || !dob || !time || !location || !whatsapp) {
+                alert('कृपया कंसल्टेशन बुक करने से पहले ऊपर दिए गए फॉर्म में अपनी सारी डिटेल्स (नाम, DOB, समय, स्थान, WhatsApp) भरें।');
+                document.getElementById('consult-name').focus();
+                return;
             }
-            const duration=document.getElementById(`${pkgKey}-duration`)?.value||'1 Hour';
-            const cType=pkgTypes[pkgKey]||'audio';
-            activeConsultationPlan={name,price,duration,type:cType,planTitle:planName,pkgKey,email,gender,dob,time,location,whatsapp,question};
-            window.activeConsultationPlan=activeConsultationPlan;
-            return activeConsultationPlan;
+
+            let duration = document.getElementById(`${pkgKey}-duration`) ? document.getElementById(`${pkgKey}-duration`).value : '1 Hour';
+            let cType = pkgTypes[pkgKey] || 'audio';
+
+            activeConsultationPlan = { name, price, duration, type: cType, planTitle: planName };
+
+            document.getElementById('selected-plan-title').innerText = `${planName} (${duration} - ${cType.toUpperCase()})`;
+            document.getElementById('selected-plan-price').innerText = `₹${price}`;
+            document.getElementById('consult-qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
+            document.getElementById('consult-upi-link').href = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
+
+            document.getElementById('consult-payment-card').classList.remove('hidden');
+            document.getElementById('consult-payment-card').scrollIntoView({ behavior: 'smooth' });
         }
 
-        window.startConsultationRazorpayPayment=async function(){
-            const p=window.activeConsultationPlan;
-            if(!p){alert('Please select a consultation package first.');return;}
-            if(!validateConsultationPersonal())return;
-            const question=document.getElementById('consult-question')?.value.trim()||'';
-            if(!question){alert('Please enter your consultation purpose or question.');document.getElementById('consult-question')?.focus();return;}
+        function sendConsultationToWhatsApp() {
+            const name = document.getElementById('consult-name').value;
+            const dob = document.getElementById('consult-dob').value;
+            const time = document.getElementById('consult-time').value;
+            const location = document.getElementById('consult-location').value;
+            const gender = document.getElementById('consult-gender').value;
+            const whatsapp = document.getElementById('consult-whatsapp').value;
+            const p = activeConsultationPlan;
 
-            const plan=selectConsultationPackage(p.planTitle,p.price,p.pkgKey);
-            if(!plan)return;
-
-            // Keep the complete consultation payload available until payment verification returns.
-            const customer={
-                name:plan.name,email:plan.email,dob:plan.dob,gender:plan.gender,time:plan.time,
-                ampm:'',place:plan.location,whatsapp:plan.whatsapp,
-                product:plan.planTitle,price:plan.price,
-                consultation_duration:plan.duration,consultation_type:plan.type,
-                consultation_question:plan.question,consultation_plan:plan.planTitle
+            const submission = {
+                name: name,
+                type: `Consultation: ${p.planTitle} (${p.duration} ${p.type})`,
+                whatsapp: whatsapp,
+                details: `DOB: ${dob}, Time: ${time}, Place: ${location}`,
+                status: 'Consultation Booked & Paid'
             };
-            try{localStorage.setItem('swamiAtmaJagran_pending_consultation',JSON.stringify(customer));}catch(_e){}
+            saveJigyasuSubmission(submission);
 
-            const btn=document.querySelector('#consult-question-step button.bg-goldPrimary') || document.querySelector('[onclick="startConsultationRazorpayPayment()"]');
+            const msg = `Namaste Swami Ji, I have paid ₹${p.price} for *${p.planTitle}* (${p.duration}, ${p.type.toUpperCase()}).\n\n*My Personal Details:*\n- Name: ${name}\n- Gender: ${gender}\n- DOB: ${dob}\n- Birth Time: ${time}\n- Birth Place: ${location}\n- WhatsApp: ${whatsapp}\n\nPlease confirm my consultation slot.`;
+            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // Cosmic Sanctuary & Oracle
+        const zodiacSigns = ['मेष (Aries)', 'वृषभ (Taurus)', 'मिथुन (Gemini)', 'कर्क (Cancer)', 'सिंह (Leo)', 'कन्या (Virgo)', 'तुला (Libra)', 'वृश्चिक (Scorpio)', 'धनु (Sagittarius)', 'मकर (Capricorn)', 'कुंभ (Aquarius)', 'मीन (Pisces)'];
+        let selectedEnergySign = 'मेष (Aries)';
+
+        function renderZodiacButtons() {
+            const container = document.getElementById('zodiac-buttons-container');
+            if(!container) return;
+            container.innerHTML = zodiacSigns.map(sign => `
+                <button type="button" onclick="selectEnergySign('${sign}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${sign === selectedEnergySign ? 'bg-gold text-black border-gold' : 'bg-white/10 text-gray-300 border-white/20 hover:bg-white/20'}">
+                    ${sign}
+                </button>
+            `).join('');
+        }
+
+        function selectEnergySign(sign) {
+            selectedEnergySign = sign;
+            renderZodiacButtons();
+        }
+
+        function generateDailyEnergy() {
+            const score = Math.floor(Math.random() * 15) + 84;
+            const vibes = [
+                'High Spiritual Clarity & Manifestation Power',
+                'Karmic Breakthrough & Deep Intuitive Alignment',
+                'Financial Flow & Professional Opportunity Window',
+                'Inner Transformation & Emotional Sovereignty'
+            ];
+            const times = ['06:15 AM - 07:45 AM', '11:30 AM - 01:00 PM', '04:20 PM - 05:50 PM', '08:00 PM - 09:30 PM'];
+            const mantras = [
+                `"Om Vam Vam Namah — Channeling inner cosmic sovereignty for ${selectedEnergySign}."`,
+                `"Om Hreem Suryaya Namah — Radiating supreme vital frequency."`,
+                `"Om Aim Kleem Brihaspataye Namah — Unlocking divine wisdom & grace."`
+            ];
+
+            document.getElementById('res-sign-title').innerText = `Energy Index (${selectedEnergySign})`;
+            document.getElementById('res-score').innerText = score + '%';
+            document.getElementById('res-vibe').innerText = vibes[Math.floor(Math.random() * vibes.length)];
+            document.getElementById('res-time').innerText = times[Math.floor(Math.random() * times.length)];
+            document.getElementById('res-mantra').innerText = mantras[Math.floor(Math.random() * mantras.length)];
+            document.getElementById('energy-result-panel').classList.remove('hidden');
+        }
+
+        function consultGuruOracle(e) {
+            e.preventDefault();
+            const q = document.getElementById('oracle-question-input').value.trim();
+            if(!q) return;
+
+            const insights = [
+                `"The cosmos reflects that your question regarding '${q}' holds a karmic lesson of patience. Stop forcing outcomes; the planetary gates open favorably by next Tuesday."`,
+                `"Through the lens of your query on '${q}', your chart reveals an unconscious fear of success. Surrender the old identity; a profound breakthrough is knocking."`,
+                `"Regarding '${q}', the celestial alignment advises a complete pivot in your approach. Trust the silence within; the answer is already written in your D1 chart."`
+            ];
+
+            const text = insights[Math.floor(Math.random() * insights.length)];
+            document.getElementById('oracle-insight-text').innerText = text;
+            document.getElementById('oracle-insight-box').classList.remove('hidden');
+        }
+
+        // Jigyasu Patal — PUBLIC SAFE VIEW
+        // Only non-sensitive order status is shown here. DOB, birth time/place, WhatsApp and Payment ID stay private.
+        async function loadJigyasuStorage() {
+            const tbody=document.getElementById('jigyasu-table-body');
+            if(!tbody)return;
             try{
-                if(btn){btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='OPENING RAZORPAY…';}
-                const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:plan.planTitle,customer})});
-                const data=await response.json();
-                if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
-                if(typeof Razorpay!=='function')throw new Error('Razorpay Checkout could not be loaded. Please refresh the page and try again.');
-
-                const rzp=new Razorpay({
-                    key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:plan.planTitle,order_id:data.orderId,
-                    prefill:{name:customer.name,email:customer.email,contact:'+91'+customer.whatsapp},
-                    notes:{product:plan.planTitle,customer_email:plan.email,consultation_question:plan.question},
-                    theme:{color:'#5C1D24'},
-                    modal:{ondismiss:function(){if(btn){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW →';}}},
-                    handler:async function(resp){
-                        if(btn){btn.textContent='VERIFYING PAYMENT…';}
-                        try{
-                            const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:plan.planTitle,customer})});
-                            const vd=await vr.json();
-                            if(!vr.ok)throw new Error(vd.error||'Payment verification failed.');
-                            await notifyOrderEvent('payment_verified',{orderId:data.orderId,paymentId:vd.paymentId,product:plan.planTitle,price:plan.price,customer:{...customer,consultation_date:'',consultation_time:'',consultation_status:'PAYMENT VERIFIED'},consultation_status:'PAYMENT VERIFIED - SLOT PENDING'});
-                            try{localStorage.removeItem('swamiAtmaJagran_pending_consultation');}catch(_e){}
-                            // Payment is complete. The ONLY next customer action is selecting a date.
-                            openPostPaymentSlotPicker({orderId:data.orderId,customer,paymentId:vd.paymentId,price:plan.price,product:plan.planTitle});
-                        }catch(e){
-                            alert('Payment received, but secure verification could not be completed. Please contact support. '+e.message);
-                            if(btn){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW →';}
-                        }
-                    }
-                });
-                rzp.on('payment.failed',function(){alert('Payment failed or was cancelled. Please try again.');if(btn){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW →';}});
-                rzp.open();
+                const r=await fetch('/api/public-orders',{cache:'no-store'});
+                const d=await r.json();
+                if(!r.ok) throw new Error(d.error||'Unable to load live submissions.');
+                const list=Array.isArray(d.orders)?d.orders:[];
+                if(!list.length){
+                    tbody.innerHTML='<tr><td colspan="4" class="py-8 text-center text-warmWhite/50 text-xs italic">No paid submissions yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML=list.map(item=>{
+                    const due=Number(item.dueAt||0), left=due-Date.now();
+                    const status=String(item.paymentStatus||'').toUpperCase();
+                    const badge=status.includes('PAID')||status==='PAYMENT_VERIFIED'
+                        ? '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-900 text-emerald-200 text-[11px] font-bold">✓ Payment Received</span>'
+                        : '<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-900 text-amber-200 text-[11px] font-bold">Payment Processing</span>';
+                    return `<tr class="hover:bg-maroonMain/30 transition-colors border-b border-goldPrimary/10">
+                        <td class="py-3 px-4 font-bold text-goldLight">${escPub(item.name||'Customer')}</td>
+                        <td class="py-3 px-4 text-warmWhite text-xs">${escPub(item.product||'')}</td>
+                        <td class="py-3 px-4 text-center"><span class="font-mono text-xs text-goldLight jigyasu-countdown" data-due="${due}">${countdownPub(left)}</span></td>
+                        <td class="py-3 px-4 text-center">${badge}</td>
+                    </tr>`;
+                }).join('');
             }catch(e){
-                alert(e.message||'Something went wrong. Please try again.');
-                if(btn){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW →';}
+                tbody.innerHTML='<tr><td colspan="4" class="py-8 text-center text-red-200 text-xs">Live submissions temporarily unavailable.</td></tr>';
             }
-        };
+        }
+        window.loadJigyasuStorage=loadJigyasuStorage;
 
-      function ensureUniversalPaidModal(){
+        setInterval(()=>{
+            document.querySelectorAll('.jigyasu-countdown').forEach(el=>{
+                const ms=Number(el.dataset.due)-Date.now();
+                if(ms<=0){el.textContent='Due now';return;}
+                const h=Math.floor(ms/3600000),m=Math.floor(ms/60000)%60,s=Math.floor(ms/1000)%60;
+                el.textContent=h+'h '+m+'m '+s+'s';
+            });
+        },1000);
+
+    </script>
+
+    <!-- RAZORPAY STANDARD CHECKOUT — SERVER VERIFIED -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+    (function(){
+      const PRODUCTS={
+        'Lagan Maya Sutra':299,
+        'Shukra Maya Sutra':399,
+        'D10 Destiny Sutra':799,
+        'Divya Bhagya Sutra':999,
+        'Individual Clarity Session':999,
+        'Partnership & Harmony':1299,
+        'Meet Swami Ji Ashram Session':1999
+      };
+      let activeProduct=null;
+      const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+
+      function ensureModal(){
         let m=document.getElementById('universal-paid-modal');
-        if(m) return m;
+        if(m)return m;
         m=document.createElement('div');
         m.id='universal-paid-modal';
         m.className='fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[115] hidden items-center justify-center p-4 overflow-y-auto';
         m.innerHTML='<div id="universal-paid-box" class="bg-cardBg max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl relative my-6"></div>';
-        document.body.appendChild(m);
-        return m;
+        document.body.appendChild(m); return m;
       }
-
-      function closeUniversalPaidModal(){
-        const m=document.getElementById('universal-paid-modal');
-        if(m){m.classList.add('hidden');m.classList.remove('flex');}
-        document.body.style.overflow='';
+      function getDetails(){
+        const ids=['u-name','u-dob','u-gender','u-time','u-ampm','u-place','u-whatsapp','u-email'];
+        const v=Object.fromEntries(ids.map(id=>[id,(document.getElementById(id)?.value||'').trim()]));
+        if(!v['u-name']||!v['u-dob']||!v['u-gender']||!v['u-time']||!v['u-ampm']||!v['u-place']||!/^[0-9]{10}$/.test(v['u-whatsapp'])||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v['u-email'])){
+          alert('कृपया Name, DOB, Gender, Birth Time, AM/PM, Birth Place, 10-digit WhatsApp और valid Email Address सभी भरें।'); return null;
+        }
+        return {name:v['u-name'],dob:v['u-dob'],gender:v['u-gender'],time:v['u-time'],ampm:v['u-ampm'],place:v['u-place'],whatsapp:v['u-whatsapp'],email:v['u-email']};
       }
-
-      function openUniversalPaidModal(){
-        const m=ensureUniversalPaidModal();
-        m.classList.remove('hidden');m.classList.add('flex');
-        document.body.style.overflow='hidden';
-        return m;
-      }
-
-      function generateSlotId(){
-        try{
-          if(window.crypto && typeof window.crypto.randomUUID==='function') return 'SAJ-'+window.crypto.randomUUID().replace(/-/g,'').slice(0,10).toUpperCase();
-        }catch(_e){}
-        return 'SAJ-'+Math.random().toString(36).slice(2,8).toUpperCase()+Date.now().toString(36).slice(-5).toUpperCase();
-      }
-
-      function openPostPaymentSlotPicker(o){
-        openUniversalPaidModal();
-        const box=document.getElementById('universal-paid-box');
-        o.slotId=o.slotId||generateSlotId();
-        const today=new Date();
-        const minDate=new Date(today.getFullYear(),today.getMonth(),today.getDate()+1);
-        const minIso=minDate.toISOString().slice(0,10);
+      function renderDetails(){
+        const m=ensureModal(),box=document.getElementById('universal-paid-box'),p=activeProduct;
         box.innerHTML=`
           <button onclick="closeUniversalPaidModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-2xl" aria-label="Close">&times;</button>
-          <div class="text-center py-5">
-            <div class="w-24 h-24 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-5xl shadow-2xl">✓</div>
-            <div class="text-[11px] tracking-[.24em] uppercase text-emerald-700 font-extrabold mt-6">PAYMENT SUCCESSFULLY VERIFIED</div>
-            <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-maroonDark mt-2">Your Payment Is Confirmed</h3>
-            <p class="text-sm text-maroonMain/80 mt-3">Your consultation payment for <b>${esc(o.product)}</b> has been securely verified.</p>
+          <div class="text-center mb-6">
+            <div class="w-16 h-16 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-2xl shadow-lg">✦</div>
+            <p class="text-[10px] tracking-[.24em] uppercase text-maroonMain/60 mt-4">Secure Order • Razorpay Standard Checkout</p>
+            <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">${esc(p.name)}</h3>
+            <p class="text-sm text-maroonMain/70 mt-2">Apni details carefully fill karein. Payment ke liye sirf official Razorpay Standard Checkout khulega.</p>
           </div>
-          <div class="mt-5 rounded-3xl bg-goldPrimary/10 border-2 border-goldPrimary/40 p-6 sm:p-8">
-            <div class="text-center">
-              <div class="text-[11px] tracking-[.25em] uppercase text-maroonMain/60 font-extrabold">FINAL STEP</div>
-              <h4 class="font-cinzel text-3xl sm:text-4xl font-bold text-maroonDark mt-2">📅 BOOK YOUR SLOT</h4>
-              <p class="text-sm text-maroonMain/80 mt-3 leading-relaxed">Payment is complete. Select your consultation date below. Choose the <b>month, year and date</b>. You do not need to select a time. Our team will send your exact consultation time and further details on WhatsApp.</p>
+          <form id="universal-details-form" class="space-y-3" onsubmit="return false;">
+            <input id="u-name" autocomplete="name" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input id="u-dob" type="date" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Date of Birth">
+              <select id="u-gender" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">Gender</option><option>Male</option><option>Female</option><option>Other</option></select>
             </div>
-            <div class="mt-6">
-              <label class="block text-xs font-bold uppercase tracking-wide text-maroonDark mb-2">Select Consultation Date</label>
-              <input id="postpay-slot-date" type="date" min="${minIso}" class="w-full px-4 py-4 rounded-xl bg-white border-2 border-goldPrimary/40 text-base font-semibold" required>
-              <p class="mt-3 text-xs text-maroonMain/70 text-center">Monday–Friday only • <b>No time selection required</b> • Exact consultation time and more details will be notified on WhatsApp.</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input id="u-time" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Time (e.g. 10:30)">
+              <select id="u-ampm" required class="w-full px-3 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm"><option value="">AM / PM</option><option>AM</option><option>PM</option></select>
             </div>
-            <p id="postpay-slot-error" class="hidden mt-4 rounded-xl bg-red-50 border border-red-200 p-3 text-xs font-semibold text-red-800"></p>
-            <button id="confirm-session-btn" onclick='confirmPostPaymentSlot(${JSON.stringify(o).replace(/'/g,"&#39;")})' class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-5 rounded-xl shadow-lg text-base sm:text-lg">BOOK YOUR SLOT →</button>
-          </div>`;
-      }
+            <input id="u-place" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Birth Place / Location">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input id="u-whatsapp" type="tel" inputmode="numeric" maxlength="10" autocomplete="tel" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="WhatsApp Number (10 digits)">
+              <input id="u-email" type="email" autocomplete="email" required class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Email Address">
+            </div>
+          </form>
+          <div class="mt-5 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-left text-xs sm:text-sm text-emerald-900 leading-relaxed">
+            <b>🔐 Secure & Automatic:</b> Aapki details secure order record ke saath save hongi. Payment ke baad payment status automatically verify hoga — <b>koi Payment ID paste karne ki zarurat nahi.</b>
+          </div>
+          <div id="vercel-pay-error" class="hidden mt-4 rounded-2xl bg-red-50 border border-red-200 p-4 text-sm font-semibold text-red-800"></div>
+          <button id="vercel-pay-btn" onclick="startVercelRazorpayPayment()" class="mt-5 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg transition-all text-base">PAY NOW — ₹${p.price} 🔒</button>
+          <p class="text-[11px] text-maroonMain/60 text-center mt-3">Razorpay Standard Checkout • UPI • Cards • Netbanking</p>`;
 
-      window.confirmPostPaymentSlot=async function(o){
-        const date=document.getElementById('postpay-slot-date')?.value||'';
-        const err=document.getElementById('postpay-slot-error');
-        const btn=document.getElementById('confirm-session-btn');
-        if(!date){if(err){err.textContent='Please select your consultation date.';err.classList.remove('hidden');}return;}
-        const day=new Date(date+'T12:00:00').getDay();
-        if(day===0||day===6){if(err){err.textContent='Saturday and Sunday are not available. Please choose a Monday–Friday date.';err.classList.remove('hidden');}return;}
-        try{
-          btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='BOOKING YOUR SLOT…';
-          const br=await fetch('/api/book-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId,date,time:'WhatsApp',slotId:o.slotId,consultationDate:date,consultationTime:'Exact time will be sent on WhatsApp',customer:o.customer})});
-          const bd=await br.json();
-          if(!br.ok)throw new Error(bd.error||'This consultation date could not be booked. Please choose another date.');
-          const bookingRecord={orderId:o.orderId,paymentId:o.paymentId,product:o.product,price:o.price,slotId:o.slotId,slotDate:date,slotTime:'Exact time will be sent on WhatsApp',customer:o.customer,consultation_status:'DATE BOOKED'};
-          try{localStorage.setItem('swamiAtmaJagran_last_slot',JSON.stringify(bookingRecord));}catch(_e){}
-          await notifyOrderEvent('consultation_booked',bookingRecord);
-          showCongrats({name:o.customer.name,product:o.product,whatsapp:o.customer.whatsapp,email:o.customer.email,price:o.price,paymentId:o.paymentId,orderId:o.orderId,isConsultation:true,slotDate:date,slotTime:'Exact time will be sent on WhatsApp',slotId:o.slotId,bookingSaved:true});
-          if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
-        }catch(e){
-          if(err){err.textContent=e.message||'Unable to confirm this consultation date.';err.classList.remove('hidden');}
-          btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='BOOK YOUR SLOT →';
+        if(window.activeConsultationPlan){
+          const c=window.activeConsultationPlan;
+          const map={'u-name':c.name,'u-dob':c.dob,'u-gender':c.gender,'u-time':document.getElementById('consult-time')?.value?.trim()||'','u-place':document.getElementById('consult-location')?.value?.trim()||'','u-whatsapp':c.whatsapp};
+          Object.entries(map).forEach(([id,value])=>{const el=document.getElementById(id);if(el&&value)el.value=value;});
         }
+      }
+      window.openPaidProductForm=function(name,price){
+        const finalPrice=PRODUCTS[name];
+        if(!finalPrice){alert('This product is not available for online payment.');return;}
+        activeProduct={name,price:finalPrice};
+        if(!window.activeConsultationPlan || window.activeConsultationPlan.planTitle!==name) window.activeConsultationPlan=null;
+        renderDetails();
+        const m=document.getElementById('universal-paid-modal');m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
+      };
+      window.closeUniversalPaidModal=function(){const m=document.getElementById('universal-paid-modal');if(m){m.classList.add('hidden');m.classList.remove('flex');}document.body.style.overflow='';};
+      window.openLaganPayment=function(){window.openPaidProductForm('Lagan Maya Sutra',299);};
+      window.closeLaganPayment=window.closeUniversalPaidModal;
+
+      window.startVercelRazorpayPayment=async function(){
+        const btn=document.getElementById('vercel-pay-btn'),err=document.getElementById('vercel-pay-error');
+        if(err){err.classList.add('hidden');err.textContent='';}
+        const customer=getDetails(); if(!customer)return;
+        try{
+          btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='CREATING SECURE PAYMENT…';
+          const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:activeProduct.name,customer})});
+          const data=await response.json();
+          if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
+          const rzp=new Razorpay({
+            key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:activeProduct.name,order_id:data.orderId,
+            prefill:{name:customer.name,email:customer.email,contact:'+91'+customer.whatsapp},
+            notes:{product:activeProduct.name,customer_email:customer.email},
+            theme:{color:'#5C1D24'},
+            modal:{ondismiss:function(){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+activeProduct.price+' 🔒';}},
+            handler:async function(resp){
+              btn.textContent='VERIFYING PAYMENT…';
+              try{
+                const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:activeProduct.name,customer})});
+                const vd=await vr.json();
+                if(!vr.ok)throw new Error(vd.error||'Payment verification failed.');
+                showCongrats({name:customer.name,product:activeProduct.name,whatsapp:customer.whatsapp,email:customer.email,price:activeProduct.price,paymentId:vd.paymentId,orderId:vd.orderId});
+                if(typeof window.loadJigyasuStorage==='function')window.loadJigyasuStorage();
+              }catch(e){
+                if(err){err.textContent='Payment received, but secure verification could not be completed. Please contact support. '+e.message;err.classList.remove('hidden');}
+                btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='TRY PAYMENT AGAIN — ₹'+activeProduct.price;
+              }
+            }
+          });
+          rzp.on('payment.failed',function(){if(err){err.textContent='Payment failed or was cancelled. Please try again.';err.classList.remove('hidden');}btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+activeProduct.price+' 🔒';});
+          rzp.open();
+        }catch(e){if(err){err.textContent=e.message||'Something went wrong. Please try again.';err.classList.remove('hidden');}btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.textContent='PAY NOW — ₹'+activeProduct.price+' 🔒';}
       };
 
-
-      async function notifyOrderEvent(eventType, payload){
-        try{
-          await fetch('/api/order-notification',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({eventType,payload})});
-        }catch(_e){ /* Notification is server-side and must never block the customer flow. */ }
-      }
-
       function showCongrats(o){
-        openUniversalPaidModal();
         const box=document.getElementById('universal-paid-box');
         box.innerHTML=`
           <div class="text-center py-5">
             <div class="w-28 h-28 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-6xl shadow-2xl">✓</div>
-            <div class="text-[11px] tracking-[.28em] uppercase text-emerald-700 font-extrabold mt-6">${o.isConsultation ? 'SESSION CONFIRMED' : 'PAYMENT SUCCESSFULLY RECEIVED'}</div>
+            <div class="text-[11px] tracking-[.28em] uppercase text-emerald-700 font-extrabold mt-6">Payment Successfully Received</div>
             <h3 class="font-cinzel text-4xl sm:text-5xl font-extrabold text-maroonDark mt-3">🎉 Congratulations!</h3>
             <p class="text-lg font-bold text-maroonMain mt-4">Namaste ${esc(o.name)} 🙏</p>
-            <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Your <b>${esc(o.product)}</b> consultation booking is confirmed. Your details and payment have been received successfully.</p>
-            ${o.isConsultation ? `<div class="mt-6 rounded-3xl bg-goldPrimary/10 border-2 border-goldPrimary/50 p-6 sm:p-8 text-left shadow-inner"><div class="text-center text-2xl sm:text-3xl font-black text-maroonDark uppercase">CONGRATULATIONS 🎉</div><div class="text-center text-lg font-extrabold text-maroonDark mt-3">YOUR SLOT WAS BOOKED</div><div class="text-center text-base font-bold text-maroonMain mt-3">📅 ${esc(o.slotDate||'Selected Date')}</div><div class="mt-4 rounded-2xl bg-white border border-goldPrimary/40 p-4 text-center"><div class="text-[10px] uppercase tracking-[.24em] text-maroonMain/60 font-extrabold">THIS IS YOUR SLOT ID</div><div class="font-mono text-2xl font-black tracking-widest text-maroonDark mt-2">${esc(o.slotId||'SAJ-PENDING')}</div></div><div class="text-center text-sm text-maroonMain/80 mt-4">🕐 Your exact consultation time will be informed to you on WhatsApp.</div><div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-maroonDark"><div>✓ Your details received</div><div>✓ Payment received</div><div>✓ Consultation date booked</div><div>✓ Time will be sent on WhatsApp</div></div></div><p class="text-sm text-maroonMain/70 mt-5">Thank you for choosing us. Please keep your Slot ID safe. Our team will send your exact consultation time and joining instructions to your WhatsApp.</p>` : `<div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner"><div class="text-center"><div class="text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS DELIVERY</div><div class="text-sm font-bold text-emerald-700 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi.</div></div><div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950"><div>✓ Payment Received</div><div>✓ Details Received</div><div>✓ Secure Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div></div></div><p class="text-sm text-maroonMain/70 mt-5">Confirmation email bhi aapke diye gaye email address par automatically bheja jayega.</p>`}
+            <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka <b>${esc(o.product)}</b> order aur aapki saari details successfully receive ho gayi hain.</p>
+            <div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner">
+              <div class="text-center"><div class="text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS DELIVERY</div><div class="text-sm font-bold text-emerald-700 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi.</div></div>
+              <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950"><div>✓ Payment Received</div><div>✓ Details Received</div><div>✓ Secure Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div></div>
+            </div>
+            <p class="text-sm text-maroonMain/70 mt-5">Confirmation email bhi aapke diye gaye email address par automatically bheja jayega.</p>
             <button onclick="closeUniversalPaidModal()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">DONE</button>
           </div>`;
       }
-;
+    })();
     </script>
 
 <!-- Owner-only panel entry (password protected) -->
@@ -2017,13 +2010,13 @@
 <div id="charts-admin-modal" class="fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[120] hidden items-center justify-center p-4 overflow-y-auto">
   <div class="bg-[#21070b] text-white w-full max-w-7xl rounded-3xl border-2 border-goldPrimary/50 shadow-2xl my-6 overflow-hidden">
     <div class="p-5 sm:p-7 border-b border-goldPrimary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div><p class="text-[10px] tracking-[.25em] text-goldPrimary uppercase">Private Operations</p><h2 class="font-cinzel text-2xl sm:text-3xl font-bold text-[#f2d675]">Your Chart Data</h2><p class="text-white/60 text-xs mt-1">Full private customer/order records • full consultation details • booked date • slot ID • 24-hour delivery tracking</p></div>
+      <div><p class="text-[10px] tracking-[.25em] text-goldPrimary uppercase">Private Operations</p><h2 class="font-cinzel text-2xl sm:text-3xl font-bold text-[#f2d675]">Your Chart Data</h2><p class="text-white/60 text-xs mt-1">Private Razorpay-backed customer records • 24-hour delivery tracking</p></div>
       <button onclick="closeChartsAdmin()" class="px-4 py-2 rounded-xl border border-goldPrimary/40 text-goldLight font-bold">✕ Close</button>
     </div>
     <div id="charts-admin-login" class="max-w-md mx-auto p-7 sm:p-10">
       <div class="text-center mb-5"><div class="w-16 h-16 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-2xl">🔒</div></div>
       <h3 class="text-xl font-bold text-[#f2d675] text-center">Private Access</h3>
-      <p class="text-white/60 text-sm text-center mt-2">Jigyasu Patal shows only Name, Product, Payment Status and 24-hour timer. Full birth/contact/consultation details, booked date and Slot ID remain private here after owner authentication.</p>
+      <p class="text-white/60 text-sm text-center mt-2">Customer birth details, WhatsApp and email are visible only after owner authentication.</p>
       <input id="charts-admin-password" type="password" autocomplete="current-password" class="w-full mt-5 p-3 rounded-xl text-black" placeholder="Owner Password">
       <button onclick="loginChartsAdmin()" class="w-full mt-3 bg-goldPrimary text-[#21070b] font-bold p-3 rounded-xl">OPEN YOUR CHART DATA</button>
       <p id="charts-admin-error" class="text-red-300 text-sm mt-3 text-center"></p>
@@ -2038,7 +2031,7 @@
       <div class="bg-emerald-50/5 border border-emerald-400/20 rounded-2xl p-4 mb-5 text-xs text-white/70 leading-relaxed"><b class="text-emerald-300">PRIVATE + PERSISTENT:</b> Customer DOB, birth details, WhatsApp, email and payment information are read from server-side Razorpay order records after owner authentication. There is no delete or clear-history control here.</div>
       <div id="charts-admin-status" class="hidden mb-4 rounded-xl p-3 text-sm"></div>
       <div class="bg-[#3a0d14] rounded-3xl border border-goldPrimary/30 overflow-x-auto">
-        <table class="w-full text-sm min-w-[1250px]"><thead><tr class="text-left border-b border-white/10 text-[#d4af37]"><th class="p-4">Customer / Product</th><th class="p-4">DOB / Gender</th><th class="p-4">Birth Time / Place</th><th class="p-4">WhatsApp / Email</th><th class="p-4">Payment / Consultation</th><th class="p-4">Booking / Question</th><th class="p-4">24h Delivery</th></tr></thead><tbody id="charts-admin-rows"></tbody></table>
+        <table class="w-full text-sm min-w-[1250px]"><thead><tr class="text-left border-b border-white/10 text-[#d4af37]"><th class="p-4">Customer / Product</th><th class="p-4">DOB / Gender</th><th class="p-4">Birth Time / Place</th><th class="p-4">WhatsApp / Email</th><th class="p-4">Payment</th><th class="p-4">24h Delivery</th></tr></thead><tbody id="charts-admin-rows"></tbody></table>
       </div>
       <div class="mt-5 flex flex-wrap gap-3"><button onclick="refreshChartsAdmin()" class="px-4 py-3 rounded-xl bg-goldPrimary text-[#21070b] font-bold">↻ Refresh Live Data</button></div>
     </div>
@@ -2053,29 +2046,7 @@
   window.closeChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.add('hidden');m.classList.remove('flex');document.body.style.overflow='';};
   async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
   window.loginChartsAdmin=async function(){const err=document.getElementById('charts-admin-error');err.textContent='';try{const {d,pass}=await fetchAdmin();sessionStorage.setItem('swami_admin_pass',pass);document.getElementById('charts-admin-login').classList.add('hidden');document.getElementById('charts-admin-dashboard').classList.remove('hidden');renderAdmin(d.orders||[]);}catch(e){err.textContent=e.message||'Private access denied.';}};
-  function renderAdmin(a){
-    const paid=a.filter(o=>o.paymentStatus==='PAID').length;
-    document.getElementById('cad-total').textContent=a.length;
-    document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);
-    document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;
-    const rows=document.getElementById('charts-admin-rows');
-    rows.innerHTML=a.length?a.map(o=>{
-      const due=Number(o.dueAt||0);
-      const isConsult=String(o.product||'').toLowerCase().includes('session')||String(o.product||'').toLowerCase().includes('harmony')||String(o.product||'').toLowerCase().includes('consult');
-      const booking=o.consultationSlotDate?`<div class="text-xs text-goldLight">📅 Date: ${esc(o.consultationSlotDate)}</div><div class="text-xs text-white/50 mt-1">🕐 ${esc(o.consultationSlotTime||'Exact time via WhatsApp')}</div>${o.slotId?`<div class="text-xs text-goldLight/80 mt-1 font-mono">🆔 Slot ID: ${esc(o.slotId)}</div>`:''}`:'<span class="text-xs text-white/40">Not booked yet</span>';
-      const question=o.consultationQuestion?`<div class="text-xs text-white/70 mt-2 max-w-sm"><span class="text-goldLight font-bold">Question:</span> ${esc(o.consultationQuestion)}</div>`:'';
-      const consultMeta=(o.consultationDuration||o.consultationType||o.consultationPlan)?`<div class="text-xs text-white/60 mt-2">${esc(o.consultationPlan||o.product)}${o.consultationDuration?' • '+esc(o.consultationDuration):''}${o.consultationType?' • '+esc(o.consultationType).toUpperCase():''}</div>`:'';
-      return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20">
-        <td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td>
-        <td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td>
-        <td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td>
-        <td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td>
-        <td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':(o.paymentStatus==='FREE REQUEST'?'bg-blue-900 text-blue-200':'bg-amber-900 text-amber-200')}">${o.paymentStatus==='PAID'?'✓ Payment Verified':(o.paymentStatus==='FREE REQUEST'?'✓ FREE REQUEST':'Payment Pending')}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div>${consultMeta}</td>
-        <td class="p-4">${booking}${question}</td>
-        <td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td>
-      </tr>`;
-    }).join(''):'<tr><td colspan="7" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';
-  }
+  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="6" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
   window.refreshChartsAdmin=async function(){const status=document.getElementById('charts-admin-status');status.className='mb-4 rounded-xl p-3 text-sm bg-goldPrimary/10 border border-goldPrimary/20 text-goldLight';status.textContent='Refreshing secure customer data…';status.classList.remove('hidden');try{const {d}=await fetchAdmin();renderAdmin(d.orders||[]);status.textContent='✓ Live data refreshed.';setTimeout(()=>status.classList.add('hidden'),1800);}catch(e){status.className='mb-4 rounded-xl p-3 text-sm bg-red-50/10 border border-red-400/20 text-red-200';status.textContent=e.message||'Unable to load data.';}};
   setInterval(()=>document.querySelectorAll('.admin-countdown').forEach(el=>el.textContent=countdown(Number(el.dataset.due)-Date.now())),1000);
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement?.id==='charts-admin-password')loginChartsAdmin();});
