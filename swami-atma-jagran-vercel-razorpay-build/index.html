@@ -1378,8 +1378,8 @@
                             </ul>
                         </div>
                         <div>
-                            <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹999</div>
-                            <button onclick="openConsultBooking('Individual Clarity Session', 999)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
+                            <div class="text-2xl font-extrabold text-[#4A0E17] mb-4">Pricing: ₹1</div>
+                            <button onclick="openConsultBooking('Individual Clarity Session', 1)" class="w-full bg-[#5C1D24] hover:bg-[#4A0E17] text-goldPrimary font-extrabold py-3.5 rounded-xl shadow-lg transition-all text-sm cursor-pointer">
                                 Book Now
                             </button>
                         </div>
@@ -2005,7 +2005,8 @@
     <script>
     (function(){
       const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-      const CB_PRODUCTS={'Individual Clarity Session':999,'Partnership & Harmony':1299,'Meet Swami Ji Ashram Session':1999};
+      const CB_PRODUCTS={'Individual Clarity Session':1,'Partnership & Harmony':1299,'Meet Swami Ji Ashram Session':1999};
+      const CB_PKG_KEY={'Individual Clarity Session':'pkg1','Partnership & Harmony':'pkg2','Meet Swami Ji Ashram Session':'pkg3'};
       const CB_REASONS=[
         'Career ya business mein rukavat',
         'Vivah / rishtey mein deri ya confusion',
@@ -2015,7 +2016,7 @@
         'Kuch aur (neeche apna sawal likhein)'
       ];
       const CB_SLOTS=['10:00 AM - 11:00 AM','12:00 PM - 01:00 PM','02:00 PM - 03:00 PM','04:00 PM - 05:00 PM','06:00 PM - 07:00 PM','08:00 PM - 09:00 PM'];
-      let cb={product:'',price:0,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:''};
+      let cb={product:'',price:0,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:'',duration:'',sessionType:''};
 
       function genSlotId(){
         const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -2035,9 +2036,27 @@
         return m;
       }
 
+      function captureCBOptions(name){
+        const pkgKey=CB_PKG_KEY[name]||'';
+        let duration='',sessionType='';
+        if(pkgKey){
+          const durEl=document.getElementById(pkgKey+'-duration');
+          duration=durEl?durEl.value:'';
+          const audioBtn=document.getElementById(pkgKey+'-audio');
+          const videoBtn=document.getElementById(pkgKey+'-video');
+          if(audioBtn&&videoBtn){
+            sessionType=(typeof pkgTypes!=='undefined'&&pkgTypes[pkgKey])?pkgTypes[pkgKey]:'audio';
+          }else{
+            sessionType='In-Person (Ashram)';
+          }
+        }
+        return {duration,sessionType};
+      }
+
       window.openConsultBooking=function(name,price){
         const finalPrice=CB_PRODUCTS[name]||price;
-        cb={product:name,price:finalPrice,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:''};
+        const opts=captureCBOptions(name);
+        cb={product:name,price:finalPrice,reason:'',question:'',name:'',whatsapp:'',email:'',date:'',slot:'',slotId:'',duration:opts.duration,sessionType:opts.sessionType};
         renderCBStep1();
         const m=ensureCBModal();m.classList.remove('hidden');m.classList.add('flex');document.body.style.overflow='hidden';
       };
@@ -2063,6 +2082,7 @@
             <p class="text-[10px] tracking-[.24em] uppercase text-maroonMain/60">${esc(cb.product)}</p>
             <h3 class="font-cinzel text-2xl sm:text-3xl font-bold text-maroonDark mt-1">Book Your Session</h3>
             <p class="text-sm text-maroonMain/80 mt-2">Is session ke liye details bhare or apna sawal bataie</p>
+            ${(cb.duration||cb.sessionType)?`<div class="inline-flex flex-wrap items-center justify-center gap-2 mt-3">${cb.duration?`<span class="text-[11px] font-bold uppercase bg-[#4A0E17] text-goldPrimary px-3 py-1 rounded-full">⏱ ${esc(cb.duration)}</span>`:''}${cb.sessionType?`<span class="text-[11px] font-bold uppercase bg-[#4A0E17] text-goldPrimary px-3 py-1 rounded-full">${esc(cb.sessionType)}</span>`:''}</div>`:''}
           </div>
           <div class="space-y-3">
             <input id="cb-name" class="w-full px-4 py-3 rounded-xl bg-white border border-goldPrimary/40 text-sm" placeholder="Full Name" value="${esc(cb.name)}">
@@ -2152,7 +2172,8 @@
         const customer={
           name:cb.name, whatsapp:cb.whatsapp, email:cb.email,
           consultReason:cb.reason, consultQuestion:cb.question,
-          bookingDate:cb.date, bookingSlot:cb.slot, slotId:cb.slotId
+          bookingDate:cb.date, bookingSlot:cb.slot, slotId:cb.slotId,
+          sessionDuration:cb.duration, sessionType:cb.sessionType
         };
         try{
           btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='CREATING SECURE PAYMENT…';
@@ -2201,6 +2222,8 @@
               <div class="mt-4 grid grid-cols-2 gap-3 text-xs text-emerald-950 border-t border-emerald-200 pt-3">
                 <div>📅 Date<br><b>${esc(cb.date)}</b></div>
                 <div>⏰ Slot<br><b>${esc(cb.slot)}</b></div>
+                ${cb.duration?`<div>⏱ Duration<br><b>${esc(cb.duration)}</b></div>`:''}
+                ${cb.sessionType?`<div>🎙 Mode<br><b>${esc(cb.sessionType)}</b></div>`:''}
               </div>
             </div>
             <p class="text-sm text-maroonMain/70 mt-5">Confirmation email bhi aapke diye gaye email address par automatically bheja jayega.</p>
@@ -2252,7 +2275,7 @@
   window.closeChartsAdmin=function(){const m=document.getElementById('charts-admin-modal');m.classList.add('hidden');m.classList.remove('flex');document.body.style.overflow='';};
   async function fetchAdmin(){const pass=document.getElementById('charts-admin-password').value||sessionStorage.getItem('swami_admin_pass')||'';const r=await fetch('/api/admin-orders',{method:'POST',headers:{'Content-Type':'application/json','X-Admin-Password':pass},body:JSON.stringify({action:'list'})});const d=await r.json();if(!r.ok)throw new Error(d.error||'Private access denied.');return {d,pass};}
   window.loginChartsAdmin=async function(){const err=document.getElementById('charts-admin-error');err.textContent='';try{const {d,pass}=await fetchAdmin();sessionStorage.setItem('swami_admin_pass',pass);document.getElementById('charts-admin-login').classList.add('hidden');document.getElementById('charts-admin-dashboard').classList.remove('hidden');renderAdmin(d.orders||[]);}catch(e){err.textContent=e.message||'Private access denied.';}};
-  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);const hasBooking=o.slotId||o.bookingDate||o.bookingSlot;const bookingCell=hasBooking?`<span class="font-mono text-goldLight">${esc(o.slotId||'—')}</span><div class="text-white/70 mt-1">${esc(o.bookingDate||'—')} · ${esc(o.bookingSlot||'—')}</div>${o.consultReason?`<div class="text-white/40 mt-1">${esc(o.consultReason)}</div>`:''}`:'—';return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4 text-xs">${bookingCell}</td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="7" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
+  function renderAdmin(a){const paid=a.filter(o=>o.paymentStatus==='PAID').length;document.getElementById('cad-total').textContent=a.length;document.getElementById('cad-paid').textContent=paid+' / '+(a.length-paid);document.getElementById('cad-new').textContent=a.filter(o=>Date.now()-Number(o.createdAt||0)<86400000).length;const rows=document.getElementById('charts-admin-rows');rows.innerHTML=a.length?a.map(o=>{const due=Number(o.dueAt||0);const hasBooking=o.slotId||o.bookingDate||o.bookingSlot;const bookingCell=hasBooking?`<span class="font-mono text-goldLight">${esc(o.slotId||'—')}</span><div class="text-white/70 mt-1">${esc(o.bookingDate||'—')} · ${esc(o.bookingSlot||'—')}</div>${(o.sessionDuration||o.sessionType)?`<div class="text-white/60 mt-1">${esc(o.sessionDuration||'')} ${o.sessionType?'· '+esc(o.sessionType):''}</div>`:''}${o.consultReason?`<div class="text-white/40 mt-1">${esc(o.consultReason)}</div>`:''}${o.consultQuestion?`<div class="text-white/40 mt-1 italic">"${esc(o.consultQuestion)}"</div>`:''}`:'—';return `<tr class="border-b border-white/5 align-top hover:bg-maroonMain/20"><td class="p-4"><b class="text-[#f2d675]">${esc(o.name)}</b><div class="text-xs text-white/40 mt-1">${esc(o.product)}<br>${esc(o.orderId||'')}</div></td><td class="p-4 text-xs">DOB: ${esc(o.dob||'—')}<br>Gender: ${esc(o.gender||'—')}</td><td class="p-4 text-xs">Time: ${esc(o.birthTime||'—')}<br>Place: ${esc(o.birthPlace||'—')}</td><td class="p-4 text-xs text-white/80">${esc(o.whatsapp||'—')}<br><span class="text-goldLight">${esc(o.email||'—')}</span></td><td class="p-4 text-xs">${bookingCell}</td><td class="p-4"><span class="px-2.5 py-1 rounded-full ${o.paymentStatus==='PAID'?'bg-emerald-900 text-emerald-200':'bg-amber-900 text-amber-200'}">${o.paymentStatus==='PAID'?'✓ Payment Verified':'Payment Pending'}</span><div class="text-xs text-white/40 mt-2">${esc(o.paymentId||'')}</div></td><td class="p-4"><b class="admin-countdown" data-due="${due}">${countdown(due-Date.now())}</b><div class="text-xs text-white/40 mt-1">${due?new Date(due).toLocaleString('en-IN'):'—'}</div></td></tr>`}).join(''):'<tr><td colspan="7" class="p-8 text-center text-white/50">No customer records yet.</td></tr>';}
   window.refreshChartsAdmin=async function(){const status=document.getElementById('charts-admin-status');status.className='mb-4 rounded-xl p-3 text-sm bg-goldPrimary/10 border border-goldPrimary/20 text-goldLight';status.textContent='Refreshing secure customer data…';status.classList.remove('hidden');try{const {d}=await fetchAdmin();renderAdmin(d.orders||[]);status.textContent='✓ Live data refreshed.';setTimeout(()=>status.classList.add('hidden'),1800);}catch(e){status.className='mb-4 rounded-xl p-3 text-sm bg-red-50/10 border border-red-400/20 text-red-200';status.textContent=e.message||'Unable to load data.';}};
   setInterval(()=>document.querySelectorAll('.admin-countdown').forEach(el=>el.textContent=countdown(Number(el.dataset.due)-Date.now())),1000);
   document.addEventListener('keydown',e=>{if(e.key==='Enter'&&document.activeElement?.id==='charts-admin-password')loginChartsAdmin();});
