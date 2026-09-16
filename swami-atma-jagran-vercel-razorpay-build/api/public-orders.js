@@ -27,23 +27,18 @@ export default async function handler(req, res) {
     for (const p of payments) {
       if (p.order_id && !paymentByOrder.has(p.order_id)) paymentByOrder.set(p.order_id, p);
     }
-    const orderRows = orders.filter(o => o?.notes?.product).map(o => {
+    const orderRows = orders.filter(o => o?.notes?.product && o.status === 'paid').map(o => {
       const p = paymentByOrder.get(o.id);
-      const notes = { ...(o.notes || {}), ...(p?.notes || {}) };
-      const isFree = notes.free_request === 'true';
-      if (!isFree && o.status !== 'paid') return null;
       const paidAt = p?.created_at ? p.created_at * 1000 : (o.created_at ? o.created_at * 1000 : Date.now());
       return {
-        name: notes.customer_name || 'Customer',
-        product: notes.product || '',
-        paymentStatus: isFree ? 'FREE REQUEST' : 'PAID',
+        name: o.notes?.customer_name || 'Customer',
+        product: o.notes?.product || '',
+        paymentStatus: 'PAID',
         dueAt: paidAt + 86400000,
-        consultationSlotDate: notes.consultation_slot_date || '',
-        consultationSlotTime: notes.consultation_slot_time || '',
       };
     });
     res.setHeader('Cache-Control', 'no-store');
-    return res.status(200).json({ orders: orderRows.filter(Boolean).slice(0, 200) });
+    return res.status(200).json({ orders: orderRows.slice(0, 200) });
   } catch (e) {
     return res.status(500).json({ error: e.message || 'Unable to load live orders.' });
   }

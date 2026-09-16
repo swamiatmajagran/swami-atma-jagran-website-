@@ -41,12 +41,6 @@ export default async function handler(req, res) {
 
     // These notes become the persistent customer record attached to the Razorpay order.
     // They are read server-side by the private Your Chart Data panel and the webhook.
-    const consultationProducts = new Set(['Individual Clarity Session','Partnership & Harmony','Meet Swami Ji Ashram Session']);
-    const isConsultation = consultationProducts.has(product);
-    // Consultation date/time are intentionally NOT required at payment time.
-    // The customer selects only a Monday-Friday date after Razorpay payment;
-    // the exact time is confirmed separately by WhatsApp.
-
     const notes = {
       product,
       customer_name: String(customer.name).slice(0, 255),
@@ -56,8 +50,6 @@ export default async function handler(req, res) {
       birth_time: `${customer.time} ${customer.ampm}`.slice(0, 255),
       birth_place: String(customer.place).slice(0, 255),
       whatsapp: String(customer.whatsapp).slice(0, 255),
-      ...(isConsultation ? { consultation_question: String(customer.consultation_question || '').slice(0, 1000) } : {}),
-      ...(isConsultation ? { consultation_slot_date: String(customer.consultation_slot_date).slice(0,255), consultation_slot_time: String(customer.consultation_slot_time).slice(0,255), consultation_duration: String(customer.consultation_duration || '').slice(0,255), consultation_type: String(customer.consultation_type || '').slice(0,255) } : {}),
     };
 
     const r = await fetch('https://api.razorpay.com/v1/orders', {
