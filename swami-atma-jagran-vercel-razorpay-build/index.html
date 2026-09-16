@@ -15,11 +15,11 @@
         <div class="bg-cardBg max-w-md w-full rounded-3xl p-7 border-2 border-goldPrimary shadow-2xl text-center my-6">
             <div class="w-20 h-20 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-4xl shadow-lg mb-4">✓</div>
             <h3 class="font-cinzel text-2xl font-extrabold text-maroonDark">🎉 Congratulations!</h3>
-            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you so much. We have received your payment.</p>
-            <p class="text-sm text-maroonMain/90 mt-2">Aapki details bhi safe tarike se save ho gayi hain. Hamari team aapki kundli/report process karegi.</p>
+            <p class="text-sm font-semibold text-maroonMain mt-3">Thank you. Your payment and order have been successfully received.</p>
+            <p class="text-sm text-maroonMain/90 mt-2">Aapki details securely save ho gayi hain. Hamari team ab aapka personalised chart/report prepare karegi.</p>
             <div class="mt-5 p-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 text-left text-xs text-maroonDark" id="payment-success-summary"></div>
             <p class="text-lg font-black text-emerald-800 mt-5">24 HOURS DELIVERY</p>
-            <p class="text-sm text-maroonMain/80 mt-2">Aapki personalised report aapke WhatsApp number par securely 24 hours ke andar deliver kar di jayegi. Confirmation email bhi automatically bheja jayega.</p>
+            <p class="text-sm text-maroonMain/80 mt-2">Aapka personalised chart/report aapke diye gaye WhatsApp number par 24 hours ke andar securely deliver kiya jayega. Aapko payment confirmation email bhi bheja jayega.</p>
             <button onclick="document.getElementById('payment-success-modal').classList.add('hidden')" class="mt-3 w-full border border-maroonMain/30 text-maroonDark font-bold py-2.5 rounded-xl">Continue on Website</button>
         </div>
     </div>
@@ -29,12 +29,13 @@
         let activePaidProduct = null;
 
         function openPaidProductForm(name, price, link) {
-            activePaidProduct = { name, price, link };
-            document.getElementById('modal-product-title').innerText = name;
-            document.getElementById('modal-product-price-tag').innerText = `₹${price}`;
-            const qr = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`)}`;
-            document.getElementById('modal-qr-code-img').src = qr;
-            document.getElementById('modal-upi-anchor').href = `upi://pay?pa=7000534788-3@ybl&pn=SwamiAtmaJagran&am=${price}&cu=INR`;
+            activePaidProduct = { name, price };
+            const title = document.getElementById('modal-product-title');
+            const priceTag = document.getElementById('modal-product-price-tag');
+            if (title) title.innerText = name;
+            if (priceTag) priceTag.innerText = `₹${price}`;
+            const email = document.getElementById('prod-email');
+            if (email) email.value = '';
             document.getElementById('product-payment-modal').classList.remove('hidden');
         }
 
@@ -47,64 +48,87 @@
             const ampm = document.getElementById('prod-ampm').value;
             const place = document.getElementById('prod-place').value.trim();
             const whatsapp = document.getElementById('prod-whatsapp').value.trim();
-            if (!name || !dob || !gender || !time || !ampm || !place || !/^[0-9]{10}$/.test(whatsapp)) {
-                alert('कृपया नाम, DOB, Gender, जन्म समय, AM/PM, जन्म स्थान और 10-digit WhatsApp नंबर सभी भरें।');
+            const email = document.getElementById('prod-email').value.trim();
+            if (!name || !dob || !gender || !time || !ampm || !place || !/^[0-9]{10}$/.test(whatsapp) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('कृपया Name, Email, DOB, Gender, Birth Time, AM/PM, Birth Place और 10-digit WhatsApp Number सभी सही भरें।');
                 return null;
             }
-            return { name, dob, gender, time, ampm, place, whatsapp, product: activePaidProduct.name, price: activePaidProduct.price, savedAt: new Date().toISOString() };
+            return { name, dob, gender, time, ampm, place, whatsapp, email, product: activePaidProduct.name, price: activePaidProduct.price, savedAt: new Date().toISOString() };
         }
 
-        function submitDetailsThenShowPay() {
+        async function continueToRazorpayPayment() {
             const customer = getPaidCustomerDetails();
             if (!customer) return;
+            const btn = document.getElementById('paid-standard-pay-btn');
+            try {
+                if (btn) { btn.disabled = true; btn.textContent = 'CREATING SECURE PAYMENT…'; btn.classList.add('opacity-60','cursor-not-allowed'); }
+                localStorage.setItem('swamiAtmaJagran_pending_payment', JSON.stringify(customer));
 
-            // Keep the exact details on this device until the payment flow returns.
-            localStorage.setItem('swamiAtmaJagran_pending_payment', JSON.stringify(customer));
+                const response = await fetch('/api/create-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ product: customer.product, customer })
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Unable to create secure Razorpay order.');
+                if (typeof Razorpay !== 'function') throw new Error('Razorpay Standard Checkout could not be loaded. Please refresh and try again.');
 
-            // One-tap WhatsApp message. Customer only needs to press Send in WhatsApp.
-            const msg = `Namaste Swami Ji 🙏\n\n*I am submitting my details for ${customer.product}.*\n\n*My Kundli Details:*\n- Name: ${customer.name}\n- Gender: ${customer.gender}\n- DOB: ${customer.dob}\n- Birth Time: ${customer.time} ${customer.ampm}\n- Birth Place: ${customer.place}\n- WhatsApp: ${customer.whatsapp}\n\nPlease confirm my details. I will now complete the secure Razorpay payment of ₹${customer.price}.`;
-            window.open(`https://wa.me/917000534788?text=${encodeURIComponent(msg)}`, '_blank');
+                const rzp = new Razorpay({
+                    key: data.keyId,
+                    amount: data.amount,
+                    currency: data.currency || 'INR',
+                    name: 'Swami Atma Jagran',
+                    description: customer.product,
+                    order_id: data.orderId,
+                    prefill: { name: customer.name, email: customer.email, contact: '+91' + customer.whatsapp },
+                    notes: { product: customer.product, customer_name: customer.name, customer_email: customer.email },
+                    theme: { color: '#5C1D24' },
+                    modal: { ondismiss: function(){ if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');} } },
+                    handler: async function(resp) {
+                        if (btn) btn.textContent = 'VERIFYING PAYMENT…';
+                        try {
+                            const vr = await fetch('/api/verify-payment', {
+                                method:'POST', headers:{'Content-Type':'application/json'},
+                                body:JSON.stringify({ orderId:data.orderId, razorpay_order_id:resp.razorpay_order_id, razorpay_payment_id:resp.razorpay_payment_id, razorpay_signature:resp.razorpay_signature, product:customer.product })
+                            });
+                            const vd = await vr.json();
+                            if (!vr.ok) throw new Error(vd.error || 'Payment verification failed.');
 
-            const payBox = document.getElementById('pay-after-details');
-            if (payBox) payBox.classList.remove('hidden');
-            const status = document.getElementById('details-submitted-status');
-            if (status) status.classList.remove('hidden');
+                            try {
+                                await fetch('/api/order-notification', {
+                                    method:'POST', headers:{'Content-Type':'application/json'},
+                                    body:JSON.stringify({
+                                        eventType:'payment_verified',
+                                        payload:{orderId:data.orderId,paymentId:vd.paymentId,product:customer.product,price:customer.price,customer}
+                                    })
+                                });
+                            } catch (_) {}
+
+                            localStorage.removeItem('swamiAtmaJagran_pending_payment');
+                            closeProductModal();
+                            const modal = document.getElementById('payment-success-modal');
+                            const summary = document.getElementById('payment-success-summary');
+                            if (summary) summary.innerHTML = `<strong>${escapeHtml(customer.product)}</strong><br>Customer: ${escapeHtml(customer.name)}<br>Payment ID: ${escapeHtml(vd.paymentId)}<br>Order ID: ${escapeHtml(vd.orderId)}<br><span class="text-emerald-700 font-bold">Payment successfully received and your details have been securely submitted.</span>`;
+                            if (modal) modal.classList.remove('hidden');
+                            if(typeof window.loadJigyasuStorage==='function') window.loadJigyasuStorage();
+                        } catch (e) {
+                            alert('Payment received, but secure verification could not be completed. Please contact support. ' + e.message);
+                            if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');}
+                        }
+                    }
+                });
+                rzp.on('payment.failed', function(){
+                    alert('Payment failed or was cancelled. Please try again.');
+                    if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');}
+                });
+                rzp.open();
+            } catch (e) {
+                alert(e.message || 'Something went wrong. Please try again.');
+                if(btn){btn.disabled=false;btn.textContent=`PAY NOW — ₹${customer.price} 🔒`;btn.classList.remove('opacity-60','cursor-not-allowed');}
+            }
         }
 
-        function continueToRazorpayPayment() {
-            const customer = getPaidCustomerDetails();
-            if (!customer) return;
-            localStorage.setItem('swamiAtmaJagran_pending_payment', JSON.stringify(customer));
-            window.location.href = activePaidProduct.link;
-        }
-
-        function unlockLaganAfterRazorpaySignal() {
-            const params = new URLSearchParams(window.location.search);
-            const linkId = params.get('razorpay_payment_link_id') || '';
-            const status = (params.get('razorpay_payment_link_status') || '').toLowerCase();
-            const paymentId = params.get('razorpay_payment_id') || '';
-            const signature = params.get('razorpay_signature') || '';
-
-            // Razorpay Payment Link callback signal. The final secure verification should be done server-side.
-            // For this ₹1 test UX, we only unlock when Razorpay returns a paid callback for our test link.
-            const paidCallback = status === 'paid' && paymentId && linkId && signature;
-            const isLaganTestLink = !linkId || linkId.toLowerCase().includes('4texxjk4') || sessionStorage.getItem('swami_lagan_payment_started') === '1';
-            if (!paidCallback || !isLaganTestLink) return;
-
-            sessionStorage.setItem('swami_lagan_paid', '1');
-            sessionStorage.removeItem('swami_lagan_payment_started');
-            unlockLaganButton();
-
-            const modal = document.getElementById('payment-success-modal');
-            const summary = document.getElementById('payment-success-summary');
-            if (summary) summary.innerHTML = '<strong>Lagan Maya Sutra</strong><br>Payment ID: ' + escapeHtml(paymentId) + '<br><span class="text-emerald-700 font-bold">Payment successfully received.</span>';
-            const waBtn = document.getElementById('payment-success-whatsapp');
-            if (waBtn) waBtn.classList.add('hidden');
-            if (modal) modal.classList.remove('hidden');
-
-            // Clean callback parameters from the address bar without reloading the page.
-            window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-        }
+        function unlockLaganAfterRazorpaySignal() {}
 
         function unlockLaganButton() {
             const btn = document.getElementById('lagan-share-details-btn');
@@ -1054,46 +1078,32 @@
         </div>
     </div>
 
-    <!-- MODAL: Product Direct Payment & WhatsApp Checkout Modal (Same as Divya Bhagya Sutra) -->
-    <div id="product-payment-modal" style="display:none!important" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+    <!-- MODAL: Paid Product Details + Razorpay Standard Checkout -->
+    <div id="product-payment-modal" class="fixed inset-0 bg-maroonDark/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-cardBg max-w-md w-full rounded-3xl p-6 border-2 border-goldPrimary shadow-2xl relative my-6">
-            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl">&times;</button>
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 text-maroonDark font-bold text-xl" aria-label="Close">&times;</button>
             <div class="text-center space-y-4">
-                <h3 class="font-cinzel text-xl font-bold text-maroonDark" id="modal-product-title">Scan & Pay Securely</h3>
-                <p class="text-sm font-bold text-maroonMain">Amount to Pay: <span id="modal-product-price-tag" class="text-red-700 text-lg">₹299</span></p>
-                <div class="bg-maroonDark p-4 rounded-2xl border-2 border-goldPrimary/60 max-w-[260px] mx-auto shadow-xl">
-                    <div class="text-goldPrimary font-cinzel text-xs font-bold mb-2 tracking-wider">SWAMI ATMA JAGRAN</div>
-                    <div class="bg-white p-2 rounded-xl">
-                        <img id="modal-qr-code-img" src="" alt="Payment QR" class="w-full h-auto mx-auto rounded">
-                    </div>
-                    <div class="text-goldLight text-[11px] mt-2 font-mono">UPI: 7000534788-3@ybl</div>
-                </div>
-                <a id="modal-upi-anchor" href="#" class="block w-full bg-maroonMain text-goldPrimary py-3 rounded-xl font-bold text-sm shadow hover:bg-maroonDark transition-all">
-                    <i class="fa-solid fa-mobile-screen-button mr-2"></i> Pay Direct via PhonePe / Paytm App
-                </a>
-                <p class="text-[11px] text-maroonMain/80 italic bg-amber-100 p-2 rounded-lg border border-goldPrimary/30">पहले अपनी पूरी जन्म-कुंडली जानकारी भरें। यह जानकारी आपकी कुंडली/रिपोर्ट बनाने के लिए जरूरी है। इसके बाद ही Secure Payment पर जाएँ।</p>
+                <div class="w-14 h-14 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center mx-auto text-xl shadow"><i class="fa-solid fa-scroll"></i></div>
+                <h3 class="font-cinzel text-xl font-bold text-maroonDark" id="modal-product-title">Your Report</h3>
+                <p class="text-sm font-bold text-maroonMain">Secure Amount: <span id="modal-product-price-tag" class="text-red-700 text-lg">₹299</span></p>
+                <p class="text-xs text-maroonMain/75 bg-amber-100 border border-goldPrimary/30 rounded-xl p-3 leading-relaxed">Apni poori janm details aur email submit karein. Uske baad official <b>Razorpay Standard Checkout</b> khulega. Payment successful hone ke baad aapko website par confirmation turant milega.</p>
                 <div class="space-y-3 pt-2 text-left border-t border-goldPrimary/20">
-                    <h4 class="text-xs font-bold uppercase text-maroonDark">पहले अपनी पूरी जन्म जानकारी दर्ज करें:</h4>
-                    <input type="text" id="prod-name" placeholder="Full Name" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    <h4 class="text-xs font-bold uppercase text-maroonDark">अपनी जन्म जानकारी दर्ज करें:</h4>
+                    <input type="text" id="prod-name" placeholder="Full Name" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    <input type="email" id="prod-email" placeholder="Email Address (Gmail / Email)" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="date" id="prod-dob" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <select id="prod-gender" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                            <option value="">Gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option>
-                        </select>
+                        <input type="date" id="prod-dob" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <select id="prod-gender" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs"><option value="">Gender</option><option value="Male">Male</option><option value="Female">Female</option><option value="Other">Other</option></select>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="prod-time" placeholder="Time (e.g. 10:30)" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <select id="prod-ampm" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                            <option value="">AM / PM</option><option value="AM">AM</option><option value="PM">PM</option>
-                        </select>
+                        <input type="text" id="prod-time" placeholder="Birth Time (e.g. 10:30)" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                        <select id="prod-ampm" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs"><option value="">AM / PM</option><option value="AM">AM</option><option value="PM">PM</option></select>
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input type="text" id="prod-place" placeholder="Birth Place / Location" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                        <input type="tel" id="prod-whatsapp" placeholder="WhatsApp No (10 digits)" pattern="[0-9]{10}" required class="w-full px-3 py-2 rounded-xl bg-white border border-goldPrimary/40 text-xs">
-                    </div>
+                    <input type="text" id="prod-place" placeholder="Birth Place / Location" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
+                    <input type="tel" id="prod-whatsapp" placeholder="WhatsApp Number (10 digits)" maxlength="10" pattern="[0-9]{10}" required class="w-full px-3 py-2.5 rounded-xl bg-white border border-goldPrimary/40 text-xs">
                 </div>
-                <!-- Legacy submit/continue payment controls intentionally disabled.
-                     The active universal flow below uses the official Razorpay Standard Checkout directly. -->
+                <button id="paid-standard-pay-btn" type="button" onclick="continueToRazorpayPayment()" class="w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-3.5 rounded-xl shadow-lg transition-all">PAY NOW — ₹299 🔒</button>
+                <p class="text-[10px] text-maroonMain/60">🔒 Secure payment powered by Razorpay Standard Checkout.</p>
             </div>
         </div>
     </div>
@@ -1164,13 +1174,13 @@
             <p class="text-base text-maroonMain/90 mt-4 leading-relaxed">Aapka <b>Swarnima Janm Patrika — FREE Kundli Report</b> request successfully place ho gaya hai.</p>
             <div class="mt-6 rounded-3xl bg-emerald-50 border-2 border-emerald-300 p-6 sm:p-7 text-left shadow-inner">
                 <div class="text-center text-2xl sm:text-3xl font-black text-emerald-800 uppercase tracking-wide">24 HOURS</div>
-                <p class="text-center text-sm font-bold text-emerald-700 mt-2">Aapki personalised Swarnima Janm Kundli report aapke WhatsApp number par 24 hours ke andar pahoch jayegi.</p>
+                <p class="text-center text-sm font-bold text-emerald-700 mt-2">Aapki personalised Swarnima Janm Patrika aapke WhatsApp number par 24 hours ke andar securely deliver ki jayegi. Nischint rahein, hamari team aapki details ko dhyan se process karegi.</p>
                 <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-emerald-950">
                     <div>✓ Details Received</div><div>✓ Free Report Request Placed</div>
                     <div>✓ Team Processing Started</div><div>✓ WhatsApp Delivery Within 24 Hours</div>
                 </div>
             </div>
-            <p class="text-sm text-maroonMain/70 mt-5">A confirmation email bhi aapke diye gaye email address par bheja jayega.</p>
+            <p class="text-sm text-maroonMain/70 mt-5">Aapko confirmation email bhi aapke diye gaye email address par bheja jayega. Pure hriday se aashvasan hai ki aapki personal kundli details ko surakshit rakhte hue report taiyar ki jayegi aur 24 hours ke andar WhatsApp par deliver ki jayegi.</p>
             <button onclick="sendToWhatsAppDirect()" class="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3.5 rounded-xl shadow-lg">📱 SEND DETAILS TO WHATSAPP</button>
             <button onclick="closeFreeSuccessModal()" class="mt-6 w-full bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold py-4 rounded-xl shadow-lg">DONE</button>
         </div>
@@ -1845,16 +1855,12 @@
             if(!plan)return;
 
             // Keep the complete consultation payload available until payment verification returns.
-            const timeParts=String(plan.time).trim().match(/^(.*?)(?:\s*)(AM|PM)$/i);
             const customer={
-                name:plan.name,email:plan.email,dob:plan.dob,gender:plan.gender,
-                time:timeParts?timeParts[1].trim():plan.time,
-                ampm:timeParts?timeParts[2].toUpperCase():'',
-                place:plan.location,whatsapp:plan.whatsapp,
+                name:plan.name,email:plan.email,dob:plan.dob,gender:plan.gender,time:plan.time,
+                ampm:'',place:plan.location,whatsapp:plan.whatsapp,
                 product:plan.planTitle,price:plan.price,
                 consultation_duration:plan.duration,consultation_type:plan.type,
-                consultation_question:plan.question,consultation_plan:plan.planTitle,
-                consultation_slot_date:'',consultation_slot_time:''
+                consultation_question:plan.question,consultation_plan:plan.planTitle
             };
             try{localStorage.setItem('swamiAtmaJagran_pending_consultation',JSON.stringify(customer));}catch(_e){}
 
@@ -1896,6 +1902,30 @@
             }
         };
 
+      function ensureUniversalPaidModal(){
+        let m=document.getElementById('universal-paid-modal');
+        if(m) return m;
+        m=document.createElement('div');
+        m.id='universal-paid-modal';
+        m.className='fixed inset-0 bg-maroonDark/95 backdrop-blur-md z-[115] hidden items-center justify-center p-4 overflow-y-auto';
+        m.innerHTML='<div id="universal-paid-box" class="bg-cardBg max-w-2xl w-full rounded-3xl p-6 sm:p-8 border-2 border-goldPrimary shadow-2xl relative my-6"></div>';
+        document.body.appendChild(m);
+        return m;
+      }
+
+      function closeUniversalPaidModal(){
+        const m=document.getElementById('universal-paid-modal');
+        if(m){m.classList.add('hidden');m.classList.remove('flex');}
+        document.body.style.overflow='';
+      }
+
+      function openUniversalPaidModal(){
+        const m=ensureUniversalPaidModal();
+        m.classList.remove('hidden');m.classList.add('flex');
+        document.body.style.overflow='hidden';
+        return m;
+      }
+
       function generateSlotId(){
         try{
           if(window.crypto && typeof window.crypto.randomUUID==='function') return 'SAJ-'+window.crypto.randomUUID().replace(/-/g,'').slice(0,10).toUpperCase();
@@ -1904,6 +1934,7 @@
       }
 
       function openPostPaymentSlotPicker(o){
+        openUniversalPaidModal();
         const box=document.getElementById('universal-paid-box');
         o.slotId=o.slotId||generateSlotId();
         const today=new Date();
@@ -1942,7 +1973,7 @@
         if(day===0||day===6){if(err){err.textContent='Saturday and Sunday are not available. Please choose a Monday–Friday date.';err.classList.remove('hidden');}return;}
         try{
           btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.textContent='BOOKING YOUR SLOT…';
-          const br=await fetch('/api/book-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId,paymentId:o.paymentId,date,slotId:o.slotId,consultationDate:date,consultationTime:'Exact time will be sent on WhatsApp',customer:o.customer})});
+          const br=await fetch('/api/book-session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderId:o.orderId,date,time:'WhatsApp',slotId:o.slotId,consultationDate:date,consultationTime:'Exact time will be sent on WhatsApp',customer:o.customer})});
           const bd=await br.json();
           if(!br.ok)throw new Error(bd.error||'This consultation date could not be booked. Please choose another date.');
           const bookingRecord={orderId:o.orderId,paymentId:o.paymentId,product:o.product,price:o.price,slotId:o.slotId,slotDate:date,slotTime:'Exact time will be sent on WhatsApp',customer:o.customer,consultation_status:'DATE BOOKED'};
@@ -1964,6 +1995,7 @@
       }
 
       function showCongrats(o){
+        openUniversalPaidModal();
         const box=document.getElementById('universal-paid-box');
         box.innerHTML=`
           <div class="text-center py-5">
