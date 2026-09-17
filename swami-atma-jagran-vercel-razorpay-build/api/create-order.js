@@ -32,9 +32,7 @@ export default async function handler(req, res) {
     const isConsultation = CONSULTATION_PRODUCTS.has(product);
 
     if (isConsultation) {
-      // Consultation flow: email is optional and the customer may explicitly select
-      // that they do not know the accurate birth time. All consultation data is
-      // stored in Razorpay order notes for Your Charts Data.
+      // Consultation booking flow: name, birth details, contact info, reason/question, and a booked slot are required.
       if (
         !customer?.name ||
         !customer?.dob ||
@@ -42,14 +40,12 @@ export default async function handler(req, res) {
         !customer?.birthTime ||
         !customer?.birthPlace ||
         !validWhatsapp ||
+        !validEmail ||
         !customer?.consultReason ||
         !customer?.bookingDate ||
         !customer?.bookingSlot
       ) {
-        return res.status(400).json({ error: 'Complete consultation booking details (name, DOB, gender, birth time/unknown-time choice, birth place, WhatsApp, reason, date and slot) are required.' });
-      }
-      if (customer?.email && !validEmail) {
-        return res.status(400).json({ error: 'Please enter a valid email address or leave the consultation email field blank.' });
+        return res.status(400).json({ error: 'Complete booking details (name, DOB, gender, birth time & place, WhatsApp, email, reason, date and slot) are required.' });
       }
     } else {
       if (
