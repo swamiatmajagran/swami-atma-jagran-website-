@@ -1463,80 +1463,66 @@
         function showBookError(msg){const e=document.getElementById('sjc-book-error');e.textContent=msg;e.classList.remove('hidden');e.scrollIntoView({behavior:'smooth',block:'center'});}
         function clearBookError(){const e=document.getElementById('sjc-book-error');e.classList.add('hidden');e.textContent='';}
         function validateBooking(){clearBookError();const name=document.getElementById('sjc-name').value.trim(),gender=document.getElementById('sjc-gender').value,place=document.getElementById('sjc-place').value.trim(),wa=document.getElementById('sjc-whatsapp').value.trim(),dob=document.getElementById('sjc-dob').value,date=document.getElementById('sjc-book-date').value,time=document.getElementById('sjc-book-time').value,email=document.getElementById('sjc-email').value.trim(),unknown=document.getElementById('sjc-unknown-time').checked; if(!name||!gender||!place||!/^[0-9]{10}$/.test(wa)||!dob||!date||(!unknown&&!time)){showBookError('Please complete all required fields and enter a valid 10-digit WhatsApp number.');return null;}if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showBookError('Please enter a valid email address or leave it blank.');return null;}const day=new Date(date+'T12:00:00').getDay();if(day===0||day===6){showBookError('Consultations are available Monday to Friday only.');return null;}if(!S.reason){document.getElementById('sjc-reason-error').classList.remove('hidden');showBookError('Please choose one consultation topic.');return null;}let birthTime=unknown?'I don\'t know accurate time':document.getElementById('sjc-birth-hour').value+':'+document.getElementById('sjc-birth-minute').value+' '+document.getElementById('sjc-birth-ampm').value;return {name,gender,birthPlace:place,whatsapp,dob,birthTime,email,unknownBirthTime:unknown,consultReason:S.reason,consultQuestion:S.reason,bookingDate:date,bookingSlot:time,sessionDuration:S.duration,sessionType:S.type,slotId:S.slotId,product:S.service,price:S.price};}
-        async function ensureConsultationRazorpay(){
-          if(typeof window.Razorpay==='function') return true;
-          const src='https://checkout.razorpay.com/v1/checkout.js';
-          const scripts=[...document.scripts];
-          const existing=scripts.find(x=>x.src && x.src.indexOf(src)===0);
-          if(existing){
-            if(typeof window.Razorpay==='function') return true;
-            await new Promise((resolve,reject)=>{
-              const done=()=>typeof window.Razorpay==='function'?resolve():reject(new Error('Razorpay Checkout loaded but the Razorpay object was not initialized. Please refresh and try again.'));
-              existing.addEventListener('load',done,{once:true});
-              existing.addEventListener('error',()=>reject(new Error('Razorpay Checkout could not be loaded. Please check your internet connection and try again.')),{once:true});
-            });
-            return true;
-          }
-          await new Promise((resolve,reject)=>{
-            const script=document.createElement('script');
-            script.src=src; script.async=true; script.dataset.sjcRazorpay='1';
-            script.onload=()=>typeof window.Razorpay==='function'?resolve():reject(new Error('Razorpay Checkout loaded but is unavailable. Please refresh and try again.'));
-            script.onerror=()=>reject(new Error('Razorpay Checkout could not be loaded. Please try again.'));
-            document.head.appendChild(script);
-          });
-          return true;
-        }
-
-        async function consultationCreateOrder(c){
-          // Use the exact same server-side order endpoint as the existing paid-product Razorpay flow.
-          const response=await fetch('/api/create-order',{
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body:JSON.stringify({product:c.product,customer:{
-              name:c.name,dob:c.dob,gender:c.gender,time:(c.unknownBirthTime?'':(c.birthTime||'').replace(/\s+(AM|PM)$/i,'')),
-              ampm:(c.unknownBirthTime?'':(((c.birthTime||'').match(/\b(AM|PM)\b/i)||['',''])[1])),
-              place:c.birthPlace,birthTime:c.birthTime,birthPlace:c.birthPlace,whatsapp:c.whatsapp,email:c.email||'',
-              consultReason:c.consultReason,consultQuestion:c.consultQuestion,bookingDate:c.bookingDate,bookingSlot:c.bookingSlot,
-              sessionDuration:c.sessionDuration,sessionType:c.sessionType,slotId:c.slotId,unknownBirthTime:!!c.unknownBirthTime
-            }})
-          });
-          const raw=await response.text();
-          let data={};
-          try{data=raw?JSON.parse(raw):{};}catch(_){data={};}
-          if(!response.ok) throw new Error(data.error||('Payment order could not be created (HTTP '+response.status+').'));
-          if(!data.orderId||!data.keyId||!data.amount) throw new Error('Razorpay order was not returned by the server. Please check the deployed /api/create-order function.');
-          return data;
-        }
-
         window.startConsultationStandardRazorpay=async function(){
           const c=validateBooking();
-          if(!c) return;
+          if(!c)return;
           const btn=document.getElementById('sjc-pay-btn');
-          btn.disabled=true; btn.classList.add('opacity-60','cursor-not-allowed'); btn.innerHTML='OPENING SECURE RAZORPAY…';
+          btn.disabled=true;btn.classList.add('opacity-60','cursor-not-allowed');btn.innerHTML='CREATING SECURE PAYMENT…';
           try{
-            await ensureConsultationRazorpay();
-            const data=await consultationCreateOrder(c);
-            const rzp=new window.Razorpay({
-              key:data.keyId, amount:data.amount, currency:data.currency||'INR',
-              name:'Swami Atma Jagran', description:c.product, order_id:data.orderId,
-              prefill:{name:c.name, ...(c.email?{email:c.email}:{}), contact:'+91'+c.whatsapp},
+            // EXACT SAME Standard Checkout pattern used by the existing paid-product flow.
+            const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+              product:c.product,
+              customer:{
+                name:c.name,
+                dob:c.dob,
+                gender:c.gender,
+                time:(c.unknownBirthTime?'':(c.birthTime||'').replace(/\s+(AM|PM)$/i,'')),
+                ampm:(c.unknownBirthTime?'':(((c.birthTime||'').match(/\b(AM|PM)\b/i)||['',''])[1])),
+                place:c.birthPlace,
+                birthTime:c.birthTime,
+                birthPlace:c.birthPlace,
+                whatsapp:c.whatsapp,
+                email:c.email||'',
+                consultReason:c.consultReason,
+                consultQuestion:c.consultQuestion,
+                bookingDate:c.bookingDate,
+                bookingSlot:c.bookingSlot,
+                sessionDuration:c.sessionDuration,
+                sessionType:c.sessionType,
+                slotId:c.slotId,
+                unknownBirthTime:!!c.unknownBirthTime
+              }
+            })});
+            const data=await response.json();
+            if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
+            if(!data.orderId||!data.keyId||!data.amount)throw new Error('Razorpay order was not returned by the server.');
+
+            const rzp=new Razorpay({
+              key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:c.product,order_id:data.orderId,
+              prefill:{name:c.name,email:c.email||'',contact:'+91'+c.whatsapp},
+              notes:{product:c.product,customer_email:c.email||''},
               theme:{color:'#5C1D24'},
               modal:{ondismiss:function(){btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.innerHTML='PAY NOW — ₹'+S.price+' 🔒';}},
               handler:async function(resp){
                 btn.innerHTML='VERIFYING PAYMENT…';
                 try{
                   const vr=await fetch('/api/verify-payment',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
-                    orderId:data.orderId,razorpay_order_id:resp.razorpay_order_id,razorpay_payment_id:resp.razorpay_payment_id,razorpay_signature:resp.razorpay_signature,product:c.product,customer:c
+                    orderId:data.orderId,
+                    razorpay_order_id:resp.razorpay_order_id,
+                    razorpay_payment_id:resp.razorpay_payment_id,
+                    razorpay_signature:resp.razorpay_signature,
+                    product:c.product,
+                    customer:c
                   })});
-                  const raw=await vr.text(); let vd={}; try{vd=raw?JSON.parse(raw):{};}catch(_){}
-                  if(!vr.ok||!vd.ok) throw new Error(vd.error||('Payment verification failed (HTTP '+vr.status+').'));
+                  const vd=await vr.json();
+                  if(!vr.ok||!vd.ok)throw new Error(vd.error||'Payment verification failed.');
                   document.getElementById('sjc-success-name').textContent=c.name;
                   document.getElementById('sjc-success-service').textContent=c.product;
                   document.getElementById('sjc-success-slot').textContent=c.slotId;
                   document.getElementById('sjc-success').classList.remove('hidden');
                   document.getElementById('sjc-success').classList.add('flex');
                 }catch(e){
-                  showBookError('Payment was received, but secure verification could not be completed. Please contact support. '+e.message);
+                  showBookError('Payment received, but secure verification could not be completed. Please contact support. '+e.message);
                   btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.innerHTML='TRY PAYMENT AGAIN — ₹'+S.price+' 🔒';
                 }
               }
@@ -1544,7 +1530,7 @@
             rzp.on('payment.failed',function(){showBookError('Razorpay payment failed or was cancelled. Please try again.');btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.innerHTML='PAY NOW — ₹'+S.price+' 🔒';});
             rzp.open();
           }catch(e){
-            showBookError(e.message||'Razorpay payment could not be started. Please try again.');
+            showBookError(e.message||'Something went wrong while opening Razorpay. Please try again.');
             btn.disabled=false;btn.classList.remove('opacity-60','cursor-not-allowed');btn.innerHTML='PAY NOW — ₹'+S.price+' 🔒';
           }
         };
