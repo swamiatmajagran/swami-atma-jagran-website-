@@ -1,0 +1,10 @@
+SWAMI ATMA JAGRAN — FINAL CONSULTATION RAZORPAY PACKAGE
+
+1. Deploy index.html as the site root.
+2. Deploy every file in api/ to the same Vercel project under /api/.
+3. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in the server/project environment variables.
+4. Redeploy after setting variables.
+5. Test each consultation: Individual Clarity, Partnership & Harmony, and Meet Swami Ji Ashram Session.
+6. Individual Clarity is intentionally ₹1 for testing. Other consultation prices remain unchanged.
+
+PAY NOW flow: validate -> POST /api/create-order -> receive orderId/keyId/amount -> ensure Razorpay SDK -> new window.Razorpay(...) -> rzp.open() -> server verification.
