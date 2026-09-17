@@ -32,16 +32,20 @@ export default async function handler(req, res) {
     const isConsultation = CONSULTATION_PRODUCTS.has(product);
 
     if (isConsultation) {
-      // Consultation booking flow: name, contact info, reason/question, and a booked slot are required.
+      // Consultation booking flow: name, birth details, contact info, reason/question, and a booked slot are required.
       if (
         !customer?.name ||
+        !customer?.dob ||
+        !customer?.gender ||
+        !customer?.birthTime ||
+        !customer?.birthPlace ||
         !validWhatsapp ||
         !validEmail ||
         !customer?.consultReason ||
         !customer?.bookingDate ||
         !customer?.bookingSlot
       ) {
-        return res.status(400).json({ error: 'Complete booking details (name, WhatsApp, email, reason, date and slot) are required.' });
+        return res.status(400).json({ error: 'Complete booking details (name, DOB, gender, birth time & place, WhatsApp, email, reason, date and slot) are required.' });
       }
     } else {
       if (
@@ -75,7 +79,11 @@ export default async function handler(req, res) {
     };
 
     if (isConsultation) {
-      // Consultation-specific note fields (Slot ID, booked date/slot, reason, question, duration & mode).
+      // Consultation-specific note fields (birth details, Slot ID, booked date/slot, reason, question, duration & mode).
+      notes.dob = String(customer.dob || '').slice(0, 255);
+      notes.gender = String(customer.gender || '').slice(0, 255);
+      notes.birth_time = String(customer.birthTime || '').slice(0, 255);
+      notes.birth_place = String(customer.birthPlace || '').slice(0, 255);
       notes.slot_id = String(customer.slotId || '').slice(0, 32);
       notes.booking_date = String(customer.bookingDate || '').slice(0, 32);
       notes.booking_slot = String(customer.bookingSlot || '').slice(0, 64);
@@ -83,6 +91,7 @@ export default async function handler(req, res) {
       notes.consult_question = String(customer.consultQuestion || '').slice(0, 500);
       notes.session_duration = String(customer.sessionDuration || '').slice(0, 32);
       notes.session_type = String(customer.sessionType || '').slice(0, 32);
+      notes.unknown_birth_time = customer.unknownBirthTime ? 'Yes' : 'No';
     } else {
       notes.dob = String(customer.dob).slice(0, 255);
       notes.gender = String(customer.gender).slice(0, 255);
