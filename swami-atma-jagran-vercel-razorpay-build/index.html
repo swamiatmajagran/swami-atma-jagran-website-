@@ -1397,7 +1397,7 @@
                 <p id="sjc-slot-help" class="text-[11px] text-maroonMain/60 mt-4">Available consultation window: Monday to Friday, 12 PM to 8 PM.</p>
               </section>
 
-              <div class="mt-6 rounded-[2rem] bg-[#3a0d14] text-white border border-goldPrimary/50 p-5 sm:p-7 flex flex-col md:flex-row md:items-center md:justify-between gap-5 shadow-2xl"><div><p class="text-[10px] uppercase tracking-[.25em] text-goldPrimary font-extrabold">Secure Payment</p><h3 class="font-cinzel text-xl font-extrabold mt-1">Ready to confirm your consultation?</h3><p class="text-xs text-white/60 mt-1">Your booking details are securely attached to your Razorpay order and recorded in Your Charts Data.</p></div><button id="sjc-pay-btn" type="button" onclick="payConsultationWithRazorpay()" class="shrink-0 bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold px-8 py-4 rounded-xl shadow-xl transition-all text-sm">PAY NOW — <span id="sjc-pay-price">₹0</span> 🔒</button></div>
+              <div class="mt-6 rounded-[2rem] bg-[#3a0d14] text-white border border-goldPrimary/50 p-5 sm:p-7 flex flex-col md:flex-row md:items-center md:justify-between gap-5 shadow-2xl"><div><p class="text-[10px] uppercase tracking-[.25em] text-goldPrimary font-extrabold">Secure Payment</p><h3 class="font-cinzel text-xl font-extrabold mt-1">Ready to confirm your consultation?</h3><p class="text-xs text-white/60 mt-1">Your booking details are securely attached to your Razorpay order and recorded in Your Charts Data.</p></div><button id="sjc-pay-btn" type="button" onclick="startConsultationStandardRazorpay()" class="shrink-0 bg-goldPrimary hover:bg-goldLight text-maroonDark font-extrabold px-8 py-4 rounded-xl shadow-xl transition-all text-sm">PAY NOW — <span id="sjc-pay-price">₹0</span> 🔒</button></div>
               <div id="sjc-book-error" class="hidden mt-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 px-4 py-3 text-sm font-semibold"></div>
             </form>
           </div>
@@ -1508,7 +1508,7 @@
           return data;
         }
 
-        window.payConsultationWithRazorpay=async function(){
+        window.startConsultationStandardRazorpay=async function(){
           const c=validateBooking();
           if(!c) return;
           const btn=document.getElementById('sjc-pay-btn');
