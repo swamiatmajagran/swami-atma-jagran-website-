@@ -32,7 +32,9 @@ export default async function handler(req, res) {
     const isConsultation = CONSULTATION_PRODUCTS.has(product);
 
     if (isConsultation) {
-      // Consultation booking flow: name, birth details, contact info, reason/question, and a booked slot are required.
+      // Consultation flow: email is optional and the customer may explicitly select
+      // that they do not know the accurate birth time. All consultation data is
+      // stored in Razorpay order notes for Your Charts Data.
       if (
         !customer?.name ||
         !customer?.dob ||
@@ -40,12 +42,14 @@ export default async function handler(req, res) {
         !customer?.birthTime ||
         !customer?.birthPlace ||
         !validWhatsapp ||
-        (customer?.email && !validEmail) ||
         !customer?.consultReason ||
         !customer?.bookingDate ||
         !customer?.bookingSlot
       ) {
-        return res.status(400).json({ error: 'Complete booking details (name, DOB, gender, birth time & place, WhatsApp, email, reason, date and slot) are required.' });
+        return res.status(400).json({ error: 'Complete consultation booking details (name, DOB, gender, birth time/unknown-time choice, birth place, WhatsApp, reason, date and slot) are required.' });
+      }
+      if (customer?.email && !validEmail) {
+        return res.status(400).json({ error: 'Please enter a valid email address or leave the consultation email field blank.' });
       }
     } else {
       if (
@@ -91,7 +95,6 @@ export default async function handler(req, res) {
       notes.consult_question = String(customer.consultQuestion || '').slice(0, 500);
       notes.session_duration = String(customer.sessionDuration || '').slice(0, 32);
       notes.session_type = String(customer.sessionType || '').slice(0, 32);
-      notes.booking_timestamp = String(customer.bookingTimestamp || new Date().toISOString()).slice(0, 64);
     } else {
       notes.dob = String(customer.dob).slice(0, 255);
       notes.gender = String(customer.gender).slice(0, 255);
