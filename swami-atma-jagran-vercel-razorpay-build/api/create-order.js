@@ -40,7 +40,6 @@ export default async function handler(req, res) {
         !customer?.birthTime ||
         !customer?.birthPlace ||
         !validWhatsapp ||
-        !validEmail ||
         !customer?.consultReason ||
         !customer?.bookingDate ||
         !customer?.bookingSlot
@@ -91,6 +90,8 @@ export default async function handler(req, res) {
       notes.consult_question = String(customer.consultQuestion || '').slice(0, 500);
       notes.session_duration = String(customer.sessionDuration || '').slice(0, 32);
       notes.session_type = String(customer.sessionType || '').slice(0, 32);
+      notes.unknown_birth_time = customer.unknownBirthTime ? 'true' : 'false';
+      notes.birth_ampm = String(customer.ampm || '').slice(0, 8);
     } else {
       notes.dob = String(customer.dob).slice(0, 255);
       notes.gender = String(customer.gender).slice(0, 255);

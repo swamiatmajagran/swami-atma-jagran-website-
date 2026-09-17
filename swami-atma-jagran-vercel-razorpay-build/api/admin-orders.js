@@ -54,6 +54,8 @@ export default async function handler(req, res) {
         consultQuestion: notes.consult_question || '',
         sessionDuration: notes.session_duration || '',
         sessionType: notes.session_type || '',
+        unknownBirthTime: notes.unknown_birth_time === 'true',
+        birthAmPm: notes.birth_ampm || '',
         paymentStatus: paid ? 'PAID' : String(o.status || 'PENDING').toUpperCase(),
         paymentId: p?.id || '',
         amount: Number(o.amount || 0) / 100,
