@@ -1497,7 +1497,27 @@
             if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
             if(!data.orderId||!data.keyId||!data.amount)throw new Error('Razorpay order was not returned by the server.');
 
-            const rzp=new Razorpay({
+            // Razorpay Standard Checkout must be loaded before constructing the gateway.
+            if(!window.Razorpay){
+              await new Promise((resolve,reject)=>{
+                const existing=document.querySelector('script[src=\"https://checkout.razorpay.com/v1/checkout.js\"]');
+                if(existing){
+                  existing.addEventListener('load',resolve,{once:true});
+                  existing.addEventListener('error',()=>reject(new Error('Razorpay SDK load error.')),{once:true});
+                  if(window.Razorpay)resolve();
+                  return;
+                }
+                const script=document.createElement('script');
+                script.src='https://checkout.razorpay.com/v1/checkout.js';
+                script.async=true;
+                script.onload=()=>resolve();
+                script.onerror=()=>reject(new Error('Razorpay SDK load error.'));
+                document.head.appendChild(script);
+              });
+            }
+            if(typeof window.Razorpay!=='function')throw new Error('Razorpay Standard Checkout is not available.');
+
+            const rzp=new window.Razorpay({
               key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:c.product,order_id:data.orderId,
               prefill:{name:c.name,email:c.email||'',contact:'+91'+c.whatsapp},
               notes:{product:c.product,customer_email:c.email||''},
@@ -1913,7 +1933,8 @@
           const response=await fetch('/api/create-order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({product:activeProduct.name,customer})});
           const data=await response.json();
           if(!response.ok)throw new Error(data.error||'Unable to create Razorpay order.');
-          const rzp=new Razorpay({
+          if(!window.Razorpay)throw new Error('Razorpay Standard Checkout is not available.');
+          const rzp=new window.Razorpay({
             key:data.keyId,amount:data.amount,currency:data.currency,name:'Swami Atma Jagran',description:activeProduct.name,order_id:data.orderId,
             prefill:{name:customer.name,email:customer.email,contact:'+91'+customer.whatsapp},
             notes:{product:activeProduct.name,customer_email:customer.email},
