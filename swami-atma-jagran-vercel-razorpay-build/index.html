@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="swami atmajagran logo.png">
+    <link rel="apple-touch-icon" href="swami atmajagran logo.png">
     <title>Swami Atma Jagran — The Digital Monk | Vedic Astrology & Spiritual Guidance</title>
     <meta name="description" content="Discover your karmic blueprint with Swami Atma Jagran, The Digital Monk. Get expert astrological reports, D1 & D9 chart analysis, Kundli Milan, and direct consultation for career, love, and life purpose.">
     <meta name="keywords" content="Swami Atma Jagran, Digital Monk, Vedic Astrology, Kundli Milan, Janm Patrika, D1 D9 Charts, Spiritual Consultation, Horoscope, Vedic Kundli, Horoscope Matching, D9 Navamsha, Ashtakoot Milan, Dasha Predictions, Spiritual Awakening">
@@ -1230,8 +1232,10 @@
         #consultation-modal .sjc-vip-card{transform:scale(1.035);box-shadow:0 28px 80px rgba(74,14,23,.38),0 0 45px rgba(212,175,55,.16);animation:sjcVipGlow 3.2s ease-in-out infinite}
         #consultation-modal .sjc-vip-card:hover{transform:scale(1.05) translateY(-5px)}
         @keyframes sjcVipGlow{0%,100%{box-shadow:0 28px 80px rgba(74,14,23,.38),0 0 25px rgba(212,175,55,.10)}50%{box-shadow:0 30px 90px rgba(74,14,23,.48),0 0 48px rgba(212,175,55,.25)}}
-        #consultation-modal .sjc-vip-image{height:260px!important}
-        @media(max-width:1023px){#consultation-modal .sjc-vip-card{transform:none}#consultation-modal .sjc-vip-card:hover{transform:translateY(-4px)}}
+        #consultation-modal .sjc-vip-image{height:100%!important;min-height:520px;width:100%;object-fit:cover;object-position:center;display:block;background:#2a0a0f}
+        #consultation-modal .sjc-vip-image-frame{min-height:520px}
+        @media(max-width:1023px){#consultation-modal .sjc-vip-card{transform:none}#consultation-modal .sjc-vip-card:hover{transform:translateY(-4px)}#consultation-modal .sjc-vip-image{min-height:430px}#consultation-modal .sjc-vip-image-frame{min-height:430px}}
+        @media(max-width:640px){#consultation-modal .sjc-vip-image{min-height:360px}#consultation-modal .sjc-vip-image-frame{min-height:360px}}
         #consultation-modal .sjc-book-page{display:none}
         #consultation-modal.sjc-booking-active .sjc-hub-page{display:none}
         #consultation-modal.sjc-booking-active .sjc-book-page{display:block}
@@ -1324,7 +1328,7 @@
               <div class="mt-8">
                 <article class="sjc-vip-card group rounded-[2.4rem] overflow-hidden border-2 border-goldPrimary bg-[#3a0d14] text-white shadow-2xl relative z-10">
                   <div class="grid lg:grid-cols-[1.05fr_1fr] gap-0 items-stretch">
-                    <div class="relative min-h-[360px] sm:min-h-[440px] overflow-hidden"><img src="image 2.png" alt="Swami Atmajagran Ji in Ashram" class="sjc-vip-image w-full h-full object-contain bg-[#2a0a0f] group-hover:scale-[1.015] transition-transform duration-1000"><div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#3a0d14]/10 to-[#3a0d14]/90"></div><div class="absolute top-5 left-5 px-4 py-2 rounded-full bg-goldPrimary text-maroonDark text-[10px] font-extrabold uppercase tracking-[.2em] shadow-xl">VIP • ASHRAM MASTER</div></div>
+                    <div class="sjc-vip-image-frame relative min-h-[520px] sm:min-h-[560px] overflow-hidden"><img src="image 2.png" alt="Swami Atmajagran Ji in Ashram" class="sjc-vip-image w-full h-full object-cover bg-[#2a0a0f] group-hover:scale-[1.015] transition-transform duration-1000"><div class="absolute inset-0 bg-gradient-to-r from-transparent via-[#3a0d14]/10 to-[#3a0d14]/90 pointer-events-none"></div><div class="absolute top-5 left-5 px-4 py-2 rounded-full bg-goldPrimary text-maroonDark text-[10px] font-extrabold uppercase tracking-[.2em] shadow-xl">VIP • ASHRAM MASTER</div></div>
                     <div class="p-7 sm:p-10 lg:p-12 flex flex-col justify-center">
                       <p class="text-[10px] uppercase tracking-[.3em] text-goldPrimary font-extrabold">The Most Exclusive Experience</p>
                       <h3 class="font-cinzel text-3xl sm:text-4xl font-extrabold text-goldLight mt-2">VIP Ashram Master Panel</h3>
@@ -1435,6 +1439,26 @@
             </div>
           </div>
         </div></div>
+
+        <!-- CONSULTATION PAYMENT SUCCESS POPUP -->
+        <div id="sjc-payment-success-popup" class="fixed right-4 bottom-4 sm:right-6 sm:bottom-6 z-[10100] hidden w-[calc(100vw-2rem)] max-w-xl" role="dialog" aria-modal="false" aria-labelledby="sjc-payment-success-title">
+          <div class="relative overflow-hidden rounded-3xl border-2 border-goldPrimary bg-[#fffaf1] shadow-[0_25px_80px_rgba(0,0,0,.42)]">
+            <div class="h-1.5 bg-gradient-to-r from-[#4A0E17] via-[#d4af37] to-[#4A0E17]"></div>
+            <div class="p-5 sm:p-6">
+              <button type="button" onclick="closeConsultationPaymentPopup()" aria-label="Dismiss payment confirmation" class="absolute top-3 right-3 w-9 h-9 rounded-full border border-[#4A0E17]/15 text-[#4A0E17] hover:bg-[#4A0E17] hover:text-goldLight transition-all font-bold text-lg">×</button>
+              <div class="pr-10">
+                <div class="flex items-center gap-3">
+                  <div class="w-11 h-11 rounded-full bg-goldPrimary text-maroonDark flex items-center justify-center font-black text-xl shadow-lg">✓</div>
+                  <div>
+                    <p id="sjc-payment-success-title" class="font-cinzel text-lg sm:text-xl font-extrabold text-[#4A0E17]">Payment Successfully Received</p>
+                    <p class="text-[10px] uppercase tracking-[.22em] text-emerald-700 font-extrabold mt-1">Consultation Booking Confirmed</p>
+                  </div>
+                </div>
+                <div id="sjc-payment-success-message" class="mt-4 rounded-2xl bg-goldPrimary/10 border border-goldPrimary/30 p-4 text-sm text-[#4A0E17] leading-relaxed"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <script>
@@ -1449,6 +1473,9 @@
         ];
         const reasonIcons=['fa-user-astronaut','fa-heart','fa-infinity','fa-hands-praying','fa-coins'];
         const esc=s=>String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+        function formatConsultationDate(v){if(!v)return '—';const d=new Date(v+'T12:00:00');if(Number.isNaN(d.getTime()))return v;return d.toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});}
+        window.closeConsultationPaymentPopup=function(){const p=document.getElementById('sjc-payment-success-popup');if(p)p.classList.add('hidden');};
+        function showConsultationPaymentPopup(c){const p=document.getElementById('sjc-payment-success-popup');const m=document.getElementById('sjc-payment-success-message');if(!p||!m)return;m.innerHTML=`<p class="font-bold text-base sm:text-lg">Namaste ${esc(c.name)},</p><p class="mt-2">Aapki consultation book ho gayi hai.</p><div class="mt-4 space-y-1.5 text-sm"><p><b>Session Name:</b> ${esc(c.product)}</p><p><b>Session Date:</b> ${esc(formatConsultationDate(c.bookingDate))}</p><p><b>Session Time:</b> ${esc(c.bookingSlot)}</p><p><b>Slot ID:</b> <span class="font-mono font-extrabold tracking-wide">${esc(c.slotId)}</span></p></div><p class="mt-4">Is Slot ID ko apne pass save karke rakhein. Humari team aapse jaldi contact karegi, unhe aap yeh send kar dijiyega.</p><p class="mt-3 font-semibold">Dhanyawad! Aapki details aur payment humare pass surakshit tarike se aa gaye hain.</p>`;p.classList.remove('hidden');}
         function makeSlotId(){return 'SLOT-'+Math.floor(1000+Math.random()*9000)+'-'+String.fromCharCode(65+Math.floor(Math.random()*26))+String.fromCharCode(65+Math.floor(Math.random()*26));}
         function isoToday(){const d=new Date();const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());}
         function renderReasons(){const box=document.getElementById('sjc-reasons');box.innerHTML=reasonOptions.map((r,i)=>`<button type="button" class="sjc-option w-full text-left rounded-2xl border border-goldPrimary/25 p-4 flex items-center gap-4" data-reason="${esc(r)}" onclick="selectConsultReason(this)"><span class="w-10 h-10 rounded-xl bg-[#5C1D24] text-goldPrimary flex items-center justify-center shrink-0"><i class="fa-solid ${reasonIcons[i]}"></i></span><span><span class="block font-bold text-sm">${esc(r)}</span><span class="block text-[10px] text-maroonMain/55 mt-1">Tap to select this consultation focus</span></span><span class="ml-auto w-5 h-5 rounded-full border border-goldPrimary/40 flex items-center justify-center text-[10px] sjc-check"></span></button>`).join('');}
@@ -1545,6 +1572,7 @@
                   document.getElementById('sjc-success-name').textContent=c.name;
                   document.getElementById('sjc-success-service').textContent=c.product;
                   document.getElementById('sjc-success-slot').textContent=c.slotId;
+                  showConsultationPaymentPopup(c);
                   document.getElementById('sjc-success').classList.remove('hidden');
                   document.getElementById('sjc-success').classList.add('flex');
                 }catch(e){
